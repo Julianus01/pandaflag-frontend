@@ -1,32 +1,37 @@
-import logo from './logo.svg'
-import './App.css'
 import { useAuth0 } from '@auth0/auth0-react'
+import Routes from './components/routes/Routes'
 
 function App() {
-  const { user, loginWithRedirect, logout } = useAuth0()
+  const { isLoading } = useAuth0()
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+  if (isLoading) {
+    return null
+  }
 
-        {user?.name && <p>{user.name}</p>}
+  return <Routes />
 
-        {!Boolean(user) && (
-          <p onClick={loginWithRedirect} className="App-link">
-            Login
-          </p>
-        )}
+  // return (
+  //   <div className="App">
+  //     <header className="App-header">
+  //       <img src={logo} className="App-logo" alt="logo" />
 
-        <p
-          onClick={() => logout({ returnTo: window.location.origin })}
-          className="App-link"
-        >
-          Logout
-        </p>
-      </header>
-    </div>
-  )
+  //       {user?.name && <p>{user.name}</p>}
+
+  //       {!Boolean(user) && (
+  //         <p onClick={loginWithRedirect} className="App-link">
+  //           Login
+  //         </p>
+  //       )}
+
+  //       <p
+  //         onClick={() => logout({ returnTo: window.location.origin })}
+  //         className="App-link"
+  //       >
+  //         Logout
+  //       </p>
+  //     </header>
+  //   </div>
+  // )
 }
 
 export default App
