@@ -10,7 +10,6 @@ const Routes = () => {
       <Switch>
         {/* Redirect to App if Authenticated */}
         <RedirectAuthenticatedRoute component={LoginPage} exact path="/login" />
-
         <RedirectAuthenticatedRoute component={LoginPage} exact path="/" />
 
         {/* Authenticated routes */}
