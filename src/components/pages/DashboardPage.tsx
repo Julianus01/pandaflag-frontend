@@ -18,7 +18,7 @@ function DashboardPage() {
   return (
     <div>
       <p>Dashboard Page</p>
-      <button onClick={logout as any}>logout</button>
+      <button onClick={() => logout({ returnTo: window.location.origin })}>logout</button>
 
       <h2>Projects</h2>
       {projects.map((project: IProject) => (
