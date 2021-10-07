@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import { Button, Heading } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import ProjectsApi, { IProject } from '../../api/ProjectsApi'
 
@@ -17,8 +18,11 @@ function DashboardPage() {
 
   return (
     <div>
-      <p>Dashboard Page</p>
-      <button onClick={() => logout({ returnTo: window.location.origin })}>logout</button>
+      <Heading as="h1" size="4xl">
+        Dashboard Page
+      </Heading>
+
+      <Button onClick={() => logout({ returnTo: window.location.origin })}>Logout</Button>
 
       <h2>Projects</h2>
       {projects.map((project: IProject) => (

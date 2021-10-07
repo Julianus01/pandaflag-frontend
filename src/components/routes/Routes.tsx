@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import RoutePage from './RoutePage'
 
 // Pages
@@ -11,7 +11,7 @@ import AuthenticatedRoute from './AuthenticatedRoute'
 import EmailVerificationRoute from './EmailVerificationRoute'
 import RedirectAuthenticatedRoute from './RedirectAuthenticatedRoute'
 
-const Routes = () => {
+function Routes() {
   return (
     <Router>
       <Switch>
@@ -19,9 +19,14 @@ const Routes = () => {
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.root()} />
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.login()} />
 
+        {/* Email Verification */}
+        <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
+
         {/* Authenticated routes */}
         <AuthenticatedRoute component={DashboardPage} exact path={RoutePage.dashboard()} />
-        <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
+
+        {/* Redirect to root */}
+        <Route component={() => <Redirect to={RoutePage.root()} />} exact={true} path="/*" />
       </Switch>
     </Router>
   )

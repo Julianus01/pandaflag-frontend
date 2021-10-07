@@ -4,14 +4,17 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import AuthenticationProvider from './components/shared/AuthenticationProvider'
+import { ChakraProvider } from '@chakra-ui/react'
 import './firebase_init'
 
 function RootHTML() {
   return (
     <React.StrictMode>
-      <AuthenticationProvider>
-        <App />
-      </AuthenticationProvider>
+      <ChakraProvider>
+        <AuthenticationProvider>
+          <App />
+        </AuthenticationProvider>
+      </ChakraProvider>
     </React.StrictMode>
   )
 }

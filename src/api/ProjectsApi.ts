@@ -15,7 +15,7 @@ export interface IProject {
 
 async function getProjects() {
   const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects)))
-  const projects = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => doc.data()) as IProject[]
+  const projects: IProject[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => doc.data()) as IProject[]
 
   return projects
 }
