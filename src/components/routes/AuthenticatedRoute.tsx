@@ -1,6 +1,7 @@
-import { Redirect, RouteProps, Route } from 'react-router-dom'
+import { Redirect, RouteProps } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import RoutePage from './RoutePage'
+import NavigationRoute from './NavigationRoute'
 
 function AuthenticatedRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth0()
@@ -13,7 +14,7 @@ function AuthenticatedRoute(props: RouteProps) {
     return <Redirect to={RoutePage.emailVerification()} />
   }
 
-  return <Route {...props} />
+  return <NavigationRoute {...props} />
 }
 
 export default AuthenticatedRoute
