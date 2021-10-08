@@ -1,9 +1,17 @@
 import { Box } from '@chakra-ui/layout'
 import { Text, Heading, Icon } from '@chakra-ui/react'
 import styled from '@emotion/styled/macro'
+import { ApiQueryId } from 'api/ApiQueryId'
+import ProjectsApi from 'api/ProjectsApi'
+import ProjectsContext from 'context/ProjectsContext'
+import { useContext } from 'react'
 import { HiSelector } from 'react-icons/hi'
+import { useQuery } from 'react-query'
 
 function SidebarProjectSelector() {
+  const projectsContext = useContext(ProjectsContext)
+  // const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+
   return (
     <Container>
       <Box flex="1">
@@ -12,7 +20,7 @@ function SidebarProjectSelector() {
         </Text>
 
         <Heading as="h5" size="sm">
-          Awesome shit
+          {projectsContext.selected?.name}
         </Heading>
       </Box>
 
@@ -28,12 +36,11 @@ export default SidebarProjectSelector
 const Container = styled.div`
   padding: ${({ theme }) => theme.space[4]};
   border-radius: ${({ theme }) => theme.radii.lg};
-  border: ${({ theme }) => `1px solid ${theme.colors.gray[300]}`};
   cursor: pointer;
   display: flex;
   user-select: none;
 
   :hover {
-    background: ${({ theme }) => theme.colors.gray[50]};
+    background: ${({ theme }) => theme.colors.gray[100]};
   }
 `

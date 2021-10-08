@@ -22,6 +22,10 @@ function settings() {
   return `/settings`
 }
 
+function projects() {
+  return `/projects`
+}
+
 function createFirstProject() {
   return `/create-first-project`
 }
@@ -33,7 +37,8 @@ const RoutePage = {
   emailVerification,
   featureFlags,
   settings,
-  createFirstProject
+  projects,
+  createFirstProject,
 }
 
 export default RoutePage

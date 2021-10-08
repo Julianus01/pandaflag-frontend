@@ -34,7 +34,7 @@ function CreateFirstProjectPage() {
 
   function createProject() {
     setIsLoading(true)
-    createProjectMutation.mutate({ creatorId: user.id as string, name: projectName })
+    createProjectMutation.mutate({ creatorId: user?.id as string, name: projectName })
   }
 
   return (

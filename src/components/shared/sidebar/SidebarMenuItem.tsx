@@ -47,4 +47,5 @@ const Container = styled.div<{ active: boolean }>`
   cursor: pointer;
   background: ${({ theme, active }) => (active ? theme.colors.gray[100] : '')};
   color: ${({ theme, active }) => (active ? theme.colors.gray[800] : theme.colors.gray[600])};
+  user-select: none;
 `

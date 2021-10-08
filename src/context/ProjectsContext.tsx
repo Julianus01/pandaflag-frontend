@@ -22,17 +22,17 @@ interface IProps {
 
 function ProjectsContextProvider({ children }: IProps) {
   const { user } = useAuth()
-  // const { data: projects } = useQuery([ApiQueryId.getProjects, user?.id], ProjectsApi.getProjects, {
-  //   enabled: Boolean(user?.id),
-  // })
+  const { data: projects } = useQuery([ApiQueryId.getProjects, user?.id], ProjectsApi.getProjects, {
+    enabled: Boolean(user?.id),
+  })
 
   const [selected, setSelected] = useState<IProject | null>(null)
 
-  // useEffect(() => {
-  //   if (projects?.length) {
-  //     setSelected(projects[0])
-  //   }
-  // }, [projects])
+  useEffect(() => {
+    if (projects?.length) {
+      setSelected(projects[0])
+    }
+  }, [projects])
 
   return <ProjectsContext.Provider value={{ selected, setSelected }}>{children}</ProjectsContext.Provider>
 }

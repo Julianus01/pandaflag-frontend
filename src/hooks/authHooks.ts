@@ -12,9 +12,7 @@ function mapUserWithId(user: Auth0User | undefined): IUser | undefined {
   return { ...user, id: user.sub?.replace('auth0|', '') as string }
 }
 
-export interface IUseAuthContextInterface extends Omit<Auth0ContextInterface, 'user'> {
-  user: IUser
-}
+export interface IUseAuthContextInterface extends Auth0ContextInterface<IUser> { }
 
 function useAuth(): IUseAuthContextInterface {
   const auth0 = useAuth0()

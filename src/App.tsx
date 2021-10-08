@@ -4,7 +4,7 @@ import Routes from './components/routes/Routes'
 import { useDispatch } from 'react-redux'
 import { authActions } from 'redux/ducks/authDuck'
 
-function useListenAndUpdateUserDuck(user: IUser | null) {
+function useListenAndUpdateUserDuck(user: IUser | undefined) {
   const dispatch = useDispatch()
 
   useEffect(() => {
