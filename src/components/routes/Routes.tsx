@@ -10,6 +10,8 @@ import LoginPage from '../pages/LoginPage'
 import AuthenticatedRoute from './AuthenticatedRoute'
 import EmailVerificationRoute from './EmailVerificationRoute'
 import RedirectAuthenticatedRoute from './RedirectAuthenticatedRoute'
+import FeatureFlagsPage from 'components/pages/FeatureFlagsPage'
+import SettingsPage from 'components/pages/SettingsPage'
 
 function Routes() {
   return (
@@ -24,6 +26,8 @@ function Routes() {
 
         {/* Authenticated routes */}
         <AuthenticatedRoute component={DashboardPage} exact path={RoutePage.dashboard()} />
+        <AuthenticatedRoute component={FeatureFlagsPage} exact path={RoutePage.featureFlags()} />
+        <AuthenticatedRoute component={SettingsPage} exact path={RoutePage.settings()} />
 
         {/* Redirect to root */}
         <Route component={() => <Redirect to={RoutePage.root()} />} exact={true} path="/*" />

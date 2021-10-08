@@ -1,16 +1,24 @@
 import { Text } from '@chakra-ui/react'
 import styled from '@emotion/styled/macro'
 import { ReactNode } from 'react'
+import { useHistory } from 'react-router'
 
 interface IProps {
   children: ReactNode
   icon: ReactNode
   active?: boolean
+  href: string
 }
 
-function SidebarMenuItem({ children, icon, active = false }: IProps) {
+function SidebarMenuItem({ children, icon, active = false, href }: IProps) {
+  const history = useHistory()
+
+  function navigate() {
+    history.push(href)
+  }
+
   return (
-    <Container active={active}>
+    <Container onClick={navigate} active={active}>
       {icon}
 
       <Text ml={3}>{children}</Text>

@@ -2,6 +2,7 @@ import { Heading, Icon } from '@chakra-ui/react'
 import styled from '@emotion/styled/macro'
 import SidebarMenuItem from './SidebarMenuItem'
 import { FiHome, FiToggleRight, FiSettings } from 'react-icons/fi'
+import RoutePage from 'components/routes/RoutePage'
 
 function Sidebar() {
   return (
@@ -11,13 +12,29 @@ function Sidebar() {
       </Heading>
 
       <Content>
-        <SidebarMenuItem icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiHome} />}>Dashboard</SidebarMenuItem>
+        <SidebarMenuItem
+          href={RoutePage.dashboard()}
+          active={window.location.pathname.includes(RoutePage.dashboard())}
+          icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiHome} />}
+        >
+          Dashboard
+        </SidebarMenuItem>
 
-        <SidebarMenuItem active icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiToggleRight} />}>
+        <SidebarMenuItem
+          href={RoutePage.featureFlags()}
+          active={window.location.pathname.includes(RoutePage.featureFlags())}
+          icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiToggleRight} />}
+        >
           Feature flags
         </SidebarMenuItem>
 
-        <SidebarMenuItem icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiSettings} />}>Settings</SidebarMenuItem>
+        <SidebarMenuItem
+          href={RoutePage.settings()}
+          active={window.location.pathname.includes(RoutePage.settings())}
+          icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiSettings} />}
+        >
+          Settings
+        </SidebarMenuItem>
       </Content>
     </Container>
   )
