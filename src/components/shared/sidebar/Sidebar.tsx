@@ -1,10 +1,11 @@
-import { Heading, Icon } from '@chakra-ui/react'
+import { Box, Divider, Heading, Icon } from '@chakra-ui/react'
 import styled from '@emotion/styled/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
 import { FiHome, FiToggleRight, FiSettings } from 'react-icons/fi'
 import RoutePage from 'components/routes/RoutePage'
 import { useEffect } from 'react'
 import { useHistory } from 'react-router'
+import SidebarProjectSelector from './SidebarProjectSelector'
 
 const MENU_ITEMS: ISidebarMenuItem[] = [
   {
@@ -59,6 +60,12 @@ function Sidebar() {
       <Heading fontWeight="extrabold" textAlign="center" mb={12} as="h4" size="md">
         smartlaunch
       </Heading>
+
+      <Divider mb={12} />
+
+      <Box mb={12}>
+        <SidebarProjectSelector />
+      </Box>
 
       <Content>
         {MENU_ITEMS.map((menuItem: ISidebarMenuItem) => (

@@ -40,7 +40,7 @@ const Container = styled.div<{ active: boolean }>`
   font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: ${({ theme, active }) => (active ? theme.fontWeights.bold : theme.fontWeights.medium)};
   border-radius: ${({ theme }) => theme.radii.lg};
-  padding: ${({ theme }) => `${theme.space[2]} ${theme.space[3]}`};
+  padding: ${({ theme }) => `${theme.space[3]} ${theme.space[3]}`};
   width: 100%;
   display: flex;
   align-items: center;
