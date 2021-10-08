@@ -11,19 +11,19 @@ const MENU_ITEMS: ISidebarMenuItem[] = [
     name: 'Dashboard',
     href: RoutePage.dashboard(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiHome} />,
-    keyboardLetter: 'd',
+    keyboardLetter: 'D',
   },
   {
     name: 'Feature Flags',
     href: RoutePage.featureFlags(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiToggleRight} />,
-    keyboardLetter: 'f',
+    keyboardLetter: 'F',
   },
   {
     name: 'Settings',
     href: RoutePage.settings(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiSettings} />,
-    keyboardLetter: 's',
+    keyboardLetter: 'S',
   },
 ]
 

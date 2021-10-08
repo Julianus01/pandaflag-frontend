@@ -3,6 +3,7 @@ import { Button, Heading, Input } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import BoxedPage from 'components/styles/BoxedPage'
 import { useQuery } from 'react-query'
+import CommonUtils from 'utils/CommonUtils'
 import ProjectsApi, { IProject } from '../../api/ProjectsApi'
 
 function DashboardPage() {
@@ -18,7 +19,7 @@ function DashboardPage() {
       <Button onClick={() => logout({ returnTo: window.location.origin })}>Logout</Button>
 
       <Input
-        onKeyDown={(event) => event.stopPropagation()}
+        onKeyDown={CommonUtils.stopPropagation}
         my={10}
         variant="outline"
         background="white"

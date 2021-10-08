@@ -1,4 +1,6 @@
-function stopPropagation(event: Event) {
+import { KeyboardEvent } from "react"
+
+function stopPropagation(event: Event | KeyboardEvent<HTMLInputElement>) {
   event.stopPropagation()
 }
 
