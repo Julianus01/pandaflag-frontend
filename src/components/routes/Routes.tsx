@@ -12,6 +12,8 @@ import EmailVerificationRoute from './EmailVerificationRoute'
 import RedirectAuthenticatedRoute from './RedirectAuthenticatedRoute'
 import FeatureFlagsPage from 'components/pages/FeatureFlagsPage'
 import SettingsPage from 'components/pages/SettingsPage'
+import CreateFirstProjectPage from 'components/pages/CreateFirstProjectPage'
+import CreateFirstProjectRoute from './CreateFirstProjectRoute'
 
 function Routes() {
   return (
@@ -28,6 +30,7 @@ function Routes() {
         <AuthenticatedRoute component={DashboardPage} exact path={RoutePage.dashboard()} />
         <AuthenticatedRoute component={FeatureFlagsPage} exact path={RoutePage.featureFlags()} />
         <AuthenticatedRoute component={SettingsPage} exact path={RoutePage.settings()} />
+        <CreateFirstProjectRoute component={CreateFirstProjectPage} exact path={RoutePage.createFirstProject()} />
 
         {/* Redirect to root */}
         <Route component={() => <Redirect to={RoutePage.root()} />} exact={true} path="/*" />

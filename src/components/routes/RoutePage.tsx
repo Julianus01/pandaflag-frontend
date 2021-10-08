@@ -22,6 +22,10 @@ function settings() {
   return `/settings`
 }
 
+function createFirstProject() {
+  return `/create-first-project`
+}
+
 const RoutePage = {
   root,
   dashboard,
@@ -29,6 +33,7 @@ const RoutePage = {
   emailVerification,
   featureFlags,
   settings,
+  createFirstProject
 }
 
 export default RoutePage
