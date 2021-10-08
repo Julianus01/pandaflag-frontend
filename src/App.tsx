@@ -1,10 +1,10 @@
-import { useAuth0 } from '@auth0/auth0-react'
+import { useAuth } from 'hooks/authHooks'
 import Routes from './components/routes/Routes'
 
 function App() {
-  const auth0 = useAuth0()
+  const auth = useAuth()
 
-  if (auth0.isLoading) {
+  if (auth.isLoading) {
     return null
   }
 

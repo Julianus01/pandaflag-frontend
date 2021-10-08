@@ -1,14 +1,14 @@
-import { useAuth0 } from '@auth0/auth0-react'
 import { Button, Heading, Input } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import BoxedPage from 'components/styles/BoxedPage'
+import { useAuth } from 'hooks/authHooks'
 import { useQuery } from 'react-query'
 import CommonUtils from 'utils/CommonUtils'
 import ProjectsApi, { IProject } from '../../api/ProjectsApi'
 
 function DashboardPage() {
-  const { logout } = useAuth0()
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const { logout, user } = useAuth()
+  const { data: projects } = useQuery(ApiQueryId.getProjects, () => ProjectsApi.getProjects(user.id))
 
   return (
     <BoxedPage>

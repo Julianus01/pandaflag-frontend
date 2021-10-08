@@ -1,8 +1,8 @@
-import { useAuth0 } from '@auth0/auth0-react'
+import { useAuth } from 'hooks/authHooks'
 import { useEffect } from 'react'
 
 function LoginPage() {
-  const { loginWithRedirect } = useAuth0()
+  const { loginWithRedirect } = useAuth()
 
   useEffect(() => {
     loginWithRedirect()

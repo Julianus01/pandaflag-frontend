@@ -1,23 +1,26 @@
-import { useAuth0 } from '@auth0/auth0-react'
 import { Button, Heading, Input, Text } from '@chakra-ui/react'
 import styled from '@emotion/styled/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi from 'api/ProjectsApi'
+import ProjectsApi, { ICreateProjectRequestParams } from 'api/ProjectsApi'
+import { useAuth } from 'hooks/authHooks'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 
 function CreateFirstProjectPage() {
-  const { user, logout } = useAuth0()
+  const { user, logout } = useAuth()
   const queryClient = useQueryClient()
 
   const [projectName, setProjectName] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const createProjectMutation = useMutation(ProjectsApi.createProject, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getProjects)
-    },
-  })
+  const createProjectMutation = useMutation(
+    (params: ICreateProjectRequestParams) => ProjectsApi.createProject(params),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(ApiQueryId.getProjects)
+      },
+    }
+  )
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
     setProjectName(event.target.value)
@@ -31,7 +34,7 @@ function CreateFirstProjectPage() {
 
   function createProject() {
     setIsLoading(true)
-    createProjectMutation.mutate(projectName)
+    createProjectMutation.mutate({ creatorId: user.id as string, name: projectName })
   }
 
   return (
