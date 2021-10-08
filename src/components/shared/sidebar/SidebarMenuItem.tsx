@@ -1,27 +1,35 @@
-import { Text } from '@chakra-ui/react'
+import { Text, Kbd } from '@chakra-ui/react'
 import styled from '@emotion/styled/macro'
 import { ReactNode } from 'react'
 import { useHistory } from 'react-router'
 
-interface IProps {
-  children: ReactNode
-  icon: ReactNode
-  active?: boolean
+export interface ISidebarMenuItem {
+  name: string
   href: string
+  icon: ReactNode
+  keyboardLetter: string
 }
 
-function SidebarMenuItem({ children, icon, active = false, href }: IProps) {
+interface IProps {
+  children: ReactNode
+  active?: boolean
+  menuItem: ISidebarMenuItem
+}
+
+function SidebarMenuItem({ children, menuItem, active = false }: IProps) {
   const history = useHistory()
 
   function navigate() {
-    history.push(href)
+    history.push(menuItem.href)
   }
 
   return (
     <Container onClick={navigate} active={active}>
-      {icon}
+      {menuItem.icon}
 
       <Text ml={3}>{children}</Text>
+
+      <Kbd ml="auto">{menuItem.keyboardLetter}</Kbd>
     </Container>
   )
 }
@@ -30,7 +38,7 @@ export default SidebarMenuItem
 
 const Container = styled.div<{ active: boolean }>`
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  font-weight: ${({ theme }) => theme.fontWeights.semibold};
+  font-weight: ${({ theme, active }) => (active ? theme.fontWeights.bold : theme.fontWeights.medium)};
   border-radius: ${({ theme }) => theme.radii.lg};
   padding: ${({ theme }) => `${theme.space[2]} ${theme.space[3]}`};
   width: 100%;
