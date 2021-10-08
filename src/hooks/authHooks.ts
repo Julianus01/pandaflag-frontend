@@ -1,6 +1,6 @@
 import { useAuth0, User as Auth0User, Auth0ContextInterface } from "@auth0/auth0-react"
 
-interface IUser extends Auth0User {
+export interface IUser extends Auth0User {
   id: string
 }
 

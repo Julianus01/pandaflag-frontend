@@ -7,8 +7,8 @@ import CommonUtils from 'utils/CommonUtils'
 import ProjectsApi, { IProject } from '../../api/ProjectsApi'
 
 function DashboardPage() {
-  const { logout, user } = useAuth()
-  const { data: projects } = useQuery(ApiQueryId.getProjects, () => ProjectsApi.getProjects(user.id))
+  const { logout } = useAuth()
+  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
   return (
     <BoxedPage>

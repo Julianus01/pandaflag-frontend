@@ -8,6 +8,7 @@ import {
   addDoc,
   where
 } from 'firebase/firestore'
+import ApiUtils from 'utils/ApiUtils'
 import { ApiCollection } from './ApiCollection'
 
 export interface IProject {
@@ -24,8 +25,9 @@ export enum MemberType {
 }
 
 // Get Projects
-async function getProjects(userId: string): Promise<IProject[]> {
-  const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', userId)))
+async function getProjects(): Promise<IProject[]> {
+  const user = ApiUtils.globalUser()
+  const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', user.id)))
   const projects: IProject[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({ id: doc.id, ...doc.data() })) as IProject[]
 
   return projects
