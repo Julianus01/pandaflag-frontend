@@ -39,7 +39,6 @@ function SidebarFooter() {
       </CustomMenuButton>
 
       <MenuList shadow="lg">
-        <MenuItem>User Settings</MenuItem>
         <MenuItem onClick={() => auth.logout({ returnTo: window.location.origin })}>Logout</MenuItem>
       </MenuList>
     </Menu>

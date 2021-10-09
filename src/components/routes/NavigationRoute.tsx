@@ -32,6 +32,7 @@ const SidebarContainer = styled.div`
   width: 280px;
   background: ${({ theme }) => theme.colors.white};
   box-shadow: ${({ theme }) => theme.shadows.xs};
+  z-index: 1;
 `
 
 const Content = styled.div`
