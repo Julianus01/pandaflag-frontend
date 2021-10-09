@@ -6,7 +6,9 @@ import {
   QueryDocumentSnapshot,
   DocumentData,
   addDoc,
-  where
+  where,
+  deleteDoc,
+  doc
 } from 'firebase/firestore'
 import LSUtils from 'utils/LSUtils'
 import { ApiCollection } from './ApiCollection'
@@ -48,9 +50,19 @@ async function createProject({ creatorId, name }: ICreateProjectRequestParams): 
   return { id: newProjectDoc.id, name, members: [creatorId] }
 }
 
+// Delete Project
+// export interface IDeleteProjectRequestParams {
+//   projectId: string
+// }
+
+async function deleteProject(projectId: string): Promise<void> {
+  return deleteDoc(doc(getFirestore(), ApiCollection.projects, projectId));
+}
+
 const ProjectsApi = {
   getProjects,
-  createProject
+  createProject,
+  deleteProject
 }
 
 export default ProjectsApi
