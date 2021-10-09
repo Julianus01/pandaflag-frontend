@@ -1,8 +1,8 @@
 import { useAuth } from 'hooks/authHooks'
 import { useEffect, useState } from 'react'
 import Routes from './components/routes/Routes'
-import ApiUtils from 'utils/ApiUtils'
 import { useUnmount } from 'react-use'
+import LSUtils from 'utils/LSUtils'
 
 function App() {
   const { user, isLoading } = useAuth()
@@ -14,7 +14,7 @@ function App() {
     }
 
     if (!isLoading && user) {
-      ApiUtils.saveUserInLS(user)
+      LSUtils.saveUser(user)
       setIsInitialized(true)
     }
 
@@ -24,7 +24,7 @@ function App() {
   }, [isLoading, user, isInitialized])
 
   useUnmount(() => {
-    ApiUtils.removeUserFromLS()
+    LSUtils.removeUser()
   })
 
   if (!isInitialized) {

@@ -3,13 +3,13 @@ import { Heading, Icon, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOpt
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
-import ProjectsContext, { Environment } from 'context/ProjectsContext'
+import ProjectsContext, { IEnvironment } from 'context/ProjectsContext'
 import { useContext, useRef, useState } from 'react'
 import { HiSelector } from 'react-icons/hi'
 import { useQuery } from 'react-query'
 import { useClickAway } from 'react-use'
 
-function environmentColorScheme(environment: Environment) {
+function environmentColorScheme(environment: IEnvironment) {
   switch (environment) {
     case 'production':
       return 'purple'
@@ -40,15 +40,15 @@ function SidebarProjectSelector() {
     setIsOpen(!isOpen)
   }
 
-  function changeEnvironment(environment: Environment) {
-    projectsContext.setEnvironment(environment)
+  function changeEnvironment(environment: IEnvironment) {
+    projectsContext.updateEnvironment(environment)
   }
 
   function changeProject(projectId: string) {
     const project = projects?.find((project: IProject) => project.id === projectId)
 
     if (project) {
-      projectsContext.setSelectedProject(project)
+      projectsContext.updateProject(project)
     }
   }
 
@@ -93,7 +93,7 @@ function SidebarProjectSelector() {
           </MenuOptionGroup>
 
           <MenuOptionGroup
-            onChange={(value) => changeEnvironment(value as Environment)}
+            onChange={(value) => changeEnvironment(value as IEnvironment)}
             value={projectsContext.environment}
             type="radio"
             title="Environments"

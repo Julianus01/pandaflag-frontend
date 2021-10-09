@@ -1,25 +1,26 @@
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import { useAuth } from 'hooks/authHooks'
-import { createContext, Dispatch, ReactNode, SetStateAction, useState } from 'react'
+import { createContext, ReactNode, useState } from 'react'
 import { useQuery } from 'react-query'
+import LSUtils from 'utils/LSUtils'
 
 const initialState = {
-  selectedProject: null,
-  setSelectedProject: () => null,
+  selectedProject: undefined,
+  updateProject: () => null,
 
   environment: 'production',
-  setEnvironment: () => null,
+  updateEnvironment: () => null,
 }
 
-export type Environment = string
+export type IEnvironment = string
 
 interface IProjectsContextState {
-  selectedProject: IProject | null
-  setSelectedProject: Dispatch<SetStateAction<IProject | null>>
+  selectedProject: IProject | undefined
+  updateProject: (project: IProject) => void
 
-  environment: Environment
-  setEnvironment: Dispatch<SetStateAction<Environment>>
+  environment: IEnvironment
+  updateEnvironment: (environment: IEnvironment) => void
 }
 
 const ProjectsContext = createContext<IProjectsContextState>(initialState)
@@ -30,19 +31,56 @@ interface IProps {
 
 function ProjectsContextProvider({ children }: IProps) {
   const { user } = useAuth()
-  const [selectedProject, setSelectedProject] = useState<IProject | null>(null)
-  const [environment, setEnvironment] = useState<Environment>('production')
+  const [selectedProject, setSelectedProject] = useState<IProject | undefined>(undefined)
+  const [environment, setEnvironment] = useState<IEnvironment>('')
 
   useQuery([ApiQueryId.getProjects, user?.id], ProjectsApi.getProjects, {
     onSuccess: (projects: IProject[]) => {
-      if (projects?.length) {
+      const lastProjectName: string = LSUtils.lastProjectName()
+      const lastEnvironment: IEnvironment = LSUtils.lastEnvironment()
+
+      if (!selectedProject && lastProjectName) {
+        const foundProject = projects.find((project: IProject) => project.name === lastProjectName)
+
+        if (foundProject) {
+          setSelectedProject(foundProject)
+        } else {
+          setSelectedProject(projects[0])
+          LSUtils.removeLastProjectName()
+        }
+      } else {
         setSelectedProject(projects[0])
+      }
+
+      if (!environment.length && lastEnvironment) {
+        const foundEnvironment = ['production', 'staging', 'development'].find(
+          (environment: IEnvironment) => environment === lastEnvironment
+        ) as IEnvironment | undefined
+
+        if (foundEnvironment) {
+          setEnvironment(foundEnvironment)
+        } else {
+          setEnvironment('production')
+          LSUtils.removeLastEnvironment()
+        }
+      } else {
+        setEnvironment('production')
       }
     },
   })
 
+  function updateProject(project: IProject) {
+    setSelectedProject(project)
+    LSUtils.saveLastProjectName(project.name)
+  }
+
+  function updateEnvironment(environment: IEnvironment) {
+    setEnvironment(environment)
+    LSUtils.saveLastEnvironment(environment)
+  }
+
   return (
-    <ProjectsContext.Provider value={{ selectedProject, setSelectedProject, environment, setEnvironment }}>
+    <ProjectsContext.Provider value={{ selectedProject, updateProject, environment, updateEnvironment }}>
       {children}
     </ProjectsContext.Provider>
   )
