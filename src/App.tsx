@@ -1,24 +1,26 @@
-import { IUser, useAuth } from 'hooks/authHooks'
+import { useAuth } from 'hooks/authHooks'
 import { useEffect } from 'react'
 import Routes from './components/routes/Routes'
-import { useDispatch } from 'react-redux'
-import { authActions } from 'redux/ducks/authDuck'
+import ApiUtils from 'utils/ApiUtils'
+import { useUnmount } from 'react-use'
 
-function useListenAndUpdateUserDuck(user: IUser | undefined) {
-  const dispatch = useDispatch()
-
+function useUpdateUserIdInLS(userId: string | undefined) {
   useEffect(() => {
-    if (user) {
-      dispatch(authActions.authStateChanged(user))
+    if (userId) {
+      ApiUtils.saveUserIdInLS(userId)
     }
-  }, [user, dispatch])
+  }, [userId])
+
+  useUnmount(() => {
+    ApiUtils.removeUserIdFromLS()
+  })
 }
 
 function App() {
-  const auth = useAuth()
-  useListenAndUpdateUserDuck(auth.user)
+  const { user, isLoading } = useAuth()
+  useUpdateUserIdInLS(user?.id)
 
-  if (auth.isLoading) {
+  if (isLoading) {
     return null
   }
 

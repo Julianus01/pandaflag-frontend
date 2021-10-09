@@ -7,7 +7,7 @@ import { useAuth } from 'hooks/authHooks'
 
 function CreateFirstProjectRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()
-  const { data: projects, isLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
   if (!isAuthenticated) {
     return <Redirect to={RoutePage.login()} />
@@ -17,7 +17,7 @@ function CreateFirstProjectRoute(props: RouteProps) {
     return <Redirect to={RoutePage.emailVerification()} />
   }
 
-  if (isLoading) {
+  if (projectsLoading) {
     return null
   }
 

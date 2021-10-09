@@ -1,4 +1,4 @@
-import { Box, Divider, Heading, Icon } from '@chakra-ui/react'
+import { Box, Divider, Heading, Icon, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
 import { FiHome, FiToggleRight, FiSettings, FiLayers } from 'react-icons/fi'
@@ -21,6 +21,9 @@ const MENU_ITEMS: ISidebarMenuItem[] = [
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiToggleRight} />,
     keyboardLetter: 'F',
   },
+]
+
+const CONFIGURATION_MENU_ITEMS: ISidebarMenuItem[] = [
   {
     name: 'Projects',
     href: RoutePage.projects(),
@@ -51,7 +54,7 @@ function Sidebar() {
   const history = useHistory()
 
   useKeyboardListener((event: KeyboardEvent) => {
-    const sidebarMenuItemBasedOnKey = MENU_ITEMS.find(
+    const sidebarMenuItemBasedOnKey = [...MENU_ITEMS, ...CONFIGURATION_MENU_ITEMS].find(
       (menuItem) => menuItem.keyboardLetter.toLowerCase() === event.key.toLowerCase()
     )
 
@@ -75,7 +78,25 @@ function Sidebar() {
       </Box>
 
       <Content>
+        <Text ml={4} mb={2} fontSize="xs" fontWeight="semibold">
+          General
+        </Text>
+
         {MENU_ITEMS.map((menuItem: ISidebarMenuItem) => (
+          <SidebarMenuItem
+            menuItem={menuItem}
+            key={menuItem.href}
+            active={window.location.pathname.includes(menuItem.href)}
+          >
+            {menuItem.name}
+          </SidebarMenuItem>
+        ))}
+
+        <Text ml={4} mt={6} mb={2} fontSize="xs" fontWeight="semibold">
+          Configuration
+        </Text>
+
+        {CONFIGURATION_MENU_ITEMS.map((menuItem: ISidebarMenuItem) => (
           <SidebarMenuItem
             menuItem={menuItem}
             key={menuItem.href}

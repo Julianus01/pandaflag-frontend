@@ -25,8 +25,8 @@ function SidebarProjectSelector() {
   }
 
   return (
-    <Menu isOpen={isOpen}>
-      <CustomMenuButton ref={ref} $active={isOpen} onClick={toggleSelector}>
+    <Menu placement="right-start" isOpen={isOpen}>
+      <CustomMenuButton zIndex="popover" ref={ref} $active={isOpen} onClick={toggleSelector}>
         <Container>
           <Box flex="1">
             <Text fontSize="xs" color="gray.500" fontWeight="medium">
@@ -67,6 +67,7 @@ const CustomMenuButton = styled(MenuButton)<{ $active: boolean }>`
   text-align: left;
   border-radius: ${({ theme }) => theme.radii.lg};
   width: 100%;
+  height: 69px;
 
   :hover {
     background: ${({ theme }) => theme.colors.gray[100]};

@@ -8,9 +8,7 @@ import { useAuth } from 'hooks/authHooks'
 
 function AuthenticatedRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()
-  const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects, {
-    enabled: false,
-  })
+  const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
   if (!isAuthenticated) {
     return <Redirect to={RoutePage.login()} />

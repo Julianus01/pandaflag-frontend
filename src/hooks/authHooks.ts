@@ -16,7 +16,7 @@ export interface IUseAuthContextInterface extends Auth0ContextInterface<IUser> {
 
 function useAuth(): IUseAuthContextInterface {
   const auth0 = useAuth0()
-  const mappedUser = mapUserWithId(auth0.user) as IUser
+  const mappedUser = mapUserWithId(auth0.user)
 
   return { ...auth0, user: mappedUser }
 }
