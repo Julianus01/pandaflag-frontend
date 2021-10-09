@@ -44,6 +44,14 @@ function SidebarProjectSelector() {
     projectsContext.setEnvironment(environment)
   }
 
+  function changeProject(projectId: string) {
+    const project = projects?.find((project: IProject) => project.id === projectId)
+
+    if (project) {
+      projectsContext.setSelectedProject(project)
+    }
+  }
+
   return (
     <div ref={ref}>
       <Menu matchWidth closeOnSelect={false} autoSelect={false} isOpen={isOpen}>
@@ -71,7 +79,12 @@ function SidebarProjectSelector() {
         </CustomMenuButton>
 
         <MenuList shadow="lg">
-          <MenuOptionGroup value={projectsContext.selectedProject?.id} type="radio" title="Projects">
+          <MenuOptionGroup
+            onChange={(value) => changeProject(value as string)}
+            value={projectsContext.selectedProject?.id}
+            type="radio"
+            title="Projects"
+          >
             {projects?.map((project: IProject) => (
               <MenuItemOption value={project.id} key={project.id}>
                 {project.name}
