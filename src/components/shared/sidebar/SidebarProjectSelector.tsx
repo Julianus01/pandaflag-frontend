@@ -25,8 +25,8 @@ function SidebarProjectSelector() {
   }
 
   return (
-    <Menu placement="right-start" isOpen={isOpen}>
-      <CustomMenuButton zIndex="popover" ref={ref} $active={isOpen} onClick={toggleSelector}>
+    <Menu autoSelect={false} placement="right-start" isOpen={isOpen}>
+      <CustomMenuButton ref={ref} $active={isOpen} onClick={toggleSelector}>
         <Container>
           <Box flex="1">
             <Text fontSize="xs" color="gray.500" fontWeight="medium">
