@@ -1,26 +1,25 @@
 import { useAuth } from 'hooks/authHooks'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Routes from './components/routes/Routes'
 import ApiUtils from 'utils/ApiUtils'
 import { useUnmount } from 'react-use'
 
-function useUpdateUserIdInLS(userId: string | undefined) {
+function App() {
+  const { user } = useAuth()
+  const [isInitialized, setIsInitialized] = useState<boolean>(false)
+
   useEffect(() => {
-    if (userId) {
-      ApiUtils.saveUserIdInLS(userId)
+    if (user?.id) {
+      ApiUtils.saveUserIdInLS(user?.id)
+      setIsInitialized(true)
     }
-  }, [userId])
+  }, [user?.id])
 
   useUnmount(() => {
     ApiUtils.removeUserIdFromLS()
   })
-}
 
-function App() {
-  const { user, isLoading } = useAuth()
-  useUpdateUserIdInLS(user?.id)
-
-  if (isLoading) {
+  if (!isInitialized) {
     return null
   }
 
