@@ -1,7 +1,7 @@
 import { Button, Heading, Input, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { ICreateProjectRequestParams } from 'api/ProjectsApi'
+import ProjectsApi from 'api/ProjectsApi'
 import { useAuth } from 'hooks/authHooks'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
@@ -13,14 +13,11 @@ function CreateFirstProjectPage() {
   const [projectName, setProjectName] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const createProjectMutation = useMutation(
-    (params: ICreateProjectRequestParams) => ProjectsApi.createProject(params),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(ApiQueryId.getProjects)
-      },
-    }
-  )
+  const createProjectMutation = useMutation(ProjectsApi.createProject, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(ApiQueryId.getProjects)
+    },
+  })
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
     setProjectName(event.target.value)
@@ -34,7 +31,7 @@ function CreateFirstProjectPage() {
 
   function createProject() {
     setIsLoading(true)
-    createProjectMutation.mutate({ creatorId: user?.id as string, name: projectName })
+    createProjectMutation.mutate(projectName)
   }
 
   return (

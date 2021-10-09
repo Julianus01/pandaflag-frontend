@@ -1,5 +1,5 @@
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { IProject } from 'api/ProjectsApi'
+import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
 import { useAuth } from 'hooks/authHooks'
 import { createContext, ReactNode, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -9,11 +9,9 @@ const initialState = {
   selectedProject: undefined,
   updateProject: () => null,
 
-  environment: 'production',
+  environment: 'development',
   updateEnvironment: () => null,
 }
-
-export type IEnvironment = string
 
 interface IProjectsContextState {
   selectedProject: IProject | undefined
@@ -36,6 +34,8 @@ function ProjectsContextProvider({ children }: IProps) {
 
   useQuery([ApiQueryId.getProjects, user?.id], ProjectsApi.getProjects, {
     onSuccess: (projects: IProject[]) => {
+      // TODO: Fix updating when creating/removing projects
+
       const lastProjectName: string = LSUtils.lastProjectName()
       const lastEnvironment: IEnvironment = LSUtils.lastEnvironment()
 
@@ -60,11 +60,11 @@ function ProjectsContextProvider({ children }: IProps) {
         if (foundEnvironment) {
           setEnvironment(foundEnvironment)
         } else {
-          setEnvironment('production')
+          setEnvironment('development')
           LSUtils.removeLastEnvironment()
         }
       } else {
-        setEnvironment('production')
+        setEnvironment('development')
       }
     },
   })

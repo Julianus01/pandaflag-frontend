@@ -1,4 +1,4 @@
-import { IEnvironment } from "context/ProjectsContext"
+import { IEnvironment } from "api/ProjectsApi"
 import { IUser } from "hooks/authHooks"
 
 const LS_USER_KEY: string = "user"

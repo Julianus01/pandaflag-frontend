@@ -13,10 +13,13 @@ import {
 import LSUtils from 'utils/LSUtils'
 import { ApiCollection } from './ApiCollection'
 
+export type IEnvironment = string
+
 export interface IProject {
   id: string
   name: string
   members: IMember[]
+  environments: IEnvironment[]
 }
 
 export type IMember = string
@@ -37,23 +40,16 @@ async function getProjects(): Promise<IProject[]> {
 
 
 // Create Project
-export interface ICreateProjectRequestParams {
-  creatorId: string
-  name: string
-}
-
 export type ICreateProjectResponse = IProject
 
-async function createProject({ creatorId, name }: ICreateProjectRequestParams): Promise<IProject> {
-  const newProjectDoc = await addDoc(collection(getFirestore(), ApiCollection.projects), { name, members: [creatorId] });
+async function createProject(name: string): Promise<IProject> {
+  const user = LSUtils.globalUser()
+  const newProjectDoc = await addDoc(collection(getFirestore(), ApiCollection.projects), { name, members: [user.id], environments: ['production', 'staging', 'development'] });
 
-  return { id: newProjectDoc.id, name, members: [creatorId] }
+  return { id: newProjectDoc.id, name, members: [user.id], environments: ['production', 'staging', 'development'] }
 }
 
 // Delete Project
-// export interface IDeleteProjectRequestParams {
-//   projectId: string
-// }
 
 async function deleteProject(projectId: string): Promise<void> {
   return deleteDoc(doc(getFirestore(), ApiCollection.projects, projectId));

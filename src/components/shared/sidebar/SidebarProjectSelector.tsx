@@ -2,8 +2,8 @@ import { Badge, Box } from '@chakra-ui/layout'
 import { Heading, Icon, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOption } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { IProject } from 'api/ProjectsApi'
-import ProjectsContext, { IEnvironment } from 'context/ProjectsContext'
+import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
+import ProjectsContext from 'context/ProjectsContext'
 import { useContext, useRef, useState } from 'react'
 import { HiSelector } from 'react-icons/hi'
 import { useQuery } from 'react-query'
@@ -78,7 +78,7 @@ function SidebarProjectSelector() {
           </Container>
         </CustomMenuButton>
 
-        <MenuList shadow="lg">
+        <MenuList maxHeight="400px" overflow="scroll" shadow="lg">
           <MenuOptionGroup
             onChange={(value) => changeProject(value as string)}
             value={projectsContext.selectedProject?.id}
