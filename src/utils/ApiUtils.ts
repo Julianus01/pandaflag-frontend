@@ -1,22 +1,24 @@
-const LS_USER_KEY: string = "userId"
+import { IUser } from "hooks/authHooks"
 
-function saveUserIdInLS(userId: string) {
-  localStorage.setItem(LS_USER_KEY, userId)
+const LS_USER_KEY: string = "user"
+
+function saveUserInLS(user: IUser) {
+  localStorage.setItem(LS_USER_KEY, JSON.stringify(user))
 }
 
-function removeUserIdFromLS() {
+function removeUserFromLS() {
   localStorage.removeItem(LS_USER_KEY)
 }
 
-function globalUserId(): string {
-  const userId: string = localStorage.getItem(LS_USER_KEY) as string
-  return userId
+function globalUser(): IUser {
+  const user: IUser = JSON.parse(localStorage.getItem(LS_USER_KEY) as string)
+  return user
 }
 
 const ApiUtils = {
-  saveUserIdInLS,
-  removeUserIdFromLS,
-  globalUserId
+  saveUserInLS,
+  removeUserFromLS,
+  globalUser
 }
 
 export default ApiUtils

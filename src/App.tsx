@@ -5,18 +5,26 @@ import ApiUtils from 'utils/ApiUtils'
 import { useUnmount } from 'react-use'
 
 function App() {
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
   const [isInitialized, setIsInitialized] = useState<boolean>(false)
 
   useEffect(() => {
-    if (user?.id) {
-      ApiUtils.saveUserIdInLS(user?.id)
+    if (isInitialized) {
+      return
+    }
+
+    if (!isLoading && user) {
+      ApiUtils.saveUserInLS(user)
       setIsInitialized(true)
     }
-  }, [user?.id])
+
+    if (!isLoading && !user) {
+      setIsInitialized(true)
+    }
+  }, [isLoading, user, isInitialized])
 
   useUnmount(() => {
-    ApiUtils.removeUserIdFromLS()
+    ApiUtils.removeUserFromLS()
   })
 
   if (!isInitialized) {
