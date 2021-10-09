@@ -1,22 +1,13 @@
-import { Button, Heading, Input } from '@chakra-ui/react'
-import { ApiQueryId } from 'api/ApiQueryId'
+import { Heading, Input } from '@chakra-ui/react'
 import BoxedPage from 'components/styles/BoxedPage'
-import { useAuth } from 'hooks/authHooks'
-import { useQuery } from 'react-query'
 import CommonUtils from 'utils/CommonUtils'
-import ProjectsApi, { IProject } from '../../api/ProjectsApi'
 
 function DashboardPage() {
-  const { logout } = useAuth()
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
-
   return (
     <BoxedPage>
       <Heading as="h3" size="lg">
         Dashboard
       </Heading>
-
-      <Button onClick={() => logout({ returnTo: window.location.origin })}>Logout</Button>
 
       <Input
         onKeyDown={CommonUtils.stopPropagation}
@@ -25,12 +16,6 @@ function DashboardPage() {
         background="white"
         placeholder="Filled"
       />
-
-      <h2>Projects</h2>
-
-      {projects?.map((project: IProject) => (
-        <div key={project.name}>Name: {project.name}</div>
-      ))}
     </BoxedPage>
   )
 }
