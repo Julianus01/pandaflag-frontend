@@ -1,5 +1,5 @@
 import { Box, Divider, Heading, Icon } from '@chakra-ui/react'
-import styled from '@emotion/styled/macro'
+import styled from 'styled-components/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
 import { FiHome, FiToggleRight, FiSettings, FiLayers } from 'react-icons/fi'
 import RoutePage from 'components/routes/RoutePage'

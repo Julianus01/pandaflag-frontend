@@ -1,4 +1,4 @@
-import styled from '@emotion/styled/macro'
+import styled from 'styled-components/macro'
 import { ReactNode } from 'react'
 
 interface IProps {

@@ -1,12 +1,13 @@
 import { Box } from '@chakra-ui/layout'
-import { Text, Heading, Icon, Menu, MenuButton, MenuList, MenuItem, useOutsideClick } from '@chakra-ui/react'
-import styled from '@emotion/styled/macro'
+import { Text, Heading, Icon, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
+import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import ProjectsContext from 'context/ProjectsContext'
 import { useContext, useRef, useState } from 'react'
 import { HiSelector } from 'react-icons/hi'
 import { useQuery } from 'react-query'
+import { useClickAway } from 'react-use'
 
 function SidebarProjectSelector() {
   const projectsContext = useContext(ProjectsContext)
@@ -15,7 +16,9 @@ function SidebarProjectSelector() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const ref = useRef(null)
 
-  useOutsideClick({ ref, handler: () => setIsOpen(false) })
+  useClickAway(ref, () => {
+    setIsOpen(false)
+  })
 
   function toggleSelector() {
     setIsOpen(!isOpen)
@@ -23,7 +26,7 @@ function SidebarProjectSelector() {
 
   return (
     <Menu isOpen={isOpen}>
-      <CustomMenuButton active={isOpen} onClick={toggleSelector}>
+      <CustomMenuButton ref={ref} $active={isOpen} onClick={toggleSelector}>
         <Container>
           <Box flex="1">
             <Text fontSize="xs" color="gray.500" fontWeight="medium">
@@ -59,8 +62,8 @@ const Container = styled.div`
   user-select: none;
 `
 
-const CustomMenuButton = styled(MenuButton)<{ active: boolean }>`
-  background: ${({ theme, active }) => (active ? theme.colors.gray[100] : '')};
+const CustomMenuButton = styled(MenuButton)<{ $active: boolean }>`
+  background: ${({ theme, $active }) => ($active ? theme.colors.gray[100] : '')};
   text-align: left;
   border-radius: ${({ theme }) => theme.radii.lg};
   width: 100%;

@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/layout'
 import { Text, Icon, Avatar, AvatarBadge } from '@chakra-ui/react'
-import styled from '@emotion/styled/macro'
+import styled from 'styled-components/macro'
 import { useAuth } from 'hooks/authHooks'
 import { FiChevronDown } from 'react-icons/fi'
 

@@ -1,5 +1,5 @@
 import { Route, RouteProps } from 'react-router-dom'
-import styled from '@emotion/styled/macro'
+import styled from 'styled-components/macro'
 import Sidebar from 'components/shared/sidebar/Sidebar'
 
 function NavigationRoute(props: RouteProps) {

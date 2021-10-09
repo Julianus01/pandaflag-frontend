@@ -1,5 +1,5 @@
 import { Text, Kbd } from '@chakra-ui/react'
-import styled from '@emotion/styled/macro'
+import styled from 'styled-components/macro'
 import { ReactNode } from 'react'
 import { useHistory } from 'react-router'
 

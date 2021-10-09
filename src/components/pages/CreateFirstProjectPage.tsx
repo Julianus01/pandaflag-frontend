@@ -1,5 +1,5 @@
 import { Button, Heading, Input, Text } from '@chakra-ui/react'
-import styled from '@emotion/styled/macro'
+import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { ICreateProjectRequestParams } from 'api/ProjectsApi'
 import { useAuth } from 'hooks/authHooks'
