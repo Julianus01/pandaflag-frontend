@@ -24,7 +24,7 @@ function SidebarFooter() {
     <Menu autoSelect={false} matchWidth isOpen={isOpen}>
       <CustomMenuButton ref={ref} $active={isOpen} onClick={toggleSelector}>
         <Container>
-          <Avatar shadow="lg" name={auth.user?.name} src={auth.user?.picture}>
+          <Avatar shadow="lg" ignoreFallback src={auth.user?.picture}>
             <AvatarBadge boxSize="1em" bg="green.500" />
           </Avatar>
 
