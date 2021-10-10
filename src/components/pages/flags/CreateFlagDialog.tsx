@@ -45,7 +45,7 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
   }
 
   function createFlag() {
-    // TODO: Check name of feature flag and show error ( can't save if it already exists )
+    // TODO: Check name of flag and show error ( can't save if it already exists )
     createFlagMutation.mutate(flagName.trim())
   }
 
@@ -63,7 +63,7 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
       <AlertDialogOverlay />
 
       <AlertDialogContent border="1px" borderColor="gray.200">
-        <AlertDialogHeader>Add Feature Flag</AlertDialogHeader>
+        <AlertDialogHeader>Add Flag</AlertDialogHeader>
 
         <AlertDialogBody>
           <Input
@@ -73,7 +73,7 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
             onChange={onFlagNameChange}
             mb={4}
             variant="filled"
-            placeholder="Feature Flag Name"
+            placeholder="Flag Name"
           />
         </AlertDialogBody>
 

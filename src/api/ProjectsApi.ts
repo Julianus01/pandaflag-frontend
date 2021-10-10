@@ -51,8 +51,6 @@ async function getProjects(): Promise<IProject[]> {
 
 
 // Create Project
-export type ICreateProjectResponse = IProject
-
 async function createProject(name: string): Promise<IProject> {
   const user = store.getState().auth.user as IUser
   const createdAt = Timestamp.now()

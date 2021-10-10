@@ -16,7 +16,7 @@ const MENU_ITEMS: ISidebarMenuItem[] = [
     keyboardLetter: 'D',
   },
   {
-    name: 'Feature Flags',
+    name: 'Flags',
     href: RoutePage.flags(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiToggleRight} />,
     keyboardLetter: 'F',

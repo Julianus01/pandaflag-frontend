@@ -6,7 +6,6 @@ import {
   QueryDocumentSnapshot,
   DocumentData,
   where,
-  orderBy,
   addDoc,
   Timestamp,
   deleteDoc,
@@ -24,15 +23,16 @@ export interface IFlag {
   createdAt: number
 }
 
-// Get Feature Flags
+// Get Flags
 async function getFlags(): Promise<IFlag[]> {
   const project = store.getState().configuration.project as IProject
+  const environment = store.getState().configuration.environment as IEnvironment
 
   const querySnapshot = await getDocs(
     query(
       collection(getFirestore(), ApiCollection.flags),
       where('projectId', '==', project.id),
-      orderBy('createdAt', 'desc')
+      where('environment', '==', environment)
     )
   )
 
@@ -41,12 +41,10 @@ async function getFlags(): Promise<IFlag[]> {
     return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
   }) as IFlag[]
 
-  return flags
+  return flags.sort((a, b) => a.name.localeCompare(b.name))
 }
 
-// Create Feature Flag
-export type ICreateProjectResponse = IFlag
-
+// Create Flag
 async function createFlag(name: string): Promise<IFlag> {
   const project = store.getState().configuration.project as IProject
   const environment = store.getState().configuration.environment as IEnvironment
@@ -64,15 +62,15 @@ async function createFlag(name: string): Promise<IFlag> {
   return { ...newFlag, id: newFlagDoc.id, createdAt: createdAt.seconds }
 }
 
-// Delete Feature Flag
+// Delete Flag
 async function deleteFlag(flagId: string): Promise<void> {
-  return deleteDoc(doc(getFirestore(), ApiCollection.flags, flagId));
+  return deleteDoc(doc(getFirestore(), ApiCollection.flags, flagId))
 }
 
 const FlagsApi = {
   getFlags,
   createFlag,
-  deleteFlag
+  deleteFlag,
 }
 
 export default FlagsApi

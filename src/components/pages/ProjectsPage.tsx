@@ -68,12 +68,12 @@ function ProjectsPage() {
       </Box>
 
       <Box border="1px" borderRadius="lg" borderColor="gray.200" background="white">
-        <Table variant="simple">
+        <Table variant="simple" size="lg">
           <Thead background="gray.100">
             <Tr>
               <Th>Name</Th>
 
-              <Th>Created at</Th>
+              <Th isNumeric>Created at</Th>
 
               <Th />
             </Tr>
@@ -84,7 +84,7 @@ function ProjectsPage() {
               <Tr key={project.id}>
                 <Td>{project.name}</Td>
 
-                <Td>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
+                <Td isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
                 <Td display="flex" justifyContent="flex-end">
                   <Tooltip placement="top" label="Remove">
