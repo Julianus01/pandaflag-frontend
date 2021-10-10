@@ -19,24 +19,21 @@ export interface IFeatureFlag {
 }
 
 // Get Projects
-async function getFeatureFlags(): Promise<IFeatureFlag[]> {
-  const user = LSUtils.globalUser()
-
-  const memberQueryValue = { id: user.id, type: 'admin' }
-  const querySnapshot = await getDocs(
-    query(
-      collection(getFirestore(), ApiCollection.projects),
-      where('members', 'array-contains', memberQueryValue),
-      orderBy('createdAt', 'desc')
-    )
-  )
-  // const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', memberQueryValue)))
-  const projects: IFeatureFlag[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
-    const data = doc.data()
-    return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
-  }) as IFeatureFlag[]
-
-  return projects
+async function getFeatureFlags() {
+  // const memberQueryValue = { id: user.id, type: 'admin' }
+  // const querySnapshot = await getDocs(
+  //   query(
+  //     collection(getFirestore(), ApiCollection.projects),
+  //     where('members', 'array-contains', memberQueryValue),
+  //     orderBy('createdAt', 'desc')
+  //   )
+  // )
+  // // const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', memberQueryValue)))
+  // const projects: IFeatureFlag[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+  //   const data = doc.data()
+  //   return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
+  // }) as IFeatureFlag[]
+  // return projects
 }
 
 // // Create Project
