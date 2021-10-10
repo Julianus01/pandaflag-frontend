@@ -39,10 +39,8 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     CommonUtils.stopPropagation(event)
 
-    if (event.key === 'Enter') {
-      if (projectName.length >= 3) {
-        createProject()
-      }
+    if (event.key === 'Enter' && projectName.length >= 3) {
+      createProject()
     }
   }
 

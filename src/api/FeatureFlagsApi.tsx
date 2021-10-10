@@ -7,14 +7,18 @@ import {
   DocumentData,
   where,
   orderBy,
+  addDoc,
+  Timestamp,
 } from 'firebase/firestore'
-import LSUtils from 'utils/LSUtils'
+import store from 'redux/store'
 import { ApiCollection } from './ApiCollection'
+import { IEnvironment, IProject } from './ProjectsApi'
 
 export interface IFeatureFlag {
   id: string
   projectId: string
   name: string
+  environment: IEnvironment
   createdAt: number
 }
 
@@ -36,17 +40,25 @@ async function getFeatureFlags() {
   // return projects
 }
 
-// // Create Project
-// export type ICreateProjectResponse = IProject
+// Create Feature Flag
+export type ICreateProjectResponse = IFeatureFlag
 
-// async function createProject(name: string): Promise<IProject> {
-//   const user = LSUtils.globalUser()
-//   const createdAt = Timestamp.now()
-//   const newProject = { name, members: [{ id: user.id, type: MemberType.admin }], environments: ['production', 'development'], createdAt }
-//   const newProjectDoc = await addDoc(collection(getFirestore(), ApiCollection.projects), newProject);
+async function createFeatureFlag(name: string): Promise<IFeatureFlag> {
+  const project = store.getState().configuration.project as IProject
+  const environment = store.getState().configuration.environment as IEnvironment
+  const createdAt = Timestamp.now()
 
-//   return { ...newProject, id: newProjectDoc.id, createdAt: createdAt.seconds }
-// }
+  const newFeatureFlag = {
+    name,
+    projectId: project.id,
+    environment,
+    createdAt,
+  }
+
+  const newFeatureFlagDoc = await addDoc(collection(getFirestore(), ApiCollection.featureFlags), newFeatureFlag)
+
+  return { ...newFeatureFlag, id: newFeatureFlagDoc.id, createdAt: createdAt.seconds }
+}
 
 // // Delete Project
 // async function deleteProject(projectId: string): Promise<void> {
@@ -55,7 +67,7 @@ async function getFeatureFlags() {
 
 const ProjectsApi = {
   getFeatureFlags,
-  // createProject,
+  createFeatureFlag,
   // deleteProject
 }
 

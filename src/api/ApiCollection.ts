@@ -1,3 +1,4 @@
 export enum ApiCollection {
-  projects = 'projects'
+  projects = 'projects',
+  featureFlags = 'feature_flags'
 }

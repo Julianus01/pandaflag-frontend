@@ -8,7 +8,10 @@ import {
   Button,
   Input,
 } from '@chakra-ui/react'
+import { ApiQueryId } from 'api/ApiQueryId'
+import FeatureFlagsApi from 'api/FeatureFlagsApi'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
 import CommonUtils from 'utils/CommonUtils'
 
 interface Props {
@@ -18,7 +21,16 @@ interface Props {
 
 function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
   const inputRef = useRef()
+  const queryClient = useQueryClient()
   const [featureFlagName, setFeatureFlagName] = useState<string>('')
+
+  const createFeatureFlagMutation = useMutation(FeatureFlagsApi.createFeatureFlag, {
+    onSuccess: () => {
+      // queryClient.invalidateQueries(ApiQueryId.getProjects)
+      setFeatureFlagName('')
+      onClose()
+    },
+  })
 
   function onFeatureFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
     setFeatureFlagName(event.target.value)
@@ -27,9 +39,14 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     CommonUtils.stopPropagation(event)
 
-    if (event.key === 'Enter') {
-      // TODO: Create
+    if (event.key === 'Enter' && featureFlagName.length >= 3) {
+      createFeatureFlag()
     }
+  }
+
+  function createFeatureFlag() {
+    // TODO: Check name of feature flag and show error ( can't save if it already exists )
+    createFeatureFlagMutation.mutate(featureFlagName.trim())
   }
 
   return (
@@ -40,7 +57,7 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
       isOpen={isOpen}
       isCentered
       autoFocus={false}
-      // closeOnOverlayClick={!createProjectMutation.isLoading}
+      closeOnOverlayClick={!createFeatureFlagMutation.isLoading}
       closeOnEsc
     >
       <AlertDialogOverlay />
@@ -63,11 +80,11 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
         <AlertDialogFooter>
           <Button
             minWidth="120px"
-            // onClick={() => {}}
+            onClick={createFeatureFlag}
             loadingText="Creating"
-            disabled={featureFlagName.length < 3}
+            disabled={featureFlagName.length < 3 || createFeatureFlagMutation.isLoading}
             colorScheme="blue"
-            // isLoading={createProjectMutation.isLoading}
+            isLoading={createFeatureFlagMutation.isLoading}
           >
             Add
           </Button>
