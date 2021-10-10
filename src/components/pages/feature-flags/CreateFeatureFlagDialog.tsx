@@ -26,7 +26,7 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
 
   const createFeatureFlagMutation = useMutation(FeatureFlagsApi.createFeatureFlag, {
     onSuccess: () => {
-      // queryClient.invalidateQueries(ApiQueryId.getProjects)
+      queryClient.invalidateQueries(ApiQueryId.getFeatureFlags)
       setFeatureFlagName('')
       onClose()
     },

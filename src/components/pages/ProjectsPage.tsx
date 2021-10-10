@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  forwardRef,
   Heading,
   Icon,
   IconButton,
@@ -27,7 +26,7 @@ interface IRemoveButtonProps {
   projectId: string
 }
 
-const RemoveButton = forwardRef(({ projectId }: IRemoveButtonProps, ref) => {
+function RemoveButton({ projectId }: IRemoveButtonProps) {
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation(ProjectsApi.deleteProject, {
@@ -42,7 +41,6 @@ const RemoveButton = forwardRef(({ projectId }: IRemoveButtonProps, ref) => {
 
   return (
     <IconButton
-      ref={ref}
       disabled={deleteMutation.isLoading}
       onClick={deleteProject}
       size="xs"
@@ -50,7 +48,7 @@ const RemoveButton = forwardRef(({ projectId }: IRemoveButtonProps, ref) => {
       icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
     />
   )
-})
+}
 
 function ProjectsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -88,9 +86,11 @@ function ProjectsPage() {
 
                 <Td>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
-                <Td isNumeric>
+                <Td display="flex" justifyContent="flex-end">
                   <Tooltip placement="top" label="Remove">
-                    <RemoveButton projectId={project.id} />
+                    <Box>
+                      <RemoveButton projectId={project.id} />
+                    </Box>
                   </Tooltip>
                 </Td>
               </Tr>

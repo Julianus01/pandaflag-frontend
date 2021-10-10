@@ -41,7 +41,7 @@ async function getProjects(): Promise<IProject[]> {
   const memberQueryValue = { id: user.sub, type: 'admin' }
 
   const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', memberQueryValue), orderBy('createdAt', "desc")))
-  const projects: IProject[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+  const projects = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
     return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
   }) as IProject[]

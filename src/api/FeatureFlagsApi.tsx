@@ -9,6 +9,8 @@ import {
   orderBy,
   addDoc,
   Timestamp,
+  deleteDoc,
+  doc,
 } from 'firebase/firestore'
 import store from 'redux/store'
 import { ApiCollection } from './ApiCollection'
@@ -22,22 +24,24 @@ export interface IFeatureFlag {
   createdAt: number
 }
 
-// Get Projects
-async function getFeatureFlags() {
-  // const memberQueryValue = { id: user.id, type: 'admin' }
-  // const querySnapshot = await getDocs(
-  //   query(
-  //     collection(getFirestore(), ApiCollection.projects),
-  //     where('members', 'array-contains', memberQueryValue),
-  //     orderBy('createdAt', 'desc')
-  //   )
-  // )
-  // // const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', memberQueryValue)))
-  // const projects: IFeatureFlag[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
-  //   const data = doc.data()
-  //   return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
-  // }) as IFeatureFlag[]
-  // return projects
+// Get Feature Flags
+async function getFeatureFlags(): Promise<IFeatureFlag[]> {
+  const project = store.getState().configuration.project as IProject
+
+  const querySnapshot = await getDocs(
+    query(
+      collection(getFirestore(), ApiCollection.featureFlags),
+      where('projectId', '==', project.id),
+      orderBy('createdAt', 'desc')
+    )
+  )
+
+  const featureFlags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
+  }) as IFeatureFlag[]
+
+  return featureFlags
 }
 
 // Create Feature Flag
@@ -60,15 +64,15 @@ async function createFeatureFlag(name: string): Promise<IFeatureFlag> {
   return { ...newFeatureFlag, id: newFeatureFlagDoc.id, createdAt: createdAt.seconds }
 }
 
-// // Delete Project
-// async function deleteProject(projectId: string): Promise<void> {
-//   return deleteDoc(doc(getFirestore(), ApiCollection.projects, projectId));
-// }
-
-const ProjectsApi = {
-  getFeatureFlags,
-  createFeatureFlag,
-  // deleteProject
+// Delete Feature Flag
+async function deleteFeatureFlag(featureFlagId: string): Promise<void> {
+  return deleteDoc(doc(getFirestore(), ApiCollection.featureFlags, featureFlagId));
 }
 
-export default ProjectsApi
+const FeatureFlagsApi = {
+  getFeatureFlags,
+  createFeatureFlag,
+  deleteFeatureFlag
+}
+
+export default FeatureFlagsApi
