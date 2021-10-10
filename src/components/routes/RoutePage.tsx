@@ -14,8 +14,8 @@ function dashboard() {
   return `/dashboard`
 }
 
-function featureFlags() {
-  return `/feature-flags`
+function flags() {
+  return `/flags`
 }
 
 function settings() {
@@ -35,7 +35,7 @@ const RoutePage = {
   dashboard,
   login,
   emailVerification,
-  featureFlags,
+  flags,
   settings,
   projects,
   createFirstProject,

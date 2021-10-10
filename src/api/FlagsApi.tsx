@@ -16,7 +16,7 @@ import store from 'redux/store'
 import { ApiCollection } from './ApiCollection'
 import { IEnvironment, IProject } from './ProjectsApi'
 
-export interface IFeatureFlag {
+export interface IFlag {
   id: string
   projectId: string
   name: string
@@ -25,54 +25,54 @@ export interface IFeatureFlag {
 }
 
 // Get Feature Flags
-async function getFeatureFlags(): Promise<IFeatureFlag[]> {
+async function getFlags(): Promise<IFlag[]> {
   const project = store.getState().configuration.project as IProject
 
   const querySnapshot = await getDocs(
     query(
-      collection(getFirestore(), ApiCollection.featureFlags),
+      collection(getFirestore(), ApiCollection.flags),
       where('projectId', '==', project.id),
       orderBy('createdAt', 'desc')
     )
   )
 
-  const featureFlags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+  const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
     return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
-  }) as IFeatureFlag[]
+  }) as IFlag[]
 
-  return featureFlags
+  return flags
 }
 
 // Create Feature Flag
-export type ICreateProjectResponse = IFeatureFlag
+export type ICreateProjectResponse = IFlag
 
-async function createFeatureFlag(name: string): Promise<IFeatureFlag> {
+async function createFlag(name: string): Promise<IFlag> {
   const project = store.getState().configuration.project as IProject
   const environment = store.getState().configuration.environment as IEnvironment
   const createdAt = Timestamp.now()
 
-  const newFeatureFlag = {
+  const newFlag = {
     name,
     projectId: project.id,
     environment,
     createdAt,
   }
 
-  const newFeatureFlagDoc = await addDoc(collection(getFirestore(), ApiCollection.featureFlags), newFeatureFlag)
+  const newFlagDoc = await addDoc(collection(getFirestore(), ApiCollection.flags), newFlag)
 
-  return { ...newFeatureFlag, id: newFeatureFlagDoc.id, createdAt: createdAt.seconds }
+  return { ...newFlag, id: newFlagDoc.id, createdAt: createdAt.seconds }
 }
 
 // Delete Feature Flag
-async function deleteFeatureFlag(featureFlagId: string): Promise<void> {
-  return deleteDoc(doc(getFirestore(), ApiCollection.featureFlags, featureFlagId));
+async function deleteFlag(flagId: string): Promise<void> {
+  return deleteDoc(doc(getFirestore(), ApiCollection.flags, flagId));
 }
 
-const FeatureFlagsApi = {
-  getFeatureFlags,
-  createFeatureFlag,
-  deleteFeatureFlag
+const FlagsApi = {
+  getFlags,
+  createFlag,
+  deleteFlag
 }
 
-export default FeatureFlagsApi
+export default FlagsApi

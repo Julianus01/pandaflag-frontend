@@ -15,34 +15,34 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import FeatureFlagsApi, { IFeatureFlag } from 'api/FeatureFlagsApi'
+import FlagsApi, { IFlag } from 'api/FlagsApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import moment from 'moment'
 import { FiMinus } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import CreateFeatureFlagDialog from './feature-flags/CreateFeatureFlagDialog'
+import CreateFlagDialog from './flags/CreateFlagDialog'
 
 interface IRemoveButtonProps {
-  featureFlagId: string
+  flagId: string
 }
 
-function RemoveButton({ featureFlagId }: IRemoveButtonProps) {
+function RemoveButton({ flagId }: IRemoveButtonProps) {
   const queryClient = useQueryClient()
 
-  const deleteMutation = useMutation(FeatureFlagsApi.deleteFeatureFlag, {
+  const deleteMutation = useMutation(FlagsApi.deleteFlag, {
     onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getFeatureFlags)
+      queryClient.invalidateQueries(ApiQueryId.getFlags)
     },
   })
 
-  function deleteFeatureFlag() {
-    deleteMutation.mutate(featureFlagId)
+  function deleteFlag() {
+    deleteMutation.mutate(flagId)
   }
 
   return (
     <IconButton
       disabled={deleteMutation.isLoading}
-      onClick={deleteFeatureFlag}
+      onClick={deleteFlag}
       size="xs"
       aria-label="delete"
       icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
@@ -50,10 +50,10 @@ function RemoveButton({ featureFlagId }: IRemoveButtonProps) {
   )
 }
 
-function FeatureFlagsPage() {
+function FlagsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { data: featureFlags } = useQuery(ApiQueryId.getFeatureFlags, FeatureFlagsApi.getFeatureFlags)
+  const { data: flags } = useQuery(ApiQueryId.getFlags, FlagsApi.getFlags)
 
   return (
     <BoxedPage>
@@ -80,16 +80,16 @@ function FeatureFlagsPage() {
           </Thead>
 
           <Tbody>
-            {featureFlags?.map((featureFlag: IFeatureFlag) => (
-              <Tr key={featureFlag.id}>
-                <Td>{featureFlag.name}</Td>
+            {flags?.map((flag: IFlag) => (
+              <Tr key={flag.id}>
+                <Td>{flag.name}</Td>
 
-                <Td>{moment.unix(featureFlag.createdAt).format('Do MMM YYYY')}</Td>
+                <Td>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
 
                 <Td display="flex" justifyContent="flex-end">
                   <Tooltip placement="top" label="Remove">
                     <Box>
-                      <RemoveButton featureFlagId={featureFlag.id} />
+                      <RemoveButton flagId={flag.id} />
                     </Box>
                   </Tooltip>
                 </Td>
@@ -99,9 +99,9 @@ function FeatureFlagsPage() {
         </Table>
       </Box>
 
-      <CreateFeatureFlagDialog isOpen={isOpen} onClose={onClose} />
+      <CreateFlagDialog isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
   )
 }
 
-export default FeatureFlagsPage
+export default FlagsPage

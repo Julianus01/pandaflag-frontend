@@ -9,7 +9,7 @@ import LoginPage from '../pages/LoginPage'
 import AuthenticatedRoute from './AuthenticatedRoute'
 import EmailVerificationRoute from './EmailVerificationRoute'
 import RedirectAuthenticatedRoute from './RedirectAuthenticatedRoute'
-import FeatureFlagsPage from 'components/pages/FeatureFlagsPage'
+import FlagsPage from 'components/pages/FlagsPage'
 import SettingsPage from 'components/pages/SettingsPage'
 import CreateFirstProjectPage from 'components/pages/CreateFirstProjectPage'
 import CreateFirstProjectRoute from './CreateFirstProjectRoute'
@@ -26,7 +26,7 @@ function Routes() {
 
         {/* Authenticated routes */}
         <AuthenticatedRoute component={DashboardPage} exact path={RoutePage.dashboard()} />
-        <AuthenticatedRoute component={FeatureFlagsPage} exact path={RoutePage.featureFlags()} />
+        <AuthenticatedRoute component={FlagsPage} exact path={RoutePage.flags()} />
         <AuthenticatedRoute component={SettingsPage} exact path={RoutePage.settings()} />
         <AuthenticatedRoute component={ProjectsPage} exact path={RoutePage.projects()} />
 

@@ -9,7 +9,7 @@ import {
   Input,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import FeatureFlagsApi from 'api/FeatureFlagsApi'
+import FlagsApi from 'api/FlagsApi'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import CommonUtils from 'utils/CommonUtils'
@@ -19,34 +19,34 @@ interface Props {
   onClose: () => void
 }
 
-function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
+function CreateFlagDialog({ isOpen, onClose }: Props) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
-  const [featureFlagName, setFeatureFlagName] = useState<string>('')
+  const [flagName, setFlagName] = useState<string>('')
 
-  const createFeatureFlagMutation = useMutation(FeatureFlagsApi.createFeatureFlag, {
+  const createFlagMutation = useMutation(FlagsApi.createFlag, {
     onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getFeatureFlags)
-      setFeatureFlagName('')
+      queryClient.invalidateQueries(ApiQueryId.getFlags)
+      setFlagName('')
       onClose()
     },
   })
 
-  function onFeatureFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setFeatureFlagName(event.target.value)
+  function onFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
+    setFlagName(event.target.value)
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     CommonUtils.stopPropagation(event)
 
-    if (event.key === 'Enter' && featureFlagName.length >= 3) {
-      createFeatureFlag()
+    if (event.key === 'Enter' && flagName.length >= 3) {
+      createFlag()
     }
   }
 
-  function createFeatureFlag() {
+  function createFlag() {
     // TODO: Check name of feature flag and show error ( can't save if it already exists )
-    createFeatureFlagMutation.mutate(featureFlagName.trim())
+    createFlagMutation.mutate(flagName.trim())
   }
 
   return (
@@ -57,7 +57,7 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
       isOpen={isOpen}
       isCentered
       autoFocus={false}
-      closeOnOverlayClick={!createFeatureFlagMutation.isLoading}
+      closeOnOverlayClick={!createFlagMutation.isLoading}
       closeOnEsc
     >
       <AlertDialogOverlay />
@@ -69,8 +69,8 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
           <Input
             ref={inputRef as any}
             onKeyDown={onKeyDown}
-            value={featureFlagName}
-            onChange={onFeatureFlagNameChange}
+            value={flagName}
+            onChange={onFlagNameChange}
             mb={4}
             variant="filled"
             placeholder="Feature Flag Name"
@@ -80,11 +80,11 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
         <AlertDialogFooter>
           <Button
             minWidth="120px"
-            onClick={createFeatureFlag}
+            onClick={createFlag}
             loadingText="Creating"
-            disabled={featureFlagName.length < 3 || createFeatureFlagMutation.isLoading}
+            disabled={flagName.length < 3 || createFlagMutation.isLoading}
             colorScheme="blue"
-            isLoading={createFeatureFlagMutation.isLoading}
+            isLoading={createFlagMutation.isLoading}
           >
             Add
           </Button>
@@ -94,4 +94,4 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
   )
 }
 
-export default CreateFeatureFlagDialog
+export default CreateFlagDialog
