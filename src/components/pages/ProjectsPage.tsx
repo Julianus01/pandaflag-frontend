@@ -71,7 +71,7 @@ function ProjectsPage() {
 
       <Box border="1px" borderRadius="lg" borderColor="gray.200" background="white">
         <Table variant="simple">
-          <Thead>
+          <Thead background="gray.100">
             <Tr>
               <Th>Name</Th>
 

@@ -12,6 +12,7 @@ import {
   Timestamp,
   orderBy,
 } from 'firebase/firestore'
+import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
 import { ApiCollection } from './ApiCollection'
 
@@ -36,8 +37,8 @@ export enum MemberType {
 
 // Get Projects
 async function getProjects(): Promise<IProject[]> {
-  const user = store.getState().auth.user
-  const memberQueryValue = { id: user.id, type: 'admin' }
+  const user = store.getState().auth.user as IUser
+  const memberQueryValue = { id: user.sub, type: 'admin' }
 
   const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', memberQueryValue), orderBy('createdAt', "desc")))
   const projects: IProject[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
@@ -53,10 +54,10 @@ async function getProjects(): Promise<IProject[]> {
 export type ICreateProjectResponse = IProject
 
 async function createProject(name: string): Promise<IProject> {
-  const user = store.getState().auth.user
+  const user = store.getState().auth.user as IUser
   const createdAt = Timestamp.now()
 
-  const newProject = { name, members: [{ id: user.id, type: MemberType.admin }], environments: ['production', 'development'], createdAt }
+  const newProject = { name, members: [{ id: user.sub, type: MemberType.admin }], environments: ['production', 'development'], createdAt }
   const newProjectDoc = await addDoc(collection(getFirestore(), ApiCollection.projects), newProject);
 
   return { ...newProject, id: newProjectDoc.id, createdAt: createdAt.seconds }
