@@ -1,8 +1,7 @@
-import { IUser } from 'hooks/authHooks'
 import { useEffect, useState } from 'react'
 import Routes from './components/routes/Routes'
 import { useDispatch } from 'react-redux'
-import { authActions } from 'redux/ducks/authDuck'
+import { authActions, IUser } from 'redux/ducks/authDuck'
 import { useAuth0, User as Auth0User } from '@auth0/auth0-react'
 
 function mapUserWithId(user: Auth0User | undefined): IUser | undefined {

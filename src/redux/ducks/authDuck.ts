@@ -1,8 +1,12 @@
 import createReducer from '../utils/createReducer'
-import { IUser } from 'hooks/authHooks'
+import { User as Auth0User } from "@auth0/auth0-react"
 
 // Types
 const AUTH_STATE_CHANGED = '[auth] AUTH_STATE_CHANGED'
+
+export interface IUser extends Auth0User {
+  id: string
+}
 
 export interface IAuthState {
   user: IUser | undefined

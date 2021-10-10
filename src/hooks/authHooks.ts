@@ -1,10 +1,7 @@
-import { useAuth0, User as Auth0User, Auth0ContextInterface } from "@auth0/auth0-react"
+import { useAuth0, Auth0ContextInterface } from "@auth0/auth0-react"
 import { useSelector } from 'react-redux'
+import { IUser } from "redux/ducks/authDuck"
 import { IStoreState } from "redux/store"
-
-export interface IUser extends Auth0User {
-  id: string
-}
 
 export interface IUseAuthContextInterface extends Auth0ContextInterface<IUser> { }
 

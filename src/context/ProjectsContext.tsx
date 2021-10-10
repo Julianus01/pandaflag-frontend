@@ -3,7 +3,7 @@ import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
 import { useAuth } from 'hooks/authHooks'
 import { createContext, ReactNode, useState } from 'react'
 import { useQuery } from 'react-query'
-import LSUtils from 'utils/LSUtils'
+import LSUtils, { LsKey } from 'utils/LSUtils'
 
 const initialState = {
   selectedProject: undefined,
@@ -47,7 +47,7 @@ function ProjectsContextProvider({ children }: IProps) {
           setSelectedProject(foundProject)
         } else {
           setSelectedProject(projects[0])
-          LSUtils.removeLastProjectName()
+          LSUtils.remove(LsKey.lastProjectName)
         }
       } else {
         setSelectedProject(projects[0])
@@ -62,7 +62,7 @@ function ProjectsContextProvider({ children }: IProps) {
           setEnvironment(foundEnvironment)
         } else {
           setEnvironment('development')
-          LSUtils.removeLastEnvironment()
+          LSUtils.remove(LsKey.lastEnvironment)
         }
       } else {
         setEnvironment('development')
