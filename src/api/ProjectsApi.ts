@@ -44,9 +44,9 @@ export type ICreateProjectResponse = IProject
 
 async function createProject(name: string): Promise<IProject> {
   const user = LSUtils.globalUser()
-  const newProjectDoc = await addDoc(collection(getFirestore(), ApiCollection.projects), { name, members: [user.id], environments: ['production', 'staging', 'development'] });
+  const newProjectDoc = await addDoc(collection(getFirestore(), ApiCollection.projects), { name, members: [user.id], environments: ['production', 'development'] });
 
-  return { id: newProjectDoc.id, name, members: [user.id], environments: ['production', 'staging', 'development'] }
+  return { id: newProjectDoc.id, name, members: [user.id], environments: ['production', 'development'] }
 }
 
 // Delete Project

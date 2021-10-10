@@ -53,7 +53,7 @@ function ProjectsContextProvider({ children }: IProps) {
       }
 
       if (!environment.length && lastEnvironment) {
-        const foundEnvironment = ['production', 'staging', 'development'].find(
+        const foundEnvironment = ['production', 'development'].find(
           (environment: IEnvironment) => environment === lastEnvironment
         ) as IEnvironment | undefined
 

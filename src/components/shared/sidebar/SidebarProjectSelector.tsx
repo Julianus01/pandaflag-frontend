@@ -14,9 +14,6 @@ function environmentColorScheme(environment: IEnvironment) {
     case 'production':
       return 'purple'
 
-    case 'staging':
-      return 'orange'
-
     case 'development':
       return 'blue'
 
@@ -101,12 +98,6 @@ function SidebarProjectSelector() {
             <MenuItemOption value="production">
               <Badge fontWeight="semibold" textTransform="lowercase" colorScheme="purple" variant="subtle">
                 production
-              </Badge>
-            </MenuItemOption>
-
-            <MenuItemOption value="staging">
-              <Badge fontWeight="semibold" textTransform="lowercase" colorScheme="orange" variant="subtle">
-                staging
               </Badge>
             </MenuItemOption>
 
