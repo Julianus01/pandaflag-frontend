@@ -56,19 +56,20 @@ function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
             onChange={onFeatureFlagNameChange}
             mb={4}
             variant="filled"
-            placeholder="Project Name"
+            placeholder="Feature Flag Name"
           />
         </AlertDialogBody>
 
         <AlertDialogFooter>
           <Button
+            minWidth="120px"
             // onClick={() => {}}
             loadingText="Creating"
             disabled={featureFlagName.length < 3}
             colorScheme="blue"
             // isLoading={createProjectMutation.isLoading}
           >
-            Create
+            Add
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

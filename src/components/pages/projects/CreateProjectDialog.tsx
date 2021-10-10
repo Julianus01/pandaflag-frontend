@@ -79,13 +79,14 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
 
         <AlertDialogFooter>
           <Button
+            minWidth="120px"
             onClick={createProject}
             loadingText="Creating"
             disabled={projectName.length < 3 || createProjectMutation.isLoading}
             colorScheme="blue"
             isLoading={createProjectMutation.isLoading}
           >
-            Create
+            Add
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

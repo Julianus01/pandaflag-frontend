@@ -1,6 +1,6 @@
 import { Box, Button, Heading, useDisclosure } from '@chakra-ui/react'
 import BoxedPage from 'components/styles/BoxedPage'
-import CreateProjectDialog from './projects/CreateProjectDialog'
+import CreateFeatureFlagDialog from './feature-flags/CreateFeatureFlagDialog'
 
 function FeatureFlagsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -17,7 +17,7 @@ function FeatureFlagsPage() {
         </Button>
       </Box>
 
-      <CreateProjectDialog isOpen={isOpen} onClose={onClose} />
+      <CreateFeatureFlagDialog isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
   )
 }
