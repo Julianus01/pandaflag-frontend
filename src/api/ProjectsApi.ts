@@ -10,6 +10,7 @@ import {
   deleteDoc,
   doc,
   Timestamp,
+  orderBy,
 } from 'firebase/firestore'
 import LSUtils from 'utils/LSUtils'
 import { ApiCollection } from './ApiCollection'
@@ -38,7 +39,7 @@ async function getProjects(): Promise<IProject[]> {
   const user = LSUtils.globalUser()
 
   const memberQueryValue = { id: user.id, type: 'admin' }
-  const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', memberQueryValue)))
+  const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', memberQueryValue), orderBy('createdAt', "desc")))
   const projects: IProject[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
     return { ...data, id: doc.id, createdAt: data.createdAt.seconds }

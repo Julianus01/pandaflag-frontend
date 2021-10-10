@@ -8,10 +8,7 @@ import {
   Button,
   Input,
 } from '@chakra-ui/react'
-import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi from 'api/ProjectsApi'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
 import CommonUtils from 'utils/CommonUtils'
 
 interface Props {
@@ -19,34 +16,20 @@ interface Props {
   onClose: () => void
 }
 
-function CreateProjectDialog({ isOpen, onClose }: Props) {
+function CreateFeatureFlagDialog({ isOpen, onClose }: Props) {
   const inputRef = useRef()
-  const queryClient = useQueryClient()
-  const [projectName, setProjectName] = useState<string>('')
+  const [featureFlagName, setFeatureFlagName] = useState<string>('')
 
-  const createProjectMutation = useMutation(ProjectsApi.createProject, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getProjects)
-      setProjectName('')
-      onClose()
-    },
-  })
-
-  function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setProjectName(event.target.value)
+  function onFeatureFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
+    setFeatureFlagName(event.target.value)
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     CommonUtils.stopPropagation(event)
 
     if (event.key === 'Enter') {
-      createProject()
+      // TODO: Create
     }
-  }
-
-  function createProject() {
-    // TODO: Check name of project and show error ( can't save if it already exists )
-    createProjectMutation.mutate(projectName)
   }
 
   return (
@@ -57,20 +40,20 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
       isOpen={isOpen}
       isCentered
       autoFocus={false}
-      closeOnOverlayClick={!createProjectMutation.isLoading}
+      // closeOnOverlayClick={!createProjectMutation.isLoading}
       closeOnEsc
     >
       <AlertDialogOverlay />
 
       <AlertDialogContent border="1px" borderColor="gray.200">
-        <AlertDialogHeader>Add project</AlertDialogHeader>
+        <AlertDialogHeader>Add Feature Flag</AlertDialogHeader>
 
         <AlertDialogBody>
           <Input
             ref={inputRef as any}
             onKeyDown={onKeyDown}
-            value={projectName}
-            onChange={onProjectNameChange}
+            value={featureFlagName}
+            onChange={onFeatureFlagNameChange}
             mb={4}
             variant="filled"
             placeholder="Project Name"
@@ -79,11 +62,11 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
 
         <AlertDialogFooter>
           <Button
-            onClick={createProject}
+            // onClick={() => {}}
             loadingText="Creating"
-            disabled={projectName.length < 3 || createProjectMutation.isLoading}
+            disabled={featureFlagName.length < 3}
             colorScheme="blue"
-            isLoading={createProjectMutation.isLoading}
+            // isLoading={createProjectMutation.isLoading}
           >
             Create
           </Button>
@@ -93,4 +76,4 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   )
 }
 
-export default CreateProjectDialog
+export default CreateFeatureFlagDialog
