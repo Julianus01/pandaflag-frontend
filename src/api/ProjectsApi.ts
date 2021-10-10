@@ -12,7 +12,7 @@ import {
   Timestamp,
   orderBy,
 } from 'firebase/firestore'
-import LSUtils from 'utils/LSUtils'
+import store from 'redux/store'
 import { ApiCollection } from './ApiCollection'
 
 export type IEnvironment = string
@@ -36,9 +36,9 @@ export enum MemberType {
 
 // Get Projects
 async function getProjects(): Promise<IProject[]> {
-  const user = LSUtils.globalUser()
-
+  const user = store.getState().auth.user
   const memberQueryValue = { id: user.id, type: 'admin' }
+
   const querySnapshot = await getDocs(query(collection(getFirestore(), ApiCollection.projects), where('members', 'array-contains', memberQueryValue), orderBy('createdAt', "desc")))
   const projects: IProject[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
@@ -53,8 +53,9 @@ async function getProjects(): Promise<IProject[]> {
 export type ICreateProjectResponse = IProject
 
 async function createProject(name: string): Promise<IProject> {
-  const user = LSUtils.globalUser()
+  const user = store.getState().auth.user
   const createdAt = Timestamp.now()
+
   const newProject = { name, members: [{ id: user.id, type: MemberType.admin }], environments: ['production', 'development'], createdAt }
   const newProjectDoc = await addDoc(collection(getFirestore(), ApiCollection.projects), newProject);
 

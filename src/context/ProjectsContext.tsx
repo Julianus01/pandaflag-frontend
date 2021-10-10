@@ -33,6 +33,7 @@ function ProjectsContextProvider({ children }: IProps) {
   const [environment, setEnvironment] = useState<IEnvironment>('')
 
   useQuery([ApiQueryId.getProjects, user?.id], ProjectsApi.getProjects, {
+    enabled: Boolean(user),
     onSuccess: (projects: IProject[]) => {
       // TODO: Fix updating when creating/removing projects
 

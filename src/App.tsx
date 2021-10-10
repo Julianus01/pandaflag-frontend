@@ -1,33 +1,44 @@
-import { useAuth } from 'hooks/authHooks'
+import { IUser } from 'hooks/authHooks'
 import { useEffect, useState } from 'react'
 import Routes from './components/routes/Routes'
-import { useUnmount } from 'react-use'
-import LSUtils from 'utils/LSUtils'
+import { useDispatch } from 'react-redux'
+import { authActions } from 'redux/ducks/authDuck'
+import { useAuth0, User as Auth0User } from '@auth0/auth0-react'
 
-function App() {
-  const { user, isLoading } = useAuth()
-  const [isInitialized, setIsInitialized] = useState<boolean>(false)
+function mapUserWithId(user: Auth0User | undefined): IUser | undefined {
+  if (!user) {
+    return undefined
+  }
+
+  return { ...user, id: user.sub?.replace('auth0|', '') as string }
+}
+
+function useInitStoreUser(): boolean {
+  const dispatch = useDispatch()
+  const { user: auth0User, isLoading } = useAuth0()
+  const [initialized, setInitialized] = useState<boolean>(false)
 
   useEffect(() => {
-    if (isInitialized) {
+    if (isLoading) {
       return
     }
 
-    if (!isLoading && user) {
-      LSUtils.saveUser(user)
-      setIsInitialized(true)
+    if (auth0User) {
+      dispatch(authActions.authStateChanged(mapUserWithId(auth0User)))
+      setInitialized(true)
+    } else {
+      dispatch(authActions.authStateChanged(undefined))
+      setInitialized(true)
     }
+  }, [auth0User, dispatch, isLoading])
 
-    if (!isLoading && !user) {
-      setIsInitialized(true)
-    }
-  }, [isLoading, user, isInitialized])
+  return initialized
+}
 
-  useUnmount(() => {
-    LSUtils.removeUser()
-  })
+function App() {
+  const initialized = useInitStoreUser()
 
-  if (!isInitialized) {
+  if (!initialized) {
     return null
   }
 
