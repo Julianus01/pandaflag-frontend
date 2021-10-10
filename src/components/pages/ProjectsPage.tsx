@@ -18,6 +18,7 @@ import {
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import BoxedPage from 'components/styles/BoxedPage'
+import moment from 'moment'
 import { FiMinus } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import CreateProjectDialog from './projects/CreateProjectDialog'
@@ -73,6 +74,9 @@ function ProjectsPage() {
           <Thead>
             <Tr>
               <Th>Name</Th>
+
+              <Th>Created at</Th>
+
               <Th />
             </Tr>
           </Thead>
@@ -81,6 +85,8 @@ function ProjectsPage() {
             {projects?.map((project: IProject) => (
               <Tr key={project.id}>
                 <Td>{project.name}</Td>
+
+                <Td>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
                 <Td isNumeric>
                   <Tooltip placement="top" label="Remove">
