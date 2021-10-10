@@ -3,11 +3,13 @@ import { Heading, Icon, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOpt
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
-import ProjectsContext from 'context/ProjectsContext'
-import { useContext, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { HiSelector } from 'react-icons/hi'
 import { useQuery } from 'react-query'
 import { useClickAway } from 'react-use'
+import { IStoreState } from 'redux/store'
+import { useSelector, useDispatch } from 'react-redux'
+import { configurationActions } from 'redux/ducks/configurationDuck'
 
 function environmentColorScheme(environment: IEnvironment) {
   switch (environment) {
@@ -23,7 +25,8 @@ function environmentColorScheme(environment: IEnvironment) {
 }
 
 function SidebarProjectSelector() {
-  const projectsContext = useContext(ProjectsContext)
+  const dispatch = useDispatch()
+  const configuration = useSelector((state: IStoreState) => state.configuration)
   const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -38,14 +41,14 @@ function SidebarProjectSelector() {
   }
 
   function changeEnvironment(environment: IEnvironment) {
-    projectsContext.updateEnvironment(environment)
+    dispatch(configurationActions.changeEnvironment(environment))
   }
 
   function changeProject(projectId: string) {
     const project = projects?.find((project: IProject) => project.id === projectId)
 
     if (project) {
-      projectsContext.updateProject(project)
+      dispatch(configurationActions.changeProject(project))
     }
   }
 
@@ -56,16 +59,16 @@ function SidebarProjectSelector() {
           <Container>
             <Box flex="1">
               <Heading as="h5" size="sm">
-                {projectsContext.selectedProject?.name}
+                {configuration.project?.name}
               </Heading>
 
               <Badge
                 fontWeight="semibold"
                 textTransform="lowercase"
-                colorScheme={environmentColorScheme(projectsContext.environment)}
+                colorScheme={environmentColorScheme(configuration?.environment as IEnvironment)}
                 variant="subtle"
               >
-                {projectsContext.environment}
+                {configuration.environment}
               </Badge>
             </Box>
 
@@ -78,7 +81,7 @@ function SidebarProjectSelector() {
         <MenuList maxHeight="400px" overflow="scroll" shadow="lg">
           <MenuOptionGroup
             onChange={(value) => changeProject(value as string)}
-            value={projectsContext.selectedProject?.id}
+            value={configuration.project?.id}
             type="radio"
             title="Projects"
           >
@@ -91,7 +94,7 @@ function SidebarProjectSelector() {
 
           <MenuOptionGroup
             onChange={(value) => changeEnvironment(value as IEnvironment)}
-            value={projectsContext.environment}
+            value={configuration.environment}
             type="radio"
             title="Environments"
           >
@@ -127,7 +130,6 @@ const CustomMenuButton = styled(MenuButton)<{ $active: boolean }>`
   text-align: left;
   border-radius: ${({ theme }) => theme.radii.lg};
   width: 100%;
-  height: 69px;
 
   :hover {
     background: ${({ theme }) => theme.colors.gray[100]};

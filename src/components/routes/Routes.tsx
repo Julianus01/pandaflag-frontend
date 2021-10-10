@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import RoutePage from './RoutePage'
 
 // Pages
-import DashboardPage from '../pages/DashboardPage'
 import EmailVerificationPage from '../pages/EmailVerificationPage'
 import LoginPage from '../pages/LoginPage'
 
@@ -15,6 +14,7 @@ import SettingsPage from 'components/pages/SettingsPage'
 import CreateFirstProjectPage from 'components/pages/CreateFirstProjectPage'
 import CreateFirstProjectRoute from './CreateFirstProjectRoute'
 import ProjectsPage from 'components/pages/ProjectsPage'
+import DashboardPage from 'components/pages/DashboardPage'
 
 function Routes() {
   return (

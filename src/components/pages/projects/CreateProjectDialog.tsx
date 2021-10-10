@@ -40,13 +40,15 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
     CommonUtils.stopPropagation(event)
 
     if (event.key === 'Enter') {
-      createProject()
+      if (projectName.length >= 3) {
+        createProject()
+      }
     }
   }
 
   function createProject() {
     // TODO: Check name of project and show error ( can't save if it already exists )
-    createProjectMutation.mutate(projectName)
+    createProjectMutation.mutate(projectName.trim())
   }
 
   return (

@@ -1,5 +1,6 @@
 import createReducer from '../utils/createReducer'
 import { User } from "@auth0/auth0-react"
+import { PayloadAction } from 'redux/types'
 
 // Types
 const AUTH_STATE_CHANGED = '[auth] AUTH_STATE_CHANGED'
@@ -13,13 +14,9 @@ const initialState: IAuthState = {
   user: undefined,
 }
 
-interface PayloadAction<T> {
-  payload: T
-}
-
 // Reducer
 export default createReducer(initialState)({
-  [AUTH_STATE_CHANGED]: (state: any, { payload: user }: PayloadAction<IUser>) => ({
+  [AUTH_STATE_CHANGED]: (state: IAuthState, { payload: user }: PayloadAction<IUser>) => ({
     ...state,
     user
   }),

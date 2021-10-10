@@ -10,7 +10,6 @@ import { ThemeProvider } from 'styled-components'
 import { initFirebase } from './firebase_init'
 import GlobalStyles from 'components/styles/GlobalStyles'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { ProjectsContextProvider } from 'context/ProjectsContext'
 import { Provider as ReduxProvider } from 'react-redux'
 import store from './redux/store'
 
@@ -37,9 +36,7 @@ function RootHTML() {
               <GlobalStyles />
 
               <AuthenticationProvider>
-                <ProjectsContextProvider>
-                  <App />
-                </ProjectsContextProvider>
+                <App />
               </AuthenticationProvider>
             </ChakraProvider>
           </ThemeProvider>

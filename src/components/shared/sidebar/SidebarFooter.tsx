@@ -29,7 +29,7 @@ function SidebarFooter() {
           </Avatar>
 
           <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
-            <Text textTransform="capitalize" isTruncated fontWeight="medium">
+            <Text isTruncated fontWeight="medium">
               {auth.user?.name}
             </Text>
           </Box>
