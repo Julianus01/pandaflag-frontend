@@ -4,8 +4,12 @@ import { IUser } from 'hooks/authHooks'
 // Types
 const AUTH_STATE_CHANGED = '[auth] AUTH_STATE_CHANGED'
 
-const initialState = {
-  user: null,
+export interface IAuthState {
+  user: IUser | undefined
+}
+
+const initialState: IAuthState = {
+  user: undefined,
 }
 
 // Reducer
