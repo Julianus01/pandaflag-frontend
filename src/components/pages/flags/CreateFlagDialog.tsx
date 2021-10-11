@@ -7,6 +7,9 @@ import {
   AlertDialogOverlay,
   Button,
   Input,
+  Stack,
+  Switch,
+  Text,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi from 'api/FlagsApi'
@@ -22,18 +25,25 @@ interface Props {
 function CreateFlagDialog({ isOpen, onClose }: Props) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
-  const [flagName, setFlagName] = useState<string>('')
 
-  const createFlagMutation = useMutation(FlagsApi.createFlag, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getFlags)
-      setFlagName('')
-      onClose()
-    },
-  })
+  const [flagName, setFlagName] = useState<string>('')
+  const [addForAll, setAddForAll] = useState<boolean>(true)
+
+  const createFlagMutation = useMutation(FlagsApi.createFlag, { onSuccess })
+  const createFlagForAllMutation = useMutation(FlagsApi.createFlagForAllEnvironments, { onSuccess })
+
+  function onSuccess() {
+    queryClient.invalidateQueries(ApiQueryId.getFlags)
+    setFlagName('')
+    onClose()
+  }
 
   function onFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
     setFlagName(event.target.value)
+  }
+
+  function toggleAddForAll() {
+    setAddForAll(!addForAll)
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -46,7 +56,11 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
 
   function createFlag() {
     // TODO: Check name of flag and show error ( can't save if it already exists )
-    createFlagMutation.mutate(flagName.trim())
+    if (addForAll) {
+      createFlagForAllMutation.mutate(flagName.trim())
+    } else {
+      createFlagMutation.mutate(flagName.trim())
+    }
   }
 
   return (
@@ -73,8 +87,14 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
             onChange={onFlagNameChange}
             mb={4}
             variant="filled"
-            placeholder="Flag Name"
+            placeholder="Ex: photo_editor"
           />
+
+          <Stack alignItems="flex-end" direction="row">
+            <Text>Add flag for all environments</Text>
+
+            <Switch isChecked={addForAll} onChange={toggleAddForAll} colorScheme="blue" />
+          </Stack>
         </AlertDialogBody>
 
         <AlertDialogFooter>

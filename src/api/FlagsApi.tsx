@@ -10,6 +10,7 @@ import {
   Timestamp,
   deleteDoc,
   doc,
+  DocumentReference,
 } from 'firebase/firestore'
 import store from 'redux/store'
 import { ApiCollection } from './ApiCollection'
@@ -62,6 +63,24 @@ async function createFlag(name: string): Promise<IFlag> {
   return { ...newFlag, id: newFlagDoc.id, createdAt: createdAt.seconds }
 }
 
+async function createFlagForAllEnvironments(
+  name: string
+): Promise<[DocumentReference<DocumentData>, DocumentReference<DocumentData>]> {
+  const project = store.getState().configuration.project as IProject
+  const createdAt = Timestamp.now()
+
+  const newFlag = {
+    name,
+    projectId: project.id,
+    createdAt,
+  }
+
+  return Promise.all([
+    addDoc(collection(getFirestore(), ApiCollection.flags), { ...newFlag, environment: 'production' }),
+    addDoc(collection(getFirestore(), ApiCollection.flags), { ...newFlag, environment: 'development' }),
+  ])
+}
+
 // Delete Flag
 async function deleteFlag(flagId: string): Promise<void> {
   return deleteDoc(doc(getFirestore(), ApiCollection.flags, flagId))
@@ -70,6 +89,7 @@ async function deleteFlag(flagId: string): Promise<void> {
 const FlagsApi = {
   getFlags,
   createFlag,
+  createFlagForAllEnvironments,
   deleteFlag,
 }
 
