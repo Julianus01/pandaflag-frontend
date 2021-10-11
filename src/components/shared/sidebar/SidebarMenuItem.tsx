@@ -51,6 +51,6 @@ const Container = styled.div<{ active: boolean }>`
   color: ${({ theme, active }) =>
     active
       ? applyColorMode(theme.colors.gray[800], theme.colors.whiteAlpha[800])(theme)
-      : applyColorMode(theme.colors.gray[600], theme.colors.whiteAlpha[600])(theme)};
+      : applyColorMode(theme.colors.gray[500], theme.colors.gray[500])(theme)};
   user-select: none;
 `

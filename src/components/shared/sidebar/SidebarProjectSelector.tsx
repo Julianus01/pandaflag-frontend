@@ -1,8 +1,7 @@
-import { Badge, Box } from '@chakra-ui/layout'
-import { Heading, Icon, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOption } from '@chakra-ui/react'
+import { Heading, Icon, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOption, Text, Box } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
+import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import { useRef, useState } from 'react'
 import { HiSelector } from 'react-icons/hi'
 import { useQuery } from 'react-query'
@@ -11,19 +10,6 @@ import { IStoreState } from 'redux/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-
-function environmentColorScheme(environment: IEnvironment) {
-  switch (environment) {
-    case 'production':
-      return 'purple'
-
-    case 'development':
-      return 'blue'
-
-    default:
-      return 'purple'
-  }
-}
 
 function SidebarProjectSelector() {
   const dispatch = useDispatch()
@@ -41,10 +27,6 @@ function SidebarProjectSelector() {
     setIsOpen(!isOpen)
   }
 
-  function changeEnvironment(environment: IEnvironment) {
-    dispatch(configurationActions.changeEnvironment(environment))
-  }
-
   function changeProject(projectId: string) {
     const project = projects?.find((project: IProject) => project.id === projectId)
 
@@ -59,18 +41,13 @@ function SidebarProjectSelector() {
         <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
           <Container>
             <Box flex="1">
+              <Text fontSize="xs" color="gray.500">
+                selected project
+              </Text>
+
               <Heading as="h5" size="sm">
                 {configuration.project?.name}
               </Heading>
-
-              <Badge
-                fontWeight="semibold"
-                textTransform="lowercase"
-                colorScheme={environmentColorScheme(configuration?.environment as IEnvironment)}
-                variant="subtle"
-              >
-                {configuration.environment}
-              </Badge>
             </Box>
 
             <Box display="flex" alignItems="center">
@@ -91,25 +68,6 @@ function SidebarProjectSelector() {
                 {project.name}
               </MenuItemOption>
             ))}
-          </MenuOptionGroup>
-
-          <MenuOptionGroup
-            onChange={(value) => changeEnvironment(value as IEnvironment)}
-            value={configuration.environment}
-            type="radio"
-            title="Environments"
-          >
-            <MenuItemOption value="production">
-              <Badge fontWeight="semibold" textTransform="lowercase" colorScheme="purple" variant="subtle">
-                production
-              </Badge>
-            </MenuItemOption>
-
-            <MenuItemOption value="development">
-              <Badge fontWeight="semibold" textTransform="lowercase" colorScheme="blue" variant="subtle">
-                development
-              </Badge>
-            </MenuItemOption>
           </MenuOptionGroup>
         </MenuList>
       </Menu>

@@ -44,6 +44,7 @@ const Container = styled.div`
   padding: 0.5rem;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `
 
 const Transition = styled(CSSTransition)`

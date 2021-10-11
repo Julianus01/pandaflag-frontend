@@ -14,6 +14,9 @@ import {
   Tooltip,
   Tr,
   useDisclosure,
+  Tabs,
+  TabList,
+  Tab,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
@@ -23,9 +26,11 @@ import { FiMinus } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { IStoreState } from 'redux/store'
 import CreateFlagDialog from './flags/CreateFlagDialog'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
+import { IEnvironment } from 'api/ProjectsApi'
+import { configurationActions } from 'redux/ducks/configurationDuck'
 
 function SkeletonTable() {
   return (
@@ -91,12 +96,30 @@ function RemoveButton({ flagId }: IRemoveButtonProps) {
   )
 }
 
+function environmentColorScheme(environment: IEnvironment) {
+  switch (environment) {
+    case 'production':
+      return 'orange'
+
+    case 'development':
+      return 'blue'
+
+    default:
+      return 'orange'
+  }
+}
+
 function FlagsPage() {
+  const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const project = useSelector((state: IStoreState) => state.configuration.project)
   const environment = useSelector((state: IStoreState) => state.configuration.environment)
 
   const { data: flags, isLoading } = useQuery([ApiQueryId.getFlags, project?.id, environment], FlagsApi.getFlags)
+
+  function changeEnvironment(index: number) {
+    dispatch(configurationActions.changeEnvironment(index === 0 ? 'production' : 'development'))
+  }
 
   return (
     <BoxedPage>
@@ -109,6 +132,20 @@ function FlagsPage() {
           Add Flag
         </Button>
       </Box>
+
+      <Tabs
+        onChange={changeEnvironment}
+        index={environment === 'production' ? 0 : 1}
+        mb={10}
+        size="sm"
+        variant="soft-rounded"
+        colorScheme={environmentColorScheme(environment as IEnvironment)}
+      >
+        <TabList>
+          <Tab pb="5px">production</Tab>
+          <Tab pb="5px">development</Tab>
+        </TabList>
+      </Tabs>
 
       {isLoading && <SkeletonTable />}
       {!isLoading && (
