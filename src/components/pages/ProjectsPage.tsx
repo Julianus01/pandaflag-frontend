@@ -20,6 +20,8 @@ import BoxedPage from 'components/styles/BoxedPage'
 import moment from 'moment'
 import { FiMinus } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import styled from 'styled-components/macro'
+import { applyColorMode } from 'theme/StyledThemeProvider'
 import CreateProjectDialog from './projects/CreateProjectDialog'
 
 interface IRemoveButtonProps {
@@ -67,9 +69,9 @@ function ProjectsPage() {
         </Button>
       </Box>
 
-      <Box border="1px" borderRadius="lg" borderColor="gray.200" background="white">
-        <Table variant="simple" size="lg">
-          <Thead background="gray.100">
+      <TableContainer>
+        <CustomTable variant="simple">
+          <TableHead>
             <Tr>
               <Th>Name</Th>
 
@@ -77,7 +79,7 @@ function ProjectsPage() {
 
               <Th />
             </Tr>
-          </Thead>
+          </TableHead>
 
           <Tbody>
             {projects?.map((project: IProject) => (
@@ -86,9 +88,9 @@ function ProjectsPage() {
 
                 <Td isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
-                <Td display="flex" justifyContent="flex-end">
+                <Td>
                   <Tooltip placement="top" label="Remove">
-                    <Box>
+                    <Box display="flex" justifyContent="flex-end">
                       <RemoveButton projectId={project.id} />
                     </Box>
                   </Tooltip>
@@ -96,8 +98,8 @@ function ProjectsPage() {
               </Tr>
             ))}
           </Tbody>
-        </Table>
-      </Box>
+        </CustomTable>
+      </TableContainer>
 
       <CreateProjectDialog isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
@@ -105,3 +107,17 @@ function ProjectsPage() {
 }
 
 export default ProjectsPage
+
+const TableContainer = styled.div`
+  overflow: hidden;
+  border-radius: ${({ theme }) => theme.radii.lg};
+  border: ${({ theme }) => `1px solid ${applyColorMode(theme.colors.gray[200], theme.colors.whiteAlpha[200])(theme)}`};
+`
+
+const TableHead = styled(Thead)`
+  background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
+`
+
+const CustomTable = styled(Table)`
+  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
+`

@@ -10,6 +10,7 @@ import { useClickAway } from 'react-use'
 import { IStoreState } from 'redux/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
+import { applyColorMode } from 'theme/StyledThemeProvider'
 
 function environmentColorScheme(environment: IEnvironment) {
   switch (environment) {
@@ -126,12 +127,13 @@ const Container = styled.div`
 `
 
 const CustomMenuButton = styled(MenuButton)<{ $active: boolean }>`
-  background: ${({ theme, $active }) => ($active ? theme.colors.gray[100] : '')};
+  background: ${({ theme, $active }) =>
+    $active ? applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme) : ''};
   text-align: left;
   border-radius: ${({ theme }) => theme.radii.lg};
   width: 100%;
 
   :hover {
-    background: ${({ theme }) => theme.colors.gray[100]};
+    background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme)};
   }
 `

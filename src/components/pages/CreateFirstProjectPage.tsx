@@ -5,6 +5,7 @@ import ProjectsApi from 'api/ProjectsApi'
 import { useAuth } from 'hooks/authHooks'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { applyColorMode } from 'theme/StyledThemeProvider'
 
 function CreateFirstProjectPage() {
   const { user, logout } = useAuth()
@@ -92,10 +93,10 @@ const Content = styled.div`
 
 const CreateBox = styled.div`
   box-shadow: ${({ theme }) => theme.shadows.lg};
-  border: ${({ theme }) => `1px solid ${theme.colors.gray[300]}`};
+  border: ${({ theme }) => `1px solid ${applyColorMode(theme.colors.gray[300], theme.colors.whiteAlpha[200])(theme)}`};
   border-radius: ${({ theme }) => theme.radii.lg};
   padding: ${({ theme }) => theme.space[10]};
-  background: ${({ theme }) => theme.colors.white};
+  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[700])(theme)};
   max-width: 500px;
   width: 100%;
   display: flex;

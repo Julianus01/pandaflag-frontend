@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
+import ThemeButton from 'theme/ThemeButton'
 
 const MENU_ITEMS: ISidebarMenuItem[] = [
   {
@@ -106,6 +107,10 @@ function Sidebar() {
           </SidebarMenuItem>
         ))}
       </Content>
+
+      <Box ml="22px">
+        <ThemeButton />
+      </Box>
 
       <SidebarFooter />
     </Container>

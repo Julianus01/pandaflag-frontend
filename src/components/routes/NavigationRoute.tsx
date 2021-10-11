@@ -9,6 +9,7 @@ import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
 import LSUtils, { LsKey } from 'utils/LSUtils'
 import { configurationActions, IConfigurationState } from 'redux/ducks/configurationDuck'
 import { useEffect } from 'react'
+import { applyColorMode } from 'theme/StyledThemeProvider'
 
 function useListenToProjectsAndUpdateConfiguration() {
   const dispatch = useDispatch()
@@ -90,7 +91,7 @@ const SidebarContainer = styled.div`
   left: 0;
   bottom: 0;
   width: 280px;
-  background: ${({ theme }) => theme.colors.white};
+  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[900])(theme)};
   box-shadow: ${({ theme }) => theme.shadows.xs};
   z-index: 1;
 `

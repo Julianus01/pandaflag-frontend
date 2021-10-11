@@ -62,7 +62,7 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
     >
       <AlertDialogOverlay />
 
-      <AlertDialogContent border="1px" borderColor="gray.200">
+      <AlertDialogContent>
         <AlertDialogHeader>Add Flag</AlertDialogHeader>
 
         <AlertDialogBody>

@@ -62,7 +62,7 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
     >
       <AlertDialogOverlay />
 
-      <AlertDialogContent border="1px" borderColor="gray.200">
+      <AlertDialogContent>
         <AlertDialogHeader>Add project</AlertDialogHeader>
 
         <AlertDialogBody>

@@ -5,6 +5,7 @@ import { useAuth } from 'hooks/authHooks'
 import { FiChevronDown } from 'react-icons/fi'
 import { useClickAway } from 'react-use'
 import { useState, useRef } from 'react'
+import { applyColorMode } from 'theme/StyledThemeProvider'
 
 function SidebarFooter() {
   const auth = useAuth()
@@ -21,27 +22,29 @@ function SidebarFooter() {
   }
 
   return (
-    <Menu autoSelect={false} matchWidth isOpen={isOpen}>
-      <CustomMenuButton ref={ref} $active={isOpen} onClick={toggleSelector}>
-        <Container>
-          <Avatar shadow="lg" ignoreFallback src={auth.user?.picture}>
-            <AvatarBadge boxSize="1em" bg="green.500" />
-          </Avatar>
+    <div ref={ref}>
+      <Menu closeOnSelect={false} autoSelect={false} matchWidth isOpen={isOpen}>
+        <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
+          <Container>
+            <Avatar shadow="lg" ignoreFallback src={auth.user?.picture}>
+              <AvatarBadge boxSize="1em" bg="green.500" />
+            </Avatar>
 
-          <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
-            <Text isTruncated fontWeight="medium">
-              {auth.user?.name}
-            </Text>
-          </Box>
+            <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
+              <Text isTruncated fontWeight="medium">
+                {auth.user?.name}
+              </Text>
+            </Box>
 
-          <Icon as={FiChevronDown} strokeWidth={2.4} w={5} h={5} />
-        </Container>
-      </CustomMenuButton>
+            <Icon as={FiChevronDown} strokeWidth={2.4} w={5} h={5} />
+          </Container>
+        </CustomMenuButton>
 
-      <MenuList shadow="lg">
-        <MenuItem onClick={() => auth.logout({ returnTo: window.location.origin })}>Logout</MenuItem>
-      </MenuList>
-    </Menu>
+        <MenuList shadow="lg">
+          <MenuItem onClick={() => auth.logout({ returnTo: window.location.origin })}>Logout</MenuItem>
+        </MenuList>
+      </Menu>
+    </div>
   )
 }
 
@@ -54,19 +57,16 @@ const Container = styled.div`
   display: flex;
   user-select: none;
   align-items: center;
-
-  :hover {
-    background: ${({ theme }) => theme.colors.gray[100]};
-  }
 `
 
 const CustomMenuButton = styled(MenuButton)<{ $active: boolean }>`
-  background: ${({ theme, $active }) => ($active ? theme.colors.gray[100] : '')};
+  background: ${({ theme, $active }) =>
+    $active ? applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme) : ''};
   text-align: left;
   border-radius: ${({ theme }) => theme.radii.lg};
   width: 100%;
 
   :hover {
-    background: ${({ theme }) => theme.colors.gray[100]};
+    background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme)};
   }
 `

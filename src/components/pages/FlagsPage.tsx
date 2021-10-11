@@ -6,7 +6,6 @@ import {
   IconButton,
   Skeleton,
   Spinner,
-  Stack,
   Table,
   Tbody,
   Td,
@@ -25,6 +24,44 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { IStoreState } from 'redux/store'
 import CreateFlagDialog from './flags/CreateFlagDialog'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components/macro'
+import { applyColorMode } from 'theme/StyledThemeProvider'
+
+function SkeletonTable() {
+  return (
+    <TableContainer>
+      <CustomTable variant="simple">
+        <TableHead>
+          <Tr>
+            <Th>Name</Th>
+
+            <Th isNumeric>Created at</Th>
+
+            <Th />
+          </Tr>
+        </TableHead>
+
+        <Tbody>
+          {Array.from(Array(3).keys()).map((key) => (
+            <Tr key={key}>
+              <Td>
+                <Skeleton height="24px" />
+              </Td>
+
+              <Td>
+                <Skeleton height="24px" />
+              </Td>
+
+              <Td>
+                <Skeleton height="24px" />
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </CustomTable>
+    </TableContainer>
+  )
+}
 
 interface IRemoveButtonProps {
   flagId: string
@@ -73,18 +110,11 @@ function FlagsPage() {
         </Button>
       </Box>
 
-      {isLoading && (
-        <Stack spacing="16px" border="1px" borderRadius="lg" borderColor="gray.200" background="white" padding="20px">
-          <Skeleton height="20px" />
-          <Skeleton height="20px" />
-          <Skeleton height="20px" />
-        </Stack>
-      )}
-
+      {isLoading && <SkeletonTable />}
       {!isLoading && (
-        <Box border="1px" borderRadius="lg" borderColor="gray.200" background="white">
-          <Table variant="simple" size="lg">
-            <Thead background="gray.100">
+        <TableContainer>
+          <CustomTable variant="simple">
+            <TableHead>
               <Tr>
                 <Th>Name</Th>
 
@@ -92,7 +122,7 @@ function FlagsPage() {
 
                 <Th />
               </Tr>
-            </Thead>
+            </TableHead>
 
             <Tbody>
               {flags?.map((flag: IFlag) => (
@@ -101,9 +131,9 @@ function FlagsPage() {
 
                   <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
 
-                  <Td display="flex" justifyContent="flex-end">
+                  <Td>
                     <Tooltip placement="top" label="Remove">
-                      <Box>
+                      <Box display="flex" justifyContent="flex-end">
                         <RemoveButton flagId={flag.id} />
                       </Box>
                     </Tooltip>
@@ -111,8 +141,8 @@ function FlagsPage() {
                 </Tr>
               ))}
             </Tbody>
-          </Table>
-        </Box>
+          </CustomTable>
+        </TableContainer>
       )}
 
       <CreateFlagDialog isOpen={isOpen} onClose={onClose} />
@@ -121,3 +151,17 @@ function FlagsPage() {
 }
 
 export default FlagsPage
+
+const TableContainer = styled.div`
+  overflow: hidden;
+  border-radius: ${({ theme }) => theme.radii.lg};
+  border: ${({ theme }) => `1px solid ${applyColorMode(theme.colors.gray[200], theme.colors.whiteAlpha[200])(theme)}`};
+`
+
+const TableHead = styled(Thead)`
+  background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
+`
+
+const CustomTable = styled(Table)`
+  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
+`

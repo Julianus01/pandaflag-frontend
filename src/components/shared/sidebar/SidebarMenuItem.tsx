@@ -2,6 +2,7 @@ import { Text, Kbd } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ReactNode } from 'react'
 import { useHistory } from 'react-router'
+import { applyColorMode } from 'theme/StyledThemeProvider'
 
 export interface ISidebarMenuItem {
   name: string
@@ -45,7 +46,11 @@ const Container = styled.div<{ active: boolean }>`
   display: flex;
   align-items: center;
   cursor: pointer;
-  background: ${({ theme, active }) => (active ? theme.colors.gray[100] : '')};
-  color: ${({ theme, active }) => (active ? theme.colors.gray[800] : theme.colors.gray[600])};
+  background: ${({ theme, active }) =>
+    active ? applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme) : ''};
+  color: ${({ theme, active }) =>
+    active
+      ? applyColorMode(theme.colors.gray[800], theme.colors.whiteAlpha[800])(theme)
+      : applyColorMode(theme.colors.gray[600], theme.colors.whiteAlpha[600])(theme)};
   user-select: none;
 `
