@@ -63,6 +63,8 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
     }
   }
 
+  const isLoading = createFlagMutation.isLoading || createFlagForAllMutation.isLoading
+
   return (
     <AlertDialog
       motionPreset="slideInBottom"
@@ -71,7 +73,7 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
       isOpen={isOpen}
       isCentered
       autoFocus={false}
-      closeOnOverlayClick={!createFlagMutation.isLoading}
+      closeOnOverlayClick={!isLoading}
       closeOnEsc
     >
       <AlertDialogOverlay />
@@ -101,10 +103,10 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
           <Button
             minWidth="120px"
             onClick={createFlag}
-            loadingText="Creating"
-            disabled={flagName.length < 3 || createFlagMutation.isLoading}
+            loadingText="Adding"
+            disabled={flagName.length < 3 || isLoading}
             colorScheme="blue"
-            isLoading={createFlagMutation.isLoading}
+            isLoading={isLoading}
           >
             Add
           </Button>

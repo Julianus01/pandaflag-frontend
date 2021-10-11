@@ -169,11 +169,13 @@ function FlagsPage() {
                   <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
 
                   <Td>
-                    <Tooltip placement="top" label="Remove">
-                      <Box display="flex" justifyContent="flex-end">
-                        <RemoveButton flagId={flag.id} />
-                      </Box>
-                    </Tooltip>
+                    <Box display="flex" justifyContent="flex-end">
+                      <Tooltip placement="top" label="Remove">
+                        <Box>
+                          <RemoveButton flagId={flag.id} />
+                        </Box>
+                      </Tooltip>
+                    </Box>
                   </Td>
                 </Tr>
               ))}

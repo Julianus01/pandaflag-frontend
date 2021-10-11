@@ -89,11 +89,13 @@ function ProjectsPage() {
                 <Td isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
                 <Td>
-                  <Tooltip placement="top" label="Remove">
-                    <Box display="flex" justifyContent="flex-end">
-                      <RemoveButton projectId={project.id} />
-                    </Box>
-                  </Tooltip>
+                  <Box display="flex" justifyContent="flex-end">
+                    <Tooltip placement="top" label="Remove">
+                      <Box>
+                        <RemoveButton projectId={project.id} />
+                      </Box>
+                    </Tooltip>
+                  </Box>
                 </Td>
               </Tr>
             ))}

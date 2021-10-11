@@ -11,6 +11,7 @@ import {
   deleteDoc,
   doc,
   DocumentReference,
+  writeBatch,
 } from 'firebase/firestore'
 import store from 'redux/store'
 import { ApiCollection } from './ApiCollection'
@@ -86,11 +87,25 @@ async function deleteFlag(flagId: string): Promise<void> {
   return deleteDoc(doc(getFirestore(), ApiCollection.flags, flagId))
 }
 
+async function deleteProjectFlags(projectId: string): Promise<void> {
+  const querySnapshot = await getDocs(
+    query(collection(getFirestore(), ApiCollection.flags), where('projectId', '==', projectId))
+  )
+
+  const batch = writeBatch(getFirestore())
+  querySnapshot.docs.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+    batch.delete(doc.ref)
+  })
+
+  return batch.commit()
+}
+
 const FlagsApi = {
   getFlags,
   createFlag,
   createFlagForAllEnvironments,
   deleteFlag,
+  deleteProjectFlags,
 }
 
 export default FlagsApi

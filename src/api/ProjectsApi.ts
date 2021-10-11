@@ -15,6 +15,7 @@ import {
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
 import { ApiCollection } from './ApiCollection'
+import FlagsApi from './FlagsApi'
 
 export type IEnvironment = string
 
@@ -63,7 +64,7 @@ async function createProject(name: string): Promise<IProject> {
 
 // Delete Project
 async function deleteProject(projectId: string): Promise<void> {
-  return deleteDoc(doc(getFirestore(), ApiCollection.projects, projectId));
+  await Promise.all([deleteDoc(doc(getFirestore(), ApiCollection.projects, projectId)), FlagsApi.deleteProjectFlags(projectId)])
 }
 
 const ProjectsApi = {
