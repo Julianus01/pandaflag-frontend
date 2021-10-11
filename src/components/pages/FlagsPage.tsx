@@ -17,6 +17,7 @@ import {
   Tabs,
   TabList,
   Tab,
+  Switch,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
@@ -47,21 +48,19 @@ function SkeletonTable() {
         </TableHead>
 
         <Tbody>
-          {Array.from(Array(3).keys()).map((key) => (
-            <Tr key={key}>
-              <Td>
-                <Skeleton height="24px" />
-              </Td>
+          <Tr>
+            <Td>
+              <Skeleton height="24px" />
+            </Td>
 
-              <Td>
-                <Skeleton height="24px" />
-              </Td>
+            <Td>
+              <Skeleton height="24px" />
+            </Td>
 
-              <Td>
-                <Skeleton height="24px" />
-              </Td>
-            </Tr>
-          ))}
+            <Td>
+              <Skeleton height="24px" />
+            </Td>
+          </Tr>
         </Tbody>
       </CustomTable>
     </TableContainer>
@@ -154,9 +153,8 @@ function FlagsPage() {
             <TableHead>
               <Tr>
                 <Th>Name</Th>
-
+                <Th>Active</Th>
                 <Th isNumeric>Created at</Th>
-
                 <Th />
               </Tr>
             </TableHead>
@@ -165,6 +163,10 @@ function FlagsPage() {
               {flags?.map((flag: IFlag) => (
                 <Tr key={flag.id}>
                   <Td>{flag.name}</Td>
+
+                  <Td>
+                    <Switch size="lg" colorScheme="green" />
+                  </Td>
 
                   <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
 
