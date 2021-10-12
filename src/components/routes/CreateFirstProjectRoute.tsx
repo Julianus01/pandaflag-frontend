@@ -3,7 +3,7 @@ import RoutePage from './RoutePage'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
-import { useAuth } from 'hooks/authHooks'
+import { useAuth } from 'hooks/auth/useAuth'
 
 function CreateFirstProjectRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()

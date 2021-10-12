@@ -1,6 +1,6 @@
 import { Redirect, RouteProps, Route } from 'react-router-dom'
 import RoutePage from './RoutePage'
-import { useAuth } from 'hooks/authHooks'
+import { useAuth } from 'hooks/auth/useAuth'
 
 function RedirectAuthenticatedRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()

@@ -19,7 +19,7 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import moment from 'moment'
 import { FiMinus } from 'react-icons/fi'
-import { useMutation, useQueryClient } from 'react-query'
+import { useQueryClient, useMutation } from 'react-query'
 
 interface IRemoveButtonProps {
   flagId: string
@@ -72,12 +72,24 @@ interface IProps {
 }
 
 function FlagRow({ flag }: IProps) {
+  const queryClient = useQueryClient()
+
+  const updateFlagMutation = useMutation(FlagsApi.updateFlag, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(ApiQueryId.getFlags)
+    },
+  })
+
+  function toggleFlag() {
+    updateFlagMutation.mutate({ id: flag.id, enabled: !flag.enabled })
+  }
+
   return (
     <Tr>
       <Td>{flag.name}</Td>
 
       <Td>
-        <Switch size="md" isChecked={true} colorScheme="green" />
+        <Switch size="md" isChecked={flag.enabled} onChange={toggleFlag} colorScheme="green" />
       </Td>
 
       <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>

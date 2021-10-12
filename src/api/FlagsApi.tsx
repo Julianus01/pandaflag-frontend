@@ -12,9 +12,10 @@ import {
   doc,
   DocumentReference,
   writeBatch,
+  setDoc,
 } from 'firebase/firestore'
 import store from 'redux/store'
-import { ApiCollection } from './ApiCollection'
+import { FirestoreCollection } from './FirestoreCollection'
 import { IEnvironment, IProject } from './ProjectsApi'
 
 export interface IFlag {
@@ -33,7 +34,7 @@ async function getFlags(): Promise<IFlag[]> {
 
   const querySnapshot = await getDocs(
     query(
-      collection(getFirestore(), ApiCollection.flags),
+      collection(getFirestore(), FirestoreCollection.flags),
       where('projectId', '==', project.id),
       where('environment', '==', environment)
     )
@@ -61,7 +62,7 @@ async function createFlag(name: string): Promise<IFlag> {
     createdAt,
   }
 
-  const newFlagDoc = await addDoc(collection(getFirestore(), ApiCollection.flags), newFlag)
+  const newFlagDoc = await addDoc(collection(getFirestore(), FirestoreCollection.flags), newFlag)
 
   return { ...newFlag, id: newFlagDoc.id, createdAt: createdAt.seconds }
 }
@@ -75,23 +76,33 @@ async function createFlagForAllEnvironments(
   const newFlag = {
     name,
     projectId: project.id,
+    enabled: false,
     createdAt,
   }
 
   return Promise.all([
-    addDoc(collection(getFirestore(), ApiCollection.flags), { ...newFlag, environment: 'production' }),
-    addDoc(collection(getFirestore(), ApiCollection.flags), { ...newFlag, environment: 'development' }),
+    addDoc(collection(getFirestore(), FirestoreCollection.flags), { ...newFlag, environment: 'production' }),
+    addDoc(collection(getFirestore(), FirestoreCollection.flags), { ...newFlag, environment: 'development' }),
   ])
+}
+
+// Update
+export interface IUpdateFlagRequestParams extends Partial<IFlag> {
+  id: string
+}
+
+async function updateFlag({ id, ...updates }: IUpdateFlagRequestParams): Promise<void> {
+  return setDoc(doc(getFirestore(), FirestoreCollection.flags, id), updates, { merge: true })
 }
 
 // Delete Flag
 async function deleteFlag(flagId: string): Promise<void> {
-  return deleteDoc(doc(getFirestore(), ApiCollection.flags, flagId))
+  return deleteDoc(doc(getFirestore(), FirestoreCollection.flags, flagId))
 }
 
 async function deleteProjectFlags(projectId: string): Promise<void> {
   const querySnapshot = await getDocs(
-    query(collection(getFirestore(), ApiCollection.flags), where('projectId', '==', projectId))
+    query(collection(getFirestore(), FirestoreCollection.flags), where('projectId', '==', projectId))
   )
 
   const batch = writeBatch(getFirestore())
@@ -109,6 +120,9 @@ const FlagsApi = {
   // Create
   createFlag,
   createFlagForAllEnvironments,
+
+  // Update
+  updateFlag,
 
   // Delete
   deleteFlag,

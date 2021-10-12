@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/layout'
 import { Text, Icon, Avatar, AvatarBadge, MenuList, MenuItem, Menu, MenuButton } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
-import { useAuth } from 'hooks/authHooks'
+import { useAuth } from 'hooks/auth/useAuth'
 import { FiChevronDown } from 'react-icons/fi'
 import { useClickAway } from 'react-use'
 import { useState, useRef } from 'react'

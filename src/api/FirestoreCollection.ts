@@ -1,4 +1,4 @@
-export enum ApiCollection {
+export enum FirestoreCollection {
   projects = 'projects',
   flags = 'flags'
 }

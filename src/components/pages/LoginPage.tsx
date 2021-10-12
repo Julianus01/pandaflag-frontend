@@ -1,4 +1,4 @@
-import { useAuth } from 'hooks/authHooks'
+import { useAuth } from 'hooks/auth/useAuth'
 import { useEffect } from 'react'
 
 function LoginPage() {

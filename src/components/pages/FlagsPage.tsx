@@ -119,7 +119,7 @@ function FlagsPage() {
           </TabList>
         </Tabs>
 
-        {isLoading && <Spinner ml={6} size="sm" />}
+        {isLoading && <Spinner colorScheme="blue" ml={6} size="sm" />}
       </Box>
 
       {isLoading && <SkeletonTable />}

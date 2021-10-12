@@ -4,7 +4,7 @@ import NavigationRoute from './NavigationRoute'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
-import { useAuth } from 'hooks/authHooks'
+import { useAuth } from 'hooks/auth/useAuth'
 
 function AuthenticatedRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()
