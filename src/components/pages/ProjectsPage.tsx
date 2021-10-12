@@ -73,11 +73,11 @@ function ProjectsPage() {
         <CustomTable variant="simple">
           <TableHead>
             <Tr>
-              <Th>Name</Th>
-
-              <Th isNumeric>Created at</Th>
-
-              <Th />
+              <Th textTransform="capitalize">Name</Th>
+              <Th textTransform="capitalize" isNumeric>
+                Created at
+              </Th>
+              <Th textTransform="capitalize" />
             </Tr>
           </TableHead>
 

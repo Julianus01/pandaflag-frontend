@@ -152,9 +152,9 @@ function FlagsPage() {
           <CustomTable variant="simple">
             <TableHead>
               <Tr>
-                <Th>Name</Th>
-                <Th>Active</Th>
-                <Th isNumeric>Created at</Th>
+                <Th textTransform="capitalize">Name</Th>
+                <Th textTransform="capitalize">Active</Th>
+                <Th textTransform="capitalize" isNumeric>Created at</Th>
                 <Th />
               </Tr>
             </TableHead>
