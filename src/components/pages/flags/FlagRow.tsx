@@ -84,7 +84,7 @@ function FlagRow({ flag }: IProps) {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
 
       toast({
-        title: `Flag ${flag.name} is now ${!enabled ? 'Enabled' : 'Disabled'}`,
+        title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${flag.environment}'`,
         position: 'top',
         isClosable: true,
         variant: 'subtle',
@@ -100,7 +100,7 @@ function FlagRow({ flag }: IProps) {
 
   return (
     <Tr>
-      <Td>{flag.name}</Td>
+      <Td fontSize="sm">{flag.name}</Td>
 
       <Td position="relative">
         {/* Couldn't use isDisabled from Switch because there is focus bug */}
@@ -114,7 +114,9 @@ function FlagRow({ flag }: IProps) {
         {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
       </Td>
 
-      <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
+      <Td fontSize="sm" isNumeric>
+        {moment.unix(flag.createdAt).format('Do MMM YYYY')}
+      </Td>
 
       <Td>
         <Box display="flex" justifyContent="flex-end">
