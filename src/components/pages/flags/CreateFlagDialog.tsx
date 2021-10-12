@@ -39,13 +39,18 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
   function onSuccess() {
     queryClient.invalidateQueries(ApiQueryId.getFlags)
-    setFlagName('')
     onClose()
+    resetState()
   }
 
   function _onClose() {
     onClose()
+    resetState()
+  }
+
+  function resetState() {
     setFlagName('')
+    setAddForAll(false)
     setError(undefined)
   }
 

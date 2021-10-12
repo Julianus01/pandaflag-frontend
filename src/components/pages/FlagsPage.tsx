@@ -82,7 +82,11 @@ function FlagsPage() {
   const project = useSelector((state: IStoreState) => state.configuration.project)
   const environment = useSelector((state: IStoreState) => state.configuration.environment)
 
-  const { data: flags, isLoading } = useQuery([ApiQueryId.getFlags, project?.id, environment], FlagsApi.getFlags)
+  const {
+    data: flags,
+    isLoading,
+    isFetching,
+  } = useQuery([ApiQueryId.getFlags, project?.id, environment], FlagsApi.getFlags)
 
   function changeEnvironment(index: number) {
     dispatch(
@@ -121,7 +125,7 @@ function FlagsPage() {
           </TabList>
         </Tabs>
 
-        {isLoading && <Spinner colorScheme="blue" ml={6} size="sm" />}
+        {isFetching && <Spinner colorScheme="blue" ml={6} size="sm" />}
       </Box>
 
       {isLoading && <SkeletonTable />}

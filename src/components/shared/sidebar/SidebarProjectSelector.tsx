@@ -1,4 +1,15 @@
-import { Heading, Icon, Menu, MenuButton, MenuList, MenuOptionGroup, MenuItemOption, Text, Box } from '@chakra-ui/react'
+import {
+  Heading,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuOptionGroup,
+  MenuItemOption,
+  Text,
+  Box,
+  useToast,
+} from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
@@ -13,6 +24,8 @@ import { applyColorMode } from 'theme/StyledThemeProvider'
 
 function SidebarProjectSelector() {
   const dispatch = useDispatch()
+  const toast = useToast()
+
   const configuration = useSelector((state: IStoreState) => state.configuration)
   const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
@@ -32,12 +45,20 @@ function SidebarProjectSelector() {
 
     if (project) {
       dispatch(configurationActions.changeProject(project))
+      setIsOpen(false)
+
+      toast({
+        title: `Changed project to '${project.name}'`,
+        position: 'top',
+        isClosable: true,
+        variant: 'subtle',
+      })
     }
   }
 
   return (
     <div ref={ref}>
-      <Menu matchWidth closeOnSelect={false} autoSelect={false} isOpen={isOpen}>
+      <Menu matchWidth autoSelect={false} isOpen={isOpen}>
         <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
           <Container>
             <Box flex="1">
