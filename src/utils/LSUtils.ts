@@ -1,5 +1,3 @@
-import { IEnvironment } from "api/ProjectsApi"
-
 export enum LsKey {
   lastProjectName = 'lastProjectName',
   lastEnvironment = 'lastEnvironment',
@@ -16,13 +14,13 @@ function lastProjectName(): string {
 }
 
 // Last Used Environment
-function saveLastEnvironment(environment: IEnvironment) {
-  localStorage.setItem(LsKey.lastEnvironment, environment)
+function saveLastEnvironmentName(name: string) {
+  localStorage.setItem(LsKey.lastEnvironment, name)
 }
 
-function lastEnvironment(): IEnvironment {
-  const environment = localStorage.getItem(LsKey.lastEnvironment) as IEnvironment
-  return environment
+function lastEnvironmentName(): string {
+  const name = localStorage.getItem(LsKey.lastEnvironment) as string
+  return name
 }
 
 function remove(lsKey: LsKey) {
@@ -38,8 +36,8 @@ const LSUtils = {
   lastProjectName,
 
   // Last Environment
-  saveLastEnvironment,
-  lastEnvironment
+  saveLastEnvironmentName,
+  lastEnvironmentName
 }
 
 export default LSUtils

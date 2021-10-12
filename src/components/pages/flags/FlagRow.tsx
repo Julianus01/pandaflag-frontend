@@ -84,7 +84,7 @@ function FlagRow({ flag }: IProps) {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
 
       toast({
-        title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${flag.environment}'`,
+        title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${flag.environmentName}'`,
         position: 'top',
         isClosable: true,
         variant: 'subtle',

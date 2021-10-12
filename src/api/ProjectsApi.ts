@@ -17,7 +17,14 @@ import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
 import FlagsApi from './FlagsApi'
 
-export type IEnvironment = string
+export interface IEnvironment {
+  name: string;
+}
+
+export const EmptyEnvironment = {
+  production: { name: 'production' },
+  development: { name: 'development' }
+}
 
 export interface IProject {
   id: string
@@ -56,7 +63,7 @@ async function createProject(name: string): Promise<IProject> {
   const user = store.getState().auth.user as IUser
   const createdAt = Timestamp.now()
 
-  const newProject = { name, members: [{ id: user.sub, type: MemberType.admin }], environments: ['production', 'development'], createdAt }
+  const newProject = { name, members: [{ id: user.sub, type: MemberType.admin }], environments: [EmptyEnvironment.production, EmptyEnvironment.development], createdAt }
   const newProjectDoc = await addDoc(collection(getFirestore(), FirestoreCollection.projects), newProject);
 
   return { ...newProject, id: newProjectDoc.id, createdAt: createdAt.seconds }

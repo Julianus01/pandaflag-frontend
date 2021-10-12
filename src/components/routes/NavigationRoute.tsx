@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import store, { IStoreState } from 'redux/store'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
+import ProjectsApi, { EmptyEnvironment, IEnvironment, IProject } from 'api/ProjectsApi'
 import LSUtils, { LsKey } from 'utils/LSUtils'
 import { configurationActions, IConfigurationState } from 'redux/ducks/configurationDuck'
 import { useEffect } from 'react'
@@ -23,7 +23,11 @@ function useListenToProjectsAndUpdateConfiguration() {
     const storeConfiguration = store.getState().configuration as IConfigurationState
 
     const lastProjectName: string = LSUtils.lastProjectName()
-    const lastEnvironment: IEnvironment = LSUtils.lastEnvironment()
+    const lastEnvironmentName: string = LSUtils.lastEnvironmentName()
+
+    const lastEnvironment = [EmptyEnvironment.production, EmptyEnvironment.development].find(
+      (environment: IEnvironment) => environment.name === lastEnvironmentName
+    )
 
     if (!storeConfiguration.project && lastProjectName) {
       const foundProject = projects.find((project: IProject) => project.name === lastProjectName)
@@ -38,19 +42,19 @@ function useListenToProjectsAndUpdateConfiguration() {
       dispatch(configurationActions.changeProject(projects[0]))
     }
 
-    if (!storeConfiguration?.environment?.length && lastEnvironment) {
-      const foundEnvironment = ['production', 'development'].find(
+    if (!storeConfiguration?.environment && lastEnvironment) {
+      const foundEnvironment = [EmptyEnvironment.production, EmptyEnvironment.development].find(
         (environment: IEnvironment) => environment === lastEnvironment
       ) as IEnvironment | undefined
 
       if (foundEnvironment) {
         dispatch(configurationActions.changeEnvironment(foundEnvironment))
       } else {
-        dispatch(configurationActions.changeEnvironment('development'))
+        dispatch(configurationActions.changeEnvironment(EmptyEnvironment.development))
         LSUtils.remove(LsKey.lastEnvironment)
       }
     } else {
-      dispatch(configurationActions.changeEnvironment('development'))
+      dispatch(configurationActions.changeEnvironment(EmptyEnvironment.development))
     }
   }, [projects, dispatch])
 }

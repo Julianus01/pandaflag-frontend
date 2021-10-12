@@ -38,7 +38,7 @@ const configurationActions = {
   },
 
   changeEnvironment: (environment: IEnvironment) => {
-    LSUtils.saveLastEnvironment(environment)
+    LSUtils.saveLastEnvironmentName(environment.name)
     return { type: CHANGE_ENVIRONMENT, payload: environment }
   }
 }

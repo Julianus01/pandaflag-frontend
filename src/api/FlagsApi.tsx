@@ -23,7 +23,7 @@ export interface IFlag {
   projectId: string
   name: string
   enabled: boolean
-  environment: IEnvironment
+  environmentName: string
   createdAt: number
 }
 
@@ -36,7 +36,7 @@ async function getFlags(): Promise<IFlag[]> {
     query(
       collection(getFirestore(), FirestoreCollection.flags),
       where('projectId', '==', project.id),
-      where('environment', '==', environment)
+      where('environmentName', '==', environment.name)
     )
   )
 
@@ -58,7 +58,7 @@ async function createFlag(name: string): Promise<IFlag> {
     name,
     projectId: project.id,
     enabled: false,
-    environment,
+    environmentName: environment.name,
     createdAt,
   }
 
@@ -81,8 +81,8 @@ async function createFlagForAllEnvironments(
   }
 
   return Promise.all([
-    addDoc(collection(getFirestore(), FirestoreCollection.flags), { ...newFlag, environment: 'production' }),
-    addDoc(collection(getFirestore(), FirestoreCollection.flags), { ...newFlag, environment: 'development' }),
+    addDoc(collection(getFirestore(), FirestoreCollection.flags), { ...newFlag, environmentName: 'production' }),
+    addDoc(collection(getFirestore(), FirestoreCollection.flags), { ...newFlag, environmentName: 'development' }),
   ])
 }
 

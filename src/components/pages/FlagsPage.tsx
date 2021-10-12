@@ -23,7 +23,7 @@ import CreateFlagDialog from './flags/CreateFlagDialog'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import { IEnvironment } from 'api/ProjectsApi'
+import { EmptyEnvironment, IEnvironment } from 'api/ProjectsApi'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
@@ -63,11 +63,11 @@ function SkeletonTable() {
 }
 
 function environmentColorScheme(environment: IEnvironment) {
-  switch (environment) {
-    case 'production':
+  switch (environment.name) {
+    case EmptyEnvironment.production.name:
       return 'orange'
 
-    case 'development':
+    case EmptyEnvironment.development.name:
       return 'blue'
 
     default:
@@ -85,7 +85,9 @@ function FlagsPage() {
   const { data: flags, isLoading } = useQuery([ApiQueryId.getFlags, project?.id, environment], FlagsApi.getFlags)
 
   function changeEnvironment(index: number) {
-    dispatch(configurationActions.changeEnvironment(index === 0 ? 'production' : 'development'))
+    dispatch(
+      configurationActions.changeEnvironment(index === 0 ? EmptyEnvironment.production : EmptyEnvironment.development)
+    )
   }
 
   function doesFlagAlreadyExist(name: string): boolean {
@@ -108,7 +110,7 @@ function FlagsPage() {
       <Box mb={10} display="flex" alignItems="center">
         <Tabs
           onChange={changeEnvironment}
-          index={environment === 'production' ? 0 : 1}
+          index={environment?.name === 'production' ? 0 : 1}
           size="sm"
           variant="soft-rounded"
           colorScheme={environmentColorScheme(environment as IEnvironment)}
