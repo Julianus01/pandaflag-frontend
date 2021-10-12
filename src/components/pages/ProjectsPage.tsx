@@ -79,6 +79,11 @@ function ProjectsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
+  function doesProjectNameAlreadyExist(name: string): boolean {
+    const found = projects?.find((project: IProject) => project.name === name)
+    return Boolean(found)
+  }
+
   return (
     <BoxedPage>
       <Box display="flex">
@@ -125,7 +130,11 @@ function ProjectsPage() {
         </CustomTable>
       </TableContainer>
 
-      <CreateProjectDialog isOpen={isOpen} onClose={onClose} />
+      <CreateProjectDialog
+        doesProjectNameAlreadyExist={doesProjectNameAlreadyExist}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </BoxedPage>
   )
 }

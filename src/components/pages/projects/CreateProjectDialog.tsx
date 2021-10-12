@@ -6,6 +6,8 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  FormControl,
+  FormErrorMessage,
   Input,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
@@ -17,12 +19,15 @@ import CommonUtils from 'utils/CommonUtils'
 interface Props {
   isOpen: boolean
   onClose: () => void
+  doesProjectNameAlreadyExist: (projectName: string) => boolean
 }
 
-function CreateProjectDialog({ isOpen, onClose }: Props) {
+function CreateProjectDialog({ isOpen, onClose, doesProjectNameAlreadyExist }: Props) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
+
   const [projectName, setProjectName] = useState<string>('')
+  const [error, setError] = useState<string | undefined>(undefined)
 
   const createProjectMutation = useMutation(ProjectsApi.createProject, {
     onSuccess: () => {
@@ -34,6 +39,10 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
     setProjectName(event.target.value)
+
+    if (error) {
+      setError(undefined)
+    }
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -45,8 +54,14 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   }
 
   function createProject() {
-    // TODO: Check name of project and show error ( can't save if it already exists )
-    createProjectMutation.mutate(projectName.trim())
+    const name = projectName.trim()
+
+    if (doesProjectNameAlreadyExist(name)) {
+      setError('Project name already exists')
+      return
+    }
+
+    createProjectMutation.mutate(name)
   }
 
   return (
@@ -66,15 +81,19 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
         <AlertDialogHeader>Add project</AlertDialogHeader>
 
         <AlertDialogBody>
-          <Input
-            ref={inputRef as any}
-            onKeyDown={onKeyDown}
-            value={projectName}
-            onChange={onProjectNameChange}
-            mb={4}
-            variant="filled"
-            placeholder="Project Name"
-          />
+          <FormControl mb={4} isInvalid={Boolean(error)}>
+            <Input
+              ref={inputRef as any}
+              isInvalid={Boolean(error)}
+              onKeyDown={onKeyDown}
+              value={projectName}
+              onChange={onProjectNameChange}
+              variant="filled"
+              placeholder="Project Name"
+            />
+
+            <FormErrorMessage>{error}</FormErrorMessage>
+          </FormControl>
         </AlertDialogBody>
 
         <AlertDialogFooter>
