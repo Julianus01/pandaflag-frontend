@@ -17,6 +17,7 @@ import {
   PopoverContent,
   Text,
   PopoverBody,
+  Tooltip,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
@@ -60,7 +61,7 @@ function RemoveButton({ projectId }: IRemoveButtonProps) {
       </PopoverTrigger>
 
       <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
-        <PopoverBody shadow="lg" p="4">
+        <PopoverBody textAlign="right" shadow="lg" p="4">
           <Text textAlign="left" mb="4">
             Are you sure you want to delete this project?
           </Text>
@@ -76,7 +77,6 @@ function RemoveButton({ projectId }: IRemoveButtonProps) {
 
 function ProjectsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-
   const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
   return (
@@ -110,8 +110,14 @@ function ProjectsPage() {
 
                 <Td isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
-                <Td isNumeric>
-                  <RemoveButton projectId={project.id} />
+                <Td>
+                  <Box display="flex" justifyContent="flex-end">
+                    <Tooltip placement="top" label="Remove">
+                      <Box>
+                        <RemoveButton projectId={project.id} />
+                      </Box>
+                    </Tooltip>
+                  </Box>
                 </Td>
               </Tr>
             ))}

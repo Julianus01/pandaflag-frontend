@@ -18,6 +18,11 @@ import {
   TabList,
   Tab,
   Switch,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  Text,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
@@ -73,6 +78,7 @@ interface IRemoveButtonProps {
 
 function RemoveButton({ flagId }: IRemoveButtonProps) {
   const queryClient = useQueryClient()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const deleteMutation = useMutation(FlagsApi.deleteFlag, {
     onSuccess: () => {
@@ -81,17 +87,34 @@ function RemoveButton({ flagId }: IRemoveButtonProps) {
   })
 
   function deleteFlag() {
+    onClose()
     deleteMutation.mutate(flagId)
   }
 
   return (
-    <IconButton
-      disabled={deleteMutation.isLoading}
-      onClick={deleteFlag}
-      size="xs"
-      aria-label="delete"
-      icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
-    />
+    <Popover placement="left" isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
+      <PopoverTrigger>
+        <IconButton
+          disabled={deleteMutation.isLoading}
+          onClick={onOpen}
+          size="xs"
+          aria-label="delete"
+          icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
+        />
+      </PopoverTrigger>
+
+      <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
+        <PopoverBody textAlign="right" shadow="lg" p="4">
+          <Text textAlign="left" mb="4">
+            Are you sure you want to delete this project?
+          </Text>
+
+          <Button textAlign="right" onClick={deleteFlag} size="sm" colorScheme="red" variant="ghost">
+            Delete
+          </Button>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -111,6 +134,7 @@ function environmentColorScheme(environment: IEnvironment) {
 function FlagsPage() {
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
+
   const project = useSelector((state: IStoreState) => state.configuration.project)
   const environment = useSelector((state: IStoreState) => state.configuration.environment)
 
@@ -154,7 +178,9 @@ function FlagsPage() {
               <Tr>
                 <Th textTransform="capitalize">Name</Th>
                 <Th textTransform="capitalize">Active</Th>
-                <Th textTransform="capitalize" isNumeric>Created at</Th>
+                <Th textTransform="capitalize" isNumeric>
+                  Created at
+                </Th>
                 <Th />
               </Tr>
             </TableHead>
@@ -165,7 +191,7 @@ function FlagsPage() {
                   <Td>{flag.name}</Td>
 
                   <Td>
-                    <Switch size="lg" colorScheme="green" />
+                    <Switch size="md" isChecked={true} colorScheme="green" />
                   </Td>
 
                   <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
