@@ -4,15 +4,19 @@ import {
   Heading,
   Icon,
   IconButton,
+  Popover,
+  PopoverTrigger,
   Spinner,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
-  Tooltip,
   Tr,
   useDisclosure,
+  PopoverContent,
+  Text,
+  PopoverBody,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
@@ -30,6 +34,7 @@ interface IRemoveButtonProps {
 
 function RemoveButton({ projectId }: IRemoveButtonProps) {
   const queryClient = useQueryClient()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const deleteMutation = useMutation(ProjectsApi.deleteProject, {
     onSuccess: () => {
@@ -38,17 +43,34 @@ function RemoveButton({ projectId }: IRemoveButtonProps) {
   })
 
   function deleteProject() {
+    onClose()
     deleteMutation.mutate(projectId)
   }
 
   return (
-    <IconButton
-      disabled={deleteMutation.isLoading}
-      onClick={deleteProject}
-      size="xs"
-      aria-label="delete"
-      icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
-    />
+    <Popover placement="left" isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
+      <PopoverTrigger>
+        <IconButton
+          disabled={deleteMutation.isLoading}
+          onClick={onOpen}
+          size="xs"
+          aria-label="delete"
+          icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
+        />
+      </PopoverTrigger>
+
+      <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
+        <PopoverBody shadow="lg" p="4">
+          <Text textAlign="left" mb="4">
+            Are you sure you want to delete this project?
+          </Text>
+
+          <Button onClick={deleteProject} size="sm" colorScheme="red" variant="ghost">
+            Delete
+          </Button>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -88,14 +110,8 @@ function ProjectsPage() {
 
                 <Td isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
-                <Td>
-                  <Box display="flex" justifyContent="flex-end">
-                    <Tooltip placement="top" label="Remove">
-                      <Box>
-                        <RemoveButton projectId={project.id} />
-                      </Box>
-                    </Tooltip>
-                  </Box>
+                <Td isNumeric>
+                  <RemoveButton projectId={project.id} />
                 </Td>
               </Tr>
             ))}

@@ -100,6 +100,10 @@ const Content = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: ${({ theme }) => `${theme.space[14]} ${theme.space[16]}`};
   margin-left: 276px;
+
+  padding: ${({ theme }) => `${theme.space[14]} ${theme.space[28]}`};
+  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
+    padding: ${({ theme }) => `${theme.space[14]} ${theme.space[16]}`};
+  }
 `
