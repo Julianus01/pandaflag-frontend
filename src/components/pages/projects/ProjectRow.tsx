@@ -18,7 +18,7 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import moment from 'moment'
 import { FiMinus } from 'react-icons/fi'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 interface IRemoveButtonProps {
   projectId: string
@@ -28,6 +28,7 @@ function RemoveButton({ projectId }: IRemoveButtonProps) {
   const queryClient = useQueryClient()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const { isFetching: projectsFetching } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
   const deleteMutation = useMutation(ProjectsApi.deleteProject, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getProjects)
@@ -57,7 +58,7 @@ function RemoveButton({ projectId }: IRemoveButtonProps) {
             Are you sure you want to delete this project?
           </Text>
 
-          <Button onClick={deleteProject} size="sm" colorScheme="red" variant="ghost">
+          <Button isDisabled={projectsFetching} onClick={deleteProject} size="sm" colorScheme="red" variant="ghost">
             Delete
           </Button>
         </PopoverBody>

@@ -5,15 +5,37 @@ import { useSelector, useDispatch } from 'react-redux'
 import store, { IStoreState } from 'redux/store'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { EmptyEnvironment, IEnvironment, IProject } from 'api/ProjectsApi'
-import LSUtils, { LsKey } from 'utils/LSUtils'
+import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
+import LSUtils from 'utils/LSUtils'
 import { configurationActions, IConfigurationState } from 'redux/ducks/configurationDuck'
 import { useEffect } from 'react'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 
-function useListenToProjectsAndUpdateConfiguration() {
+function useUpdateConfigurationEnvironment() {
   const dispatch = useDispatch()
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const project = useSelector((state: IStoreState) => state.configuration.project)
+
+  useEffect(() => {
+    if (!project) {
+      return
+    }
+
+    const lastEnvironmentName: string = LSUtils.lastEnvironmentName()
+    const lastEnvironment = project.environments.find(
+      (environment: IEnvironment) => environment.name === lastEnvironmentName
+    )
+
+    if (lastEnvironment) {
+      dispatch(configurationActions.changeEnvironment(lastEnvironment as IEnvironment))
+      return
+    }
+
+    dispatch(configurationActions.changeEnvironment(project.environments[0]))
+  }, [project, dispatch])
+}
+
+function useUpdateConfigurationProject(projects: IProject[] | undefined) {
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!projects?.length) {
@@ -21,48 +43,30 @@ function useListenToProjectsAndUpdateConfiguration() {
     }
 
     const storeConfiguration = store.getState().configuration as IConfigurationState
-
     const lastProjectName: string = LSUtils.lastProjectName()
-    const lastEnvironmentName: string = LSUtils.lastEnvironmentName()
-
-    const lastEnvironment = [EmptyEnvironment.production, EmptyEnvironment.development].find(
-      (environment: IEnvironment) => environment.name === lastEnvironmentName
-    )
 
     if (!storeConfiguration.project && lastProjectName) {
       const foundProject = projects.find((project: IProject) => project.name === lastProjectName)
 
       if (foundProject) {
         dispatch(configurationActions.changeProject(foundProject))
-      } else {
-        dispatch(configurationActions.changeProject(projects[0]))
-        LSUtils.remove(LsKey.lastProjectName)
+        return
       }
-    } else {
+
       dispatch(configurationActions.changeProject(projects[0]))
+      return
     }
 
-    if (!storeConfiguration?.environment && lastEnvironment) {
-      const foundEnvironment = [EmptyEnvironment.production, EmptyEnvironment.development].find(
-        (environment: IEnvironment) => environment === lastEnvironment
-      ) as IEnvironment | undefined
-
-      if (foundEnvironment) {
-        dispatch(configurationActions.changeEnvironment(foundEnvironment))
-      } else {
-        dispatch(configurationActions.changeEnvironment(EmptyEnvironment.development))
-        LSUtils.remove(LsKey.lastEnvironment)
-      }
-    } else {
-      dispatch(configurationActions.changeEnvironment(EmptyEnvironment.development))
-    }
+    dispatch(configurationActions.changeProject(projects[0]))
   }, [projects, dispatch])
 }
 
 function NavigationRoute(props: RouteProps) {
   const configuration = useSelector((state: IStoreState) => state.configuration)
+  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
-  useListenToProjectsAndUpdateConfiguration()
+  useUpdateConfigurationProject(projects)
+  useUpdateConfigurationEnvironment()
 
   if (!configuration.project || !configuration.environment) {
     return null

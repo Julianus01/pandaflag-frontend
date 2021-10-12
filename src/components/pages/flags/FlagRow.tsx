@@ -21,7 +21,7 @@ import FlagsApi, { IFlag } from 'api/FlagsApi'
 import usePropState from 'hooks/common/usePropState'
 import moment from 'moment'
 import { FiMinus } from 'react-icons/fi'
-import { useQueryClient, useMutation } from 'react-query'
+import { useQueryClient, useMutation, useQuery } from 'react-query'
 import styled, { css } from 'styled-components/macro'
 
 interface IRemoveButtonProps {
@@ -32,6 +32,7 @@ function RemoveButton({ flagId }: IRemoveButtonProps) {
   const queryClient = useQueryClient()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const { isFetching: flagsFetching } = useQuery(ApiQueryId.getFlags, FlagsApi.getFlags)
   const deleteMutation = useMutation(FlagsApi.deleteFlag, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
@@ -61,7 +62,7 @@ function RemoveButton({ flagId }: IRemoveButtonProps) {
             Are you sure you want to delete this project?
           </Text>
 
-          <Button textAlign="right" onClick={deleteFlag} size="sm" colorScheme="red" variant="ghost">
+          <Button isDisabled={flagsFetching} textAlign="right" onClick={deleteFlag} size="sm" colorScheme="red" variant="ghost">
             Delete
           </Button>
         </PopoverBody>
