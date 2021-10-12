@@ -6,6 +6,8 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  FormControl,
+  FormErrorMessage,
   Input,
   Stack,
   Switch,
@@ -20,14 +22,16 @@ import CommonUtils from 'utils/CommonUtils'
 interface Props {
   isOpen: boolean
   onClose: () => void
+  doesFlagAlreadyExist: (flagName: string) => boolean
 }
 
-function CreateFlagDialog({ isOpen, onClose }: Props) {
+function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
 
   const [flagName, setFlagName] = useState<string>('')
   const [addForAll, setAddForAll] = useState<boolean>(true)
+  const [error, setError] = useState<string | undefined>(undefined)
 
   const createFlagMutation = useMutation(FlagsApi.createFlag, { onSuccess })
   const createFlagForAllMutation = useMutation(FlagsApi.createFlagForAllEnvironments, { onSuccess })
@@ -38,8 +42,18 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
     onClose()
   }
 
+  function _onClose() {
+    onClose()
+    setFlagName('')
+    setError(undefined)
+  }
+
   function onFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
     setFlagName(event.target.value)
+
+    if (error) {
+      setError(undefined)
+    }
   }
 
   function toggleAddForAll() {
@@ -55,11 +69,17 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
   }
 
   function createFlag() {
-    // TODO: Check name of flag and show error ( can't save if it already exists )
+    const name = flagName.trim()
+
+    if (doesFlagAlreadyExist(name)) {
+      setError('A flag with this name already exists')
+      return
+    }
+
     if (addForAll) {
-      createFlagForAllMutation.mutate(flagName.trim())
+      createFlagForAllMutation.mutate(name)
     } else {
-      createFlagMutation.mutate(flagName.trim())
+      createFlagMutation.mutate(name)
     }
   }
 
@@ -69,7 +89,7 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
     <AlertDialog
       motionPreset="slideInBottom"
       leastDestructiveRef={inputRef as any}
-      onClose={onClose}
+      onClose={_onClose}
       isOpen={isOpen}
       isCentered
       autoFocus={false}
@@ -82,15 +102,18 @@ function CreateFlagDialog({ isOpen, onClose }: Props) {
         <AlertDialogHeader>Add Flag</AlertDialogHeader>
 
         <AlertDialogBody>
-          <Input
-            ref={inputRef as any}
-            onKeyDown={onKeyDown}
-            value={flagName}
-            onChange={onFlagNameChange}
-            mb={4}
-            variant="filled"
-            placeholder="Ex: photo_editor"
-          />
+          <FormControl mb={4} isInvalid={Boolean(error)}>
+            <Input
+              ref={inputRef as any}
+              onKeyDown={onKeyDown}
+              value={flagName}
+              onChange={onFlagNameChange}
+              variant="filled"
+              placeholder="Ex: photo_editor"
+            />
+
+            <FormErrorMessage>{error}</FormErrorMessage>
+          </FormControl>
 
           <Stack alignItems="flex-end" direction="row">
             <Text>Add flag for all environments</Text>

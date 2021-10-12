@@ -19,10 +19,10 @@ import CommonUtils from 'utils/CommonUtils'
 interface Props {
   isOpen: boolean
   onClose: () => void
-  doesProjectNameAlreadyExist: (projectName: string) => boolean
+  doesProjectAlreadyExist: (projectName: string) => boolean
 }
 
-function CreateProjectDialog({ isOpen, onClose, doesProjectNameAlreadyExist }: Props) {
+function CreateProjectDialog({ isOpen, onClose, doesProjectAlreadyExist }: Props) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
 
@@ -36,6 +36,12 @@ function CreateProjectDialog({ isOpen, onClose, doesProjectNameAlreadyExist }: P
       onClose()
     },
   })
+
+  function _onClose() {
+    onClose()
+    setProjectName('')
+    setError(undefined)
+  }
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
     setProjectName(event.target.value)
@@ -56,8 +62,8 @@ function CreateProjectDialog({ isOpen, onClose, doesProjectNameAlreadyExist }: P
   function createProject() {
     const name = projectName.trim()
 
-    if (doesProjectNameAlreadyExist(name)) {
-      setError('Project name already exists')
+    if (doesProjectAlreadyExist(name)) {
+      setError('A project with this name already exists')
       return
     }
 
@@ -68,7 +74,7 @@ function CreateProjectDialog({ isOpen, onClose, doesProjectNameAlreadyExist }: P
     <AlertDialog
       motionPreset="slideInBottom"
       leastDestructiveRef={inputRef as any}
-      onClose={onClose}
+      onClose={_onClose}
       isOpen={isOpen}
       isCentered
       autoFocus={false}

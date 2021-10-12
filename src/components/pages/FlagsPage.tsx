@@ -144,6 +144,11 @@ function FlagsPage() {
     dispatch(configurationActions.changeEnvironment(index === 0 ? 'production' : 'development'))
   }
 
+  function doesFlagAlreadyExist(name: string): boolean {
+    const found = flags?.find((flag: IFlag) => flag.name === name)
+    return Boolean(found)
+  }
+
   return (
     <BoxedPage>
       <Box display="flex">
@@ -212,7 +217,7 @@ function FlagsPage() {
         </TableContainer>
       )}
 
-      <CreateFlagDialog isOpen={isOpen} onClose={onClose} />
+      <CreateFlagDialog doesFlagAlreadyExist={doesFlagAlreadyExist} isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
   )
 }
