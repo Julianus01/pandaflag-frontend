@@ -1,4 +1,4 @@
-import { Box, Divider, Heading, Icon, Text } from '@chakra-ui/react'
+import { Box, Heading, Icon, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
 import { FiHome, FiToggleRight, FiSettings, FiLayers } from 'react-icons/fi'
@@ -68,11 +68,9 @@ function Sidebar() {
 
   return (
     <Container>
-      <Heading fontWeight="extrabold" textAlign="center" mb={12} as="h4" size="md">
-        smartlaunch
+      <Heading fontWeight="extrabold" textAlign="left" mb={20} ml={4} as="h4" size="md">
+        Smartlaunch
       </Heading>
-
-      <Divider mb={6} />
 
       <Box mb={6}>
         <SidebarProjectSelector />
