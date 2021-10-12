@@ -18,6 +18,7 @@ import FlagsApi from 'api/FlagsApi'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import CommonUtils from 'utils/CommonUtils'
+import _ from 'lodash/fp'
 
 interface Props {
   isOpen: boolean
@@ -69,7 +70,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   }
 
   function createFlag() {
-    const name = flagName.trim()
+    const name = _.snakeCase(flagName)
 
     if (doesFlagAlreadyExist(name)) {
       setError('A flag with this name already exists')
@@ -102,7 +103,11 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
         <AlertDialogHeader>Add Flag</AlertDialogHeader>
 
         <AlertDialogBody>
-          <FormControl mb={4} isInvalid={Boolean(error)}>
+          <Text color="gray.500" mb={2} fontSize="sm">
+            Flag will be transformed into <i>snake_case</i> for easy api access
+          </Text>
+
+          <FormControl mb={10} isInvalid={Boolean(error)}>
             <Input
               ref={inputRef as any}
               onKeyDown={onKeyDown}
