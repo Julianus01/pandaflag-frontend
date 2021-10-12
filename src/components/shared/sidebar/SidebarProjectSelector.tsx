@@ -66,7 +66,7 @@ function SidebarProjectSelector() {
                 selected project
               </Text>
 
-              <Heading as="h5" size="sm">
+              <Heading as="h5" size="lg">
                 {configuration.project?.name}
               </Heading>
             </Box>
@@ -79,6 +79,7 @@ function SidebarProjectSelector() {
 
         <MenuList maxHeight="400px" overflow="scroll" shadow="lg">
           <MenuOptionGroup
+            fontWeight="semibold"
             onChange={(value) => changeProject(value as string)}
             value={configuration.project?.id}
             type="radio"
