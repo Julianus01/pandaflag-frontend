@@ -6,7 +6,7 @@ import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import CreateProjectDialog from './projects/CreateProjectDialog'
-import ProjectsTable from './projects/ProjectsTables'
+import ProjectsTable from './projects/ProjectsTable'
 
 function ProjectsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()

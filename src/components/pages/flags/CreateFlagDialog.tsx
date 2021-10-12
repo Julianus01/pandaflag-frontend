@@ -126,9 +126,9 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
           </FormControl>
 
           <Stack alignItems="flex-end" direction="row">
-            <Text>Add flag for all environments</Text>
-
             <Switch isChecked={addForAll} onChange={toggleAddForAll} colorScheme="blue" />
+
+            <Text>Add flag for all environments</Text>
           </Stack>
         </AlertDialogBody>
 

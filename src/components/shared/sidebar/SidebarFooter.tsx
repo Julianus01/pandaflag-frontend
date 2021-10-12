@@ -31,7 +31,7 @@ function SidebarFooter() {
             </Avatar>
 
             <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
-              <Text fontSize='sm' isTruncated fontWeight="medium">
+              <Text isTruncated fontWeight="medium">
                 {auth.user?.name}
               </Text>
             </Box>
@@ -41,7 +41,7 @@ function SidebarFooter() {
         </CustomMenuButton>
 
         <MenuList shadow="lg">
-          <MenuItem fontSize="sm" onClick={() => auth.logout({ returnTo: window.location.origin })}>
+          <MenuItem onClick={() => auth.logout({ returnTo: window.location.origin })}>
             Logout
           </MenuItem>
         </MenuList>

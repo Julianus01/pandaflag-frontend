@@ -74,11 +74,9 @@ interface IProps {
 function ProjectRow({ project }: IProps) {
   return (
     <Tr>
-      <Td fontSize="sm">{project.name}</Td>
+      <Td>{project.name}</Td>
 
-      <Td fontSize="sm" isNumeric>
-        {moment.unix(project.createdAt).format('Do MMM YYYY')}
-      </Td>
+      <Td isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
       <Td>
         <Box display="flex" justifyContent="flex-end">

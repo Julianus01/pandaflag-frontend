@@ -68,7 +68,7 @@ function Sidebar() {
 
   return (
     <Container>
-      <Heading fontWeight="extrabold" textAlign="left" mb={20} ml={4} as="h4" size="md">
+      <Heading fontWeight="extrabold" textAlign="left" mb={16} ml={4} as="h4" size="md">
         Smartlaunch
       </Heading>
 

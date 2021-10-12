@@ -101,7 +101,7 @@ function FlagRow({ flag }: IProps) {
 
   return (
     <Tr>
-      <Td fontSize="sm">{flag.name}</Td>
+      <Td>{flag.name}</Td>
 
       <Td position="relative">
         {/* Couldn't use isDisabled from Switch because there is focus bug */}
@@ -115,7 +115,7 @@ function FlagRow({ flag }: IProps) {
         {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
       </Td>
 
-      <Td fontSize="sm" isNumeric>
+      <Td isNumeric>
         {moment.unix(flag.createdAt).format('Do MMM YYYY')}
       </Td>
 
