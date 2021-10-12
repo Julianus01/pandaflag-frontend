@@ -13,6 +13,7 @@ import {
   Tabs,
   TabList,
   Tab,
+  Spinner,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
@@ -104,19 +105,22 @@ function FlagsPage() {
         </Button>
       </Box>
 
-      <Tabs
-        onChange={changeEnvironment}
-        index={environment === 'production' ? 0 : 1}
-        mb={10}
-        size="sm"
-        variant="soft-rounded"
-        colorScheme={environmentColorScheme(environment as IEnvironment)}
-      >
-        <TabList>
-          <Tab pb="5px">production</Tab>
-          <Tab pb="5px">development</Tab>
-        </TabList>
-      </Tabs>
+      <Box mb={10} display="flex" alignItems="center">
+        <Tabs
+          onChange={changeEnvironment}
+          index={environment === 'production' ? 0 : 1}
+          size="sm"
+          variant="soft-rounded"
+          colorScheme={environmentColorScheme(environment as IEnvironment)}
+        >
+          <TabList>
+            <Tab pb="5px">production</Tab>
+            <Tab pb="5px">development</Tab>
+          </TabList>
+        </Tabs>
+
+        {isLoading && <Spinner ml={6} size="sm" />}
+      </Box>
 
       {isLoading && <SkeletonTable />}
       {!isLoading && Boolean(flags?.length) && (
