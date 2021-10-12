@@ -108,7 +108,7 @@ function Sidebar() {
         ))}
       </Content>
 
-      <Box display="flex" justifyContent="flex-start" ml="22px">
+      <Box display="flex" justifyContent="flex-start" ml="23px">
         <ThemeButton />
       </Box>
 
