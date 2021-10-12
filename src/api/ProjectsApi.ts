@@ -68,8 +68,13 @@ async function deleteProject(projectId: string): Promise<void> {
 }
 
 const ProjectsApi = {
+  // Get
   getProjects,
+
+  // Create
   createProject,
+
+  // Delete
   deleteProject
 }
 

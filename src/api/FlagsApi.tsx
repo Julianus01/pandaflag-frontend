@@ -21,6 +21,7 @@ export interface IFlag {
   id: string
   projectId: string
   name: string
+  enabled: boolean
   environment: IEnvironment
   createdAt: number
 }
@@ -55,6 +56,7 @@ async function createFlag(name: string): Promise<IFlag> {
   const newFlag = {
     name,
     projectId: project.id,
+    enabled: false,
     environment,
     createdAt,
   }
@@ -101,9 +103,14 @@ async function deleteProjectFlags(projectId: string): Promise<void> {
 }
 
 const FlagsApi = {
+  // Get
   getFlags,
+
+  // Create
   createFlag,
   createFlagForAllEnvironments,
+
+  // Delete
   deleteFlag,
   deleteProjectFlags,
 }

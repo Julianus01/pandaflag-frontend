@@ -119,9 +119,9 @@ function FlagsPage() {
       </Tabs>
 
       {isLoading && <SkeletonTable />}
-      {!isLoading && flags?.length && (
+      {!isLoading && Boolean(flags?.length) && (
         <TableContainer>
-          <FlagsTable flags={flags} />
+          <FlagsTable flags={flags as IFlag[]} />
         </TableContainer>
       )}
 

@@ -31,7 +31,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   const queryClient = useQueryClient()
 
   const [flagName, setFlagName] = useState<string>('')
-  const [addForAll, setAddForAll] = useState<boolean>(true)
+  const [addForAll, setAddForAll] = useState<boolean>(false)
   const [error, setError] = useState<string | undefined>(undefined)
 
   const createFlagMutation = useMutation(FlagsApi.createFlag, { onSuccess })
