@@ -14,6 +14,7 @@ import {
   TabList,
   Tab,
   Spinner,
+  Icon,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
@@ -27,6 +28,7 @@ import { EmptyEnvironment, IEnvironment } from 'api/ProjectsApi'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
+import { FiFlag } from 'react-icons/fi'
 
 function SkeletonTable() {
   return (
@@ -106,7 +108,7 @@ function FlagsPage() {
           Flags
         </Heading>
 
-        <Button onClick={onOpen} colorScheme="blue">
+        <Button leftIcon={<Icon as={FiFlag} />} onClick={onOpen} colorScheme="blue">
           Add Flag
         </Button>
       </Box>

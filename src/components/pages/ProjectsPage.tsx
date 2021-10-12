@@ -1,7 +1,8 @@
-import { Box, Button, Heading, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Heading, Icon, useDisclosure } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import BoxedPage from 'components/styles/BoxedPage'
+import { FiLayers } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
@@ -24,7 +25,7 @@ function ProjectsPage() {
           Projects
         </Heading>
 
-        <Button onClick={onOpen} colorScheme="blue">
+        <Button leftIcon={<Icon as={FiLayers} />} onClick={onOpen} colorScheme="blue">
           Add Project
         </Button>
       </Box>

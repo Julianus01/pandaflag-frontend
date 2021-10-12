@@ -10,7 +10,7 @@ function RedirectAuthenticatedRoute(props: RouteProps) {
       return <Redirect to={RoutePage.emailVerification()} />
     }
 
-    return <Redirect to={RoutePage.dashboard()} />
+    return <Redirect to={RoutePage.flags()} />
   }
 
   return <Route {...props} />
