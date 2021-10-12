@@ -1,37 +1,36 @@
 import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react'
-import { IFlag } from 'api/FlagsApi'
+import { IProject } from 'api/ProjectsApi'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import FlagRow from './FlagRow'
+import ProjectRow from './ProjectRow'
 
 interface IProps {
-  flags: IFlag[]
+  projects: IProject[]
 }
 
-function FlagsTable({ flags }: IProps) {
+function ProjectsTable({ projects }: IProps) {
   return (
     <CustomTable variant="simple">
       <TableHead>
         <Tr>
           <Th textTransform="capitalize">Name</Th>
-          <Th textTransform="capitalize">Active</Th>
           <Th textTransform="capitalize" isNumeric>
             Created at
           </Th>
-          <Th />
+          <Th textTransform="capitalize" />
         </Tr>
       </TableHead>
 
       <Tbody>
-        {flags.map((flag: IFlag) => (
-          <FlagRow key={flag.id} flag={flag} />
+        {projects.map((project: IProject) => (
+          <ProjectRow key={project.id} project={project} />
         ))}
       </Tbody>
     </CustomTable>
   )
 }
 
-export default FlagsTable
+export default ProjectsTable
 
 const TableHead = styled(Thead)`
   background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};

@@ -1,79 +1,12 @@
-import {
-  Box,
-  Button,
-  Heading,
-  Icon,
-  IconButton,
-  Popover,
-  PopoverTrigger,
-  Spinner,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  useDisclosure,
-  PopoverContent,
-  Text,
-  PopoverBody,
-  Tooltip,
-} from '@chakra-ui/react'
+import { Box, Button, Heading, useDisclosure } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import BoxedPage from 'components/styles/BoxedPage'
-import moment from 'moment'
-import { FiMinus } from 'react-icons/fi'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import CreateProjectDialog from './projects/CreateProjectDialog'
-
-interface IRemoveButtonProps {
-  projectId: string
-}
-
-function RemoveButton({ projectId }: IRemoveButtonProps) {
-  const queryClient = useQueryClient()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const deleteMutation = useMutation(ProjectsApi.deleteProject, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getProjects)
-    },
-  })
-
-  function deleteProject() {
-    onClose()
-    deleteMutation.mutate(projectId)
-  }
-
-  return (
-    <Popover placement="left" isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
-      <PopoverTrigger>
-        <IconButton
-          disabled={deleteMutation.isLoading}
-          onClick={onOpen}
-          size="xs"
-          aria-label="delete"
-          icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
-        />
-      </PopoverTrigger>
-
-      <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
-        <PopoverBody textAlign="right" shadow="lg" p="4">
-          <Text textAlign="left" mb="4">
-            Are you sure you want to delete this project?
-          </Text>
-
-          <Button onClick={deleteProject} size="sm" colorScheme="red" variant="ghost">
-            Delete
-          </Button>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
-  )
-}
+import ProjectsTable from './projects/ProjectsTables'
 
 function ProjectsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -97,44 +30,10 @@ function ProjectsPage() {
       </Box>
 
       <TableContainer>
-        <CustomTable variant="simple">
-          <TableHead>
-            <Tr>
-              <Th textTransform="capitalize">Name</Th>
-              <Th textTransform="capitalize" isNumeric>
-                Created at
-              </Th>
-              <Th textTransform="capitalize" />
-            </Tr>
-          </TableHead>
-
-          <Tbody>
-            {projects?.map((project: IProject) => (
-              <Tr key={project.id}>
-                <Td>{project.name}</Td>
-
-                <Td isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
-
-                <Td>
-                  <Box display="flex" justifyContent="flex-end">
-                    <Tooltip placement="top" label="Remove">
-                      <Box>
-                        <RemoveButton projectId={project.id} />
-                      </Box>
-                    </Tooltip>
-                  </Box>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </CustomTable>
+        <ProjectsTable projects={projects as IProject[]} />
       </TableContainer>
 
-      <CreateProjectDialog
-        doesProjectAlreadyExist={doesProjectAlreadyExist}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      <CreateProjectDialog doesProjectAlreadyExist={doesProjectAlreadyExist} isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
   )
 }
@@ -145,12 +44,4 @@ const TableContainer = styled.div`
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radii.lg};
   border: ${({ theme }) => `1px solid ${applyColorMode(theme.colors.gray[200], theme.colors.whiteAlpha[200])(theme)}`};
-`
-
-const TableHead = styled(Thead)`
-  background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
-`
-
-const CustomTable = styled(Table)`
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
 `
