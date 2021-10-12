@@ -2,34 +2,21 @@ import {
   Box,
   Button,
   Heading,
-  Icon,
-  IconButton,
   Skeleton,
-  Spinner,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
-  Tooltip,
   Tr,
   useDisclosure,
   Tabs,
   TabList,
   Tab,
-  Switch,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  Text,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import BoxedPage from 'components/styles/BoxedPage'
-import moment from 'moment'
-import { FiMinus } from 'react-icons/fi'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { IStoreState } from 'redux/store'
 import CreateFlagDialog from './flags/CreateFlagDialog'
 import { useDispatch, useSelector } from 'react-redux'
@@ -37,6 +24,8 @@ import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import { IEnvironment } from 'api/ProjectsApi'
 import { configurationActions } from 'redux/ducks/configurationDuck'
+import FlagsTable from './flags/FlagsTable'
+import { useQuery } from 'react-query'
 
 function SkeletonTable() {
   return (
@@ -69,52 +58,6 @@ function SkeletonTable() {
         </Tbody>
       </CustomTable>
     </TableContainer>
-  )
-}
-
-interface IRemoveButtonProps {
-  flagId: string
-}
-
-function RemoveButton({ flagId }: IRemoveButtonProps) {
-  const queryClient = useQueryClient()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const deleteMutation = useMutation(FlagsApi.deleteFlag, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getFlags)
-    },
-  })
-
-  function deleteFlag() {
-    onClose()
-    deleteMutation.mutate(flagId)
-  }
-
-  return (
-    <Popover placement="left" isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
-      <PopoverTrigger>
-        <IconButton
-          disabled={deleteMutation.isLoading}
-          onClick={onOpen}
-          size="xs"
-          aria-label="delete"
-          icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
-        />
-      </PopoverTrigger>
-
-      <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
-        <PopoverBody textAlign="right" shadow="lg" p="4">
-          <Text textAlign="left" mb="4">
-            Are you sure you want to delete this project?
-          </Text>
-
-          <Button textAlign="right" onClick={deleteFlag} size="sm" colorScheme="red" variant="ghost">
-            Delete
-          </Button>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
   )
 }
 
@@ -176,44 +119,9 @@ function FlagsPage() {
       </Tabs>
 
       {isLoading && <SkeletonTable />}
-      {!isLoading && (
+      {!isLoading && flags?.length && (
         <TableContainer>
-          <CustomTable variant="simple">
-            <TableHead>
-              <Tr>
-                <Th textTransform="capitalize">Name</Th>
-                <Th textTransform="capitalize">Active</Th>
-                <Th textTransform="capitalize" isNumeric>
-                  Created at
-                </Th>
-                <Th />
-              </Tr>
-            </TableHead>
-
-            <Tbody>
-              {flags?.map((flag: IFlag) => (
-                <Tr key={flag.id}>
-                  <Td>{flag.name}</Td>
-
-                  <Td>
-                    <Switch size="md" isChecked={true} colorScheme="green" />
-                  </Td>
-
-                  <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
-
-                  <Td>
-                    <Box display="flex" justifyContent="flex-end">
-                      <Tooltip placement="top" label="Remove">
-                        <Box>
-                          <RemoveButton flagId={flag.id} />
-                        </Box>
-                      </Tooltip>
-                    </Box>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </CustomTable>
+          <FlagsTable flags={flags} />
         </TableContainer>
       )}
 
