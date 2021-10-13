@@ -19,11 +19,12 @@ import FlagsApi from './FlagsApi'
 
 export interface IEnvironment {
   name: string;
+  color: string;
 }
 
 export const EmptyEnvironment = {
-  production: { name: 'production' },
-  development: { name: 'development' }
+  production: { name: 'production', color: 'orange' },
+  development: { name: 'development', color: 'blue' }
 }
 
 export interface IProject {

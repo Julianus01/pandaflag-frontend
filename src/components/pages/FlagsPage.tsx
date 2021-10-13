@@ -25,7 +25,7 @@ import CreateFlagDialog from './flags/CreateFlagDialog'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import { EmptyEnvironment, IEnvironment } from 'api/ProjectsApi'
+import { EmptyEnvironment } from 'api/ProjectsApi'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
@@ -63,19 +63,6 @@ function SkeletonTable() {
       </CustomTable>
     </TableContainer>
   )
-}
-
-function environmentColorScheme(environment: IEnvironment) {
-  switch (environment.name) {
-    case EmptyEnvironment.production.name:
-      return 'orange'
-
-    case EmptyEnvironment.development.name:
-      return 'blue'
-
-    default:
-      return 'orange'
-  }
 }
 
 function FlagsPage() {
@@ -120,7 +107,7 @@ function FlagsPage() {
           index={environment?.name === 'production' ? 0 : 1}
           size="sm"
           variant="soft-rounded"
-          colorScheme={environmentColorScheme(environment as IEnvironment)}
+          colorScheme={environment?.color}
         >
           <TabList>
             <Tab pb="5px">production</Tab>
