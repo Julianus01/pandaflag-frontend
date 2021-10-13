@@ -43,7 +43,7 @@ function RemoveButton({ flag }: IRemoveButtonProps) {
 
       toast({
         title: `Removed flag '${flag.name} for ${flag.environmentName}'`,
-        position: 'top',
+        position: 'bottom-right',
         isClosable: true,
         variant: 'subtle',
         status: 'success',
@@ -107,7 +107,7 @@ function FlagRow({ flag }: IProps) {
 
       toast({
         title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${flag.environmentName}'`,
-        position: 'top',
+        position: 'bottom-right',
         isClosable: true,
         variant: 'subtle',
         status: 'success',

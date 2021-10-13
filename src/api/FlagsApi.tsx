@@ -23,6 +23,7 @@ export interface IFlag {
   id: string
   projectId: string
   name: string
+  description?: string
   enabled: boolean
   environmentName: string
   createdAt: number
@@ -49,8 +50,13 @@ async function getFlags(): Promise<IFlag[]> {
   return flags.sort((a, b) => a.name.localeCompare(b.name))
 }
 
-async function getFlag(id: string): Promise<IFlag> {
+async function getFlag(id: string): Promise<IFlag | undefined> {
   const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.flags, id))
+
+  if (!snapshot.exists()) {
+    return undefined
+  }
+
   return { id, ...snapshot.data() } as IFlag
 }
 

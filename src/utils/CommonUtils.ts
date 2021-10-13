@@ -1,11 +1,13 @@
-import { KeyboardEvent, MouseEvent } from "react"
+import { KeyboardEvent, MouseEvent } from 'react'
 
-function stopPropagation(event: Event | KeyboardEvent<HTMLInputElement> | MouseEvent<HTMLDivElement>) {
+function stopPropagation(
+  event: Event | KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLTextAreaElement> | MouseEvent<HTMLDivElement>
+) {
   event.stopPropagation()
 }
 
 const CommonUtils = {
-  stopPropagation
+  stopPropagation,
 }
 
 export default CommonUtils
