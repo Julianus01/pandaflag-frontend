@@ -23,7 +23,6 @@ import { FiArrowLeft } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 import { useHistory, useParams } from 'react-router'
 import styled from 'styled-components/macro'
-import CommonUtils from 'utils/CommonUtils'
 
 interface IParams {
   id: string
@@ -115,7 +114,6 @@ function FlagPage() {
         </Heading>
 
         <Input
-          onKeyDown={CommonUtils.stopPropagation}
           value={flag.name}
           onChange={onInputChange('name')}
           variant="filled"
@@ -124,7 +122,6 @@ function FlagPage() {
         />
 
         <AutoTextArea
-          onKeyDown={CommonUtils.stopPropagation}
           borderRadius="md"
           variant="filled"
           placeholder="Description"

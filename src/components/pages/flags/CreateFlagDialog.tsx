@@ -17,7 +17,6 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi from 'api/FlagsApi'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import CommonUtils from 'utils/CommonUtils'
 import _ from 'lodash/fp'
 
 interface Props {
@@ -67,8 +66,6 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    CommonUtils.stopPropagation(event)
-
     if (event.key === 'Enter' && flagName.length >= 3) {
       createFlag()
     }

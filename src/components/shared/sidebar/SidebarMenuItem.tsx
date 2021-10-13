@@ -1,4 +1,4 @@
-import { Text, Kbd } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ReactNode } from 'react'
 import { useHistory } from 'react-router'
@@ -8,7 +8,6 @@ export interface ISidebarMenuItem {
   name: string
   href: string
   icon: ReactNode
-  keyboardLetter: string
 }
 
 interface IProps {
@@ -29,8 +28,6 @@ function SidebarMenuItem({ children, menuItem, active = false }: IProps) {
       {menuItem.icon}
 
       <Text ml={3}>{children}</Text>
-
-      <Kbd ml="auto">{menuItem.keyboardLetter}</Kbd>
     </Container>
   )
 }

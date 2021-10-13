@@ -14,7 +14,6 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import CommonUtils from 'utils/CommonUtils'
 
 interface Props {
   isOpen: boolean
@@ -52,8 +51,6 @@ function CreateProjectDialog({ isOpen, onClose, doesProjectAlreadyExist }: Props
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    CommonUtils.stopPropagation(event)
-
     if (event.key === 'Enter' && projectName.length >= 3) {
       createProject()
     }

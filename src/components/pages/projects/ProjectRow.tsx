@@ -38,7 +38,7 @@ function RemoveButton({ project }: IRemoveButtonProps) {
 
       toast({
         title: `Removed project '${project.name}'`,
-        position: 'bottom-right',
+        position: 'top',
         isClosable: true,
         variant: 'subtle',
         status: 'success',
