@@ -15,6 +15,7 @@ import {
   Tab,
   Spinner,
   Icon,
+  Text,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
@@ -136,6 +137,8 @@ function FlagsPage() {
           <FlagsTable flags={flags as IFlag[]} />
         </TableContainer>
       )}
+
+      {!isLoading && !Boolean(flags?.length) && <Text>No flags. Go ahead and add your first flag</Text>}
 
       <CreateFlagDialog doesFlagAlreadyExist={doesFlagAlreadyExist} isOpen={isOpen} onClose={onClose} />
     </BoxedPage>

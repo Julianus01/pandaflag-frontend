@@ -25,23 +25,32 @@ import { useQueryClient, useMutation, useQuery } from 'react-query'
 import styled, { css } from 'styled-components/macro'
 
 interface IRemoveButtonProps {
-  flagId: string
+  flag: IFlag
 }
 
-function RemoveButton({ flagId }: IRemoveButtonProps) {
+function RemoveButton({ flag }: IRemoveButtonProps) {
   const queryClient = useQueryClient()
+  const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { isFetching: flagsFetching } = useQuery(ApiQueryId.getFlags, FlagsApi.getFlags)
   const deleteMutation = useMutation(FlagsApi.deleteFlag, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
+
+      toast({
+        title: `Removed flag '${flag.name} for ${flag.environmentName}'`,
+        position: 'top',
+        isClosable: true,
+        variant: 'subtle',
+        status: 'success',
+      })
     },
   })
 
   function deleteFlag() {
     onClose()
-    deleteMutation.mutate(flagId)
+    deleteMutation.mutate(flag.id)
   }
 
   return (
@@ -62,7 +71,14 @@ function RemoveButton({ flagId }: IRemoveButtonProps) {
             Are you sure you want to delete this project?
           </Text>
 
-          <Button isDisabled={flagsFetching} textAlign="right" onClick={deleteFlag} size="sm" colorScheme="red" variant="ghost">
+          <Button
+            isDisabled={flagsFetching}
+            textAlign="right"
+            onClick={deleteFlag}
+            size="sm"
+            colorScheme="red"
+            variant="ghost"
+          >
             Delete
           </Button>
         </PopoverBody>
@@ -115,15 +131,13 @@ function FlagRow({ flag }: IProps) {
         {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
       </Td>
 
-      <Td isNumeric>
-        {moment.unix(flag.createdAt).format('Do MMM YYYY')}
-      </Td>
+      <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
 
       <Td>
         <Box display="flex" justifyContent="flex-end">
           <Tooltip placement="top" label="Remove">
             <Box>
-              <RemoveButton flagId={flag.id} />
+              <RemoveButton flag={flag} />
             </Box>
           </Tooltip>
         </Box>

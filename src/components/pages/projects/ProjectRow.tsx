@@ -13,6 +13,7 @@ import {
   Text,
   PopoverBody,
   Tooltip,
+  useToast,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
@@ -21,23 +22,32 @@ import { FiMinus } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 interface IRemoveButtonProps {
-  projectId: string
+  project: IProject
 }
 
-function RemoveButton({ projectId }: IRemoveButtonProps) {
+function RemoveButton({ project }: IRemoveButtonProps) {
   const queryClient = useQueryClient()
+  const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { isFetching: projectsFetching } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
   const deleteMutation = useMutation(ProjectsApi.deleteProject, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getProjects)
+
+      toast({
+        title: `Removed project '${project.name}'`,
+        position: 'top',
+        isClosable: true,
+        variant: 'subtle',
+        status: 'success',
+      })
     },
   })
 
   function deleteProject() {
     onClose()
-    deleteMutation.mutate(projectId)
+    deleteMutation.mutate(project.id)
   }
 
   return (
@@ -82,7 +92,7 @@ function ProjectRow({ project }: IProps) {
         <Box display="flex" justifyContent="flex-end">
           <Tooltip placement="top" label="Remove">
             <Box>
-              <RemoveButton projectId={project.id} />
+              <RemoveButton project={project} />
             </Box>
           </Tooltip>
         </Box>
