@@ -15,13 +15,16 @@ import {
   PopoverBody,
   Text,
   useToast,
+  HStack,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
+import RoutePage from 'components/routes/RoutePage'
 import usePropState from 'hooks/common/usePropState'
 import moment from 'moment'
-import { FiMinus } from 'react-icons/fi'
+import { FiEdit2, FiMinus } from 'react-icons/fi'
 import { useQueryClient, useMutation, useQuery } from 'react-query'
+import { useHistory } from 'react-router'
 import styled, { css } from 'styled-components/macro'
 
 interface IRemoveButtonProps {
@@ -93,7 +96,9 @@ interface IProps {
 
 function FlagRow({ flag }: IProps) {
   const toast = useToast()
+  const history = useHistory()
   const queryClient = useQueryClient()
+
   const [enabled, setEnabled] = usePropState(flag.enabled)
 
   const updateFlagMutation = useMutation(FlagsApi.updateFlag, {
@@ -110,9 +115,13 @@ function FlagRow({ flag }: IProps) {
     },
   })
 
-  function toggleFlag() {
+  function toggleStatus() {
     setEnabled(!enabled)
     updateFlagMutation.mutate({ id: flag.id, enabled: !flag.enabled })
+  }
+
+  function onEdit() {
+    history.push(RoutePage.flag(flag.id))
   }
 
   return (
@@ -125,7 +134,7 @@ function FlagRow({ flag }: IProps) {
         {/* Potential thread to follow */}
         {/* https://giters.com/chakra-ui/chakra-ui/issues/4596 */}
         <SwitchContainer disabled={updateFlagMutation.isLoading}>
-          <Switch mr={4} size="md" isChecked={enabled} onChange={toggleFlag} colorScheme="green" shadow="none" />
+          <Switch mr={4} size="md" isChecked={enabled} onChange={toggleStatus} colorScheme="green" shadow="none" />
         </SwitchContainer>
 
         {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
@@ -134,13 +143,19 @@ function FlagRow({ flag }: IProps) {
       <Td isNumeric>{moment.unix(flag.createdAt).format('Do MMM YYYY')}</Td>
 
       <Td>
-        <Box display="flex" justifyContent="flex-end">
+        <HStack spacing="2" display="flex" justifyContent="flex-end">
+          <Tooltip placement="top" label="Edit">
+            <Box>
+              <IconButton onClick={onEdit} size="xs" aria-label="edit" icon={<Icon as={FiEdit2} />} />
+            </Box>
+          </Tooltip>
+
           <Tooltip placement="top" label="Remove">
             <Box>
               <RemoveButton flag={flag} />
             </Box>
           </Tooltip>
-        </Box>
+        </HStack>
       </Td>
     </Tr>
   )

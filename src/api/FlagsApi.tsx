@@ -2,6 +2,7 @@ import {
   collection,
   query,
   getDocs,
+  getDoc,
   getFirestore,
   QueryDocumentSnapshot,
   DocumentData,
@@ -46,6 +47,11 @@ async function getFlags(): Promise<IFlag[]> {
   }) as IFlag[]
 
   return flags.sort((a, b) => a.name.localeCompare(b.name))
+}
+
+async function getFlag(id: string): Promise<IFlag> {
+  const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.flags, id))
+  return { id, ...snapshot.data() } as IFlag
 }
 
 // Create Flag
@@ -116,6 +122,7 @@ async function deleteProjectFlags(projectId: string): Promise<void> {
 const FlagsApi = {
   // Get
   getFlags,
+  getFlag,
 
   // Create
   createFlag,

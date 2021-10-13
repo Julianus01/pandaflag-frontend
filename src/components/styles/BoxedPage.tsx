@@ -5,8 +5,8 @@ interface IProps {
   children: ReactNode
 }
 
-function BoxedPage({ children }: IProps) {
-  return <Container>{children}</Container>
+function BoxedPage({ children, ...restProps }: IProps) {
+  return <Container {...restProps}>{children}</Container>
 }
 
 export default BoxedPage

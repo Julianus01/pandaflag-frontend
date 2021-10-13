@@ -1,4 +1,8 @@
 export enum ApiQueryId {
+  // Projects
   getProjects = 'getProjects',
-  getFlags = 'getFlags'
+
+  // Flags
+  getFlags = 'getFlags',
+  getFlag = 'getFlag',
 }
