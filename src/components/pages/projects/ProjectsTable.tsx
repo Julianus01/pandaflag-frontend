@@ -14,9 +14,13 @@ function ProjectsTable({ projects }: IProps) {
       <TableHead>
         <Tr>
           <Th textTransform="capitalize">Name</Th>
+
+          <Th textTransform="capitalize">Api key</Th>
+
           <Th textTransform="capitalize" isNumeric>
             Created at
           </Th>
+
           <Th textTransform="capitalize" />
         </Tr>
       </TableHead>

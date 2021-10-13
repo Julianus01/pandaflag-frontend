@@ -18,8 +18,9 @@ import {
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import moment from 'moment'
-import { FiMinus } from 'react-icons/fi'
+import { FiMinus, FiKey } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useClipboard } from '@chakra-ui/react'
 
 interface IRemoveButtonProps {
   project: IProject
@@ -82,11 +83,19 @@ interface IProps {
 }
 
 function ProjectRow({ project }: IProps) {
+  const { hasCopied, onCopy } = useClipboard(project.apiKey)
+
   return (
     <Tr>
       <Td>{project.name}</Td>
 
-      <Td isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
+      <Td>
+        <Button minWidth="78px" onClick={onCopy} leftIcon={<Icon as={FiKey} />} size="xs">
+          {hasCopied ? 'Copied' : 'Copy'}
+        </Button>
+      </Td>
+
+      <Td whiteSpace="nowrap" isNumeric>{moment.unix(project.createdAt).format('Do MMM YYYY')}</Td>
 
       <Td>
         <Box display="flex" justifyContent="flex-end">
