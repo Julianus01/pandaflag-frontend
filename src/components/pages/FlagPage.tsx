@@ -106,7 +106,7 @@ function FlagPage() {
         Status
       </Heading>
       <Text color="gray.500" mb={2}>
-        You can toggle the status below but update to take effect.
+        You can toggle the status below but takes effect<br />after you complete the update.
       </Text>
 
       <FormControl display="flex" alignItems="center">
