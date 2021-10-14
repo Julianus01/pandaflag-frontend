@@ -110,8 +110,8 @@ const Content = styled.div`
   flex-direction: column;
   margin-left: 276px;
 
-  padding: ${({ theme }) => `${theme.space[14]} ${theme.space[28]}`};
+  padding: ${({ theme }) => `0 ${theme.space[28]}`};
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
-    padding: ${({ theme }) => `${theme.space[14]} ${theme.space[16]}`};
+    padding: ${({ theme }) => `0 ${theme.space[16]}`};
   }
 `

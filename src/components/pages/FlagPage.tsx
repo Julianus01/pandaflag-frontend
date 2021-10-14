@@ -1,7 +1,6 @@
 import {
   Box,
   Heading,
-  IconButton,
   Icon,
   Spinner,
   Text,
@@ -10,18 +9,21 @@ import {
   FormLabel,
   Input,
   Tag,
+  Button,
+  useToast,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
 import AutoTextArea from 'components/styles/AutoTextarea'
 import BoxedPage from 'components/styles/BoxedPage'
+import FixedFooter from 'components/styles/FixedFooter'
 import usePropState from 'hooks/common/usePropState'
 import useFlagEnvironment from 'hooks/flag/useEnvironmentColor'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { FiArrowLeft } from 'react-icons/fi'
-import { useQuery } from 'react-query'
-import { useHistory, useParams } from 'react-router'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 interface IParams {
@@ -29,10 +31,12 @@ interface IParams {
 }
 
 function FlagPage() {
-  const history = useHistory()
+  const toast = useToast()
   const params = useParams<IParams>()
+  const queryClient = useQueryClient()
 
   const [flag, setFlag] = usePropState<IFlag | undefined>(undefined)
+  const [isDirty, setIsDirty] = useState<boolean>(false)
   const environment = useFlagEnvironment(flag?.environmentName)
 
   const { isFetching } = useQuery([ApiQueryId.getFlag, params.id], () => FlagsApi.getFlag(params.id), {
@@ -41,18 +45,41 @@ function FlagPage() {
     },
   })
 
-  function onBack() {
-    history.push(RoutePage.flags())
+  const updateFlagMutation = useMutation(FlagsApi.updateFlag, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(ApiQueryId.getFlags)
+      setIsDirty(false)
+
+      toast({
+        title: `Updated successfully`,
+        position: 'top',
+        isClosable: true,
+        variant: 'subtle',
+        status: 'success',
+      })
+    },
+  })
+
+  function onDirty() {
+    if (!isDirty) {
+      setIsDirty(true)
+    }
   }
 
   function toggleStatus() {
     setFlag({ ...flag, enabled: !flag?.enabled } as IFlag)
+    onDirty()
   }
 
   function onInputChange(key: string) {
     return function (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
       setFlag({ ...flag, [key]: event.target.value } as IFlag)
+      onDirty()
     }
+  }
+
+  function onUpdate() {
+    updateFlagMutation.mutate(flag as IFlag)
   }
 
   if (isFetching) {
@@ -69,80 +96,78 @@ function FlagPage() {
 
   return (
     <BoxedPage>
-      <Container>
-        <BackContainer>
-          <IconButton
-            onClick={onBack}
-            mr="2"
-            size="xs"
-            aria-label="back"
-            icon={<Icon as={FiArrowLeft} strokeWidth={2.4} />}
-          />
-        </BackContainer>
-
-        <Box display="flex">
-          <Heading flex={1} mb={10} as="h3" size="lg">
-            {flag.name}
-          </Heading>
-        </Box>
-
-        <Heading as="h5" size="sm">
-          Status
+      <Box display="flex">
+        <Heading flex={1} mb={10} as="h3" size="lg">
+          {flag.name}
         </Heading>
-        <Text color="gray.500" mb={2}>
-          You can toggle the status below but update to take effect.
-        </Text>
+      </Box>
 
-        <FormControl display="flex" alignItems="center">
-          <Switch id="status" mr={2} size="md" isChecked={flag.enabled} onChange={toggleStatus} colorScheme="green" />
+      <Heading as="h5" size="sm">
+        Status
+      </Heading>
+      <Text color="gray.500" mb={2}>
+        You can toggle the status below but update to take effect.
+      </Text>
 
-          <FormLabel cursor="pointer" fontWeight="normal" htmlFor="status" mb="0">
-            {flag.enabled ? 'Enabled' : 'Disabled'}
-          </FormLabel>
-        </FormControl>
+      <FormControl display="flex" alignItems="center">
+        <Switch id="status" mr={2} size="md" isChecked={flag.enabled} onChange={toggleStatus} colorScheme="green" />
 
-        <Heading mt={10} mb={2} as="h5" size="sm">
-          Environment
-        </Heading>
+        <FormLabel cursor="pointer" fontWeight="normal" htmlFor="status" mb="0">
+          {flag.enabled ? 'Enabled' : 'Disabled'}
+        </FormLabel>
+      </FormControl>
 
-        <Tag variant="subtle" colorScheme={environment?.color}>
-          {flag.environmentName}
-        </Tag>
+      <Heading mt={10} mb={2} as="h5" size="sm">
+        Environment
+      </Heading>
 
-        <Heading mt={10} mb={2} as="h5" size="sm">
-          Information
-        </Heading>
+      <Tag variant="subtle" colorScheme={environment?.color}>
+        {flag.environmentName}
+      </Tag>
 
-        <Input
-          value={flag.name}
-          onChange={onInputChange('name')}
-          variant="filled"
-          placeholder="Name"
-          mb={2}
-        />
+      <Heading mt={10} mb={2} as="h5" size="sm">
+        Information
+      </Heading>
 
-        <AutoTextArea
-          borderRadius="md"
-          variant="filled"
-          placeholder="Description"
+      <Input value={flag.name} onChange={onInputChange('name')} variant="filled" placeholder="Name" mb={2} />
+
+      <AutoTextArea
+        borderRadius="md"
+        variant="filled"
+        placeholder="Description"
+        size="sm"
+        resize="none"
+        onChange={onInputChange('description')}
+        value={flag.description}
+      />
+
+      <FixedFooter>
+        <BackLink to={{ pathname: RoutePage.flags() }}>
+          <Button size="sm" variant="ghost" leftIcon={<Icon as={FiArrowLeft} />}>
+            Back
+          </Button>
+        </BackLink>
+
+        <Button
+          isLoading={updateFlagMutation.isLoading}
+          loadingText="Updating"
+          onClick={onUpdate}
           size="sm"
-          resize="none"
-          onChange={onInputChange('description')}
-          value={flag.description}
-        />
-      </Container>
+          ml="auto"
+          colorScheme="blue"
+          disabled={!isDirty || updateFlagMutation.isLoading}
+        >
+          Update
+        </Button>
+      </FixedFooter>
     </BoxedPage>
   )
 }
 
 export default FlagPage
 
-const Container = styled.div`
-  position: relative;
-`
-
-const BackContainer = styled.div`
-  position: absolute;
-  left: 0;
-  top: -35px;
+const BackLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 `
