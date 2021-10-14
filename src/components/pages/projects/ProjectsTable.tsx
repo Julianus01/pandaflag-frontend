@@ -1,4 +1,4 @@
-import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react'
+import { Table, Tbody, Th, Thead, Tr, Box } from '@chakra-ui/react'
 import { IProject } from 'api/ProjectsApi'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
@@ -13,7 +13,9 @@ function ProjectsTable({ projects }: IProps) {
     <CustomTable variant="simple">
       <TableHead>
         <Tr>
-          <Th textTransform="capitalize">Name</Th>
+          <Th textTransform="capitalize">
+            <Box ml="26px">Name</Box>
+          </Th>
 
           <Th textTransform="capitalize">Api key</Th>
 
