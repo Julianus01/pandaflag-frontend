@@ -85,7 +85,7 @@ function FlagsPage() {
   }
 
   function doesFlagAlreadyExist(name: string): boolean {
-    const found = flags?.find((flag: IFlag) => flag.name === name)
+    const found = flags?.find((flag: IFlag) => flag.name.toLowerCase() === name.toLowerCase())
     return Boolean(found)
   }
 

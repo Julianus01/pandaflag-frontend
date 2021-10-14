@@ -6,6 +6,7 @@ import RoutePage from 'components/routes/RoutePage'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
 import ThemeButton from 'theme/ThemeButton'
+import SidebarProjectsCount from './SidebarProjectsCounts'
 
 const MENU_ITEMS: ISidebarMenuItem[] = [
   {
@@ -25,6 +26,7 @@ const CONFIGURATION_MENU_ITEMS: ISidebarMenuItem[] = [
     name: 'Projects',
     href: RoutePage.projects(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiLayers} />,
+    endComponent: () => <SidebarProjectsCount />
   },
   {
     name: 'Settings',

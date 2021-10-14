@@ -14,7 +14,7 @@ function ProjectsPage() {
   const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
   function doesProjectAlreadyExist(name: string): boolean {
-    const found = projects?.find((project: IProject) => project.name === name)
+    const found = projects?.find((project: IProject) => project.name.toLowerCase() === name.toLowerCase())
     return Boolean(found)
   }
 
