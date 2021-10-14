@@ -108,7 +108,8 @@ const Content = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 276px;
+  /* Sidebar width !! */
+  margin-left: 280px;
 
   padding: ${({ theme }) => `0 ${theme.space[28]}`};
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {

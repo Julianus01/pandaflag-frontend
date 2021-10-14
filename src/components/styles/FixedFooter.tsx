@@ -24,16 +24,17 @@ const Container = styled.div`
   /* Sidebar width !! */
   left: 280px;
   right: 0;
-  bottom: ${({ theme }) => theme.space[10]};
+  bottom: 0;
+  background: ${({ theme }) => applyColorMode(theme.colors.gray[50], theme.colors.gray[800])(theme)};
 `
 
 const Content = styled.div`
   flex: 1;
   display: flex;
 
-  padding: ${({ theme }) => `0 ${theme.space[28]}`};
+  padding: ${({ theme }) => `0 ${theme.space[24]}`};
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
-    padding: ${({ theme }) => `0 ${theme.space[16]}`};
+    padding: ${({ theme }) => `0 ${theme.space[12]}`};
   }
 `
 
@@ -46,6 +47,7 @@ const Footer = styled.footer`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+  margin-bottom: ${({ theme }) => theme.space[10]};
   border-radius: ${({ theme }) => theme.radii.md};
   box-shadow: ${({ theme }) => theme.shadows.xs};
   padding: ${({ theme }) => `${theme.space[8]}`};

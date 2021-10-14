@@ -97,7 +97,7 @@ function FlagPage() {
   }
 
   return (
-    <BoxedPage>
+    <Container>
       <Box display="flex">
         <Heading flex={1} mb={10} as="h3" size="lg">
           {flag.name}
@@ -176,11 +176,15 @@ function FlagPage() {
           Update
         </Button>
       </FixedFooter>
-    </BoxedPage>
+    </Container>
   )
 }
 
 export default FlagPage
+
+const Container = styled(BoxedPage)`
+  padding-bottom: ${({ theme }) => theme.space[40]};
+`
 
 const BackLink = styled(Link)`
   display: flex;
