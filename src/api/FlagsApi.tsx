@@ -61,7 +61,12 @@ async function getFlag(id: string): Promise<IFlag | undefined> {
 }
 
 // Create Flag
-async function createFlag(name: string): Promise<IFlag> {
+interface ICreateFlagRequestParams {
+  name: string
+  description?: string
+}
+
+async function createFlag({ name, description = '' }: ICreateFlagRequestParams): Promise<IFlag> {
   const project = store.getState().configuration.project as IProject
   const environment = store.getState().configuration.environment as IEnvironment
   const createdAt = Timestamp.now()
@@ -79,14 +84,23 @@ async function createFlag(name: string): Promise<IFlag> {
   return { ...newFlag, id: newFlagDoc.id, createdAt: createdAt.seconds }
 }
 
-async function createFlagForAllEnvironments(
+interface ICreateFlagForAllEnvironmentsRequestParams {
   name: string
-): Promise<[DocumentReference<DocumentData>, DocumentReference<DocumentData>]> {
+  description?: string
+}
+
+async function createFlagForAllEnvironments({
+  name,
+  description = '',
+}: ICreateFlagForAllEnvironmentsRequestParams): Promise<
+  [DocumentReference<DocumentData>, DocumentReference<DocumentData>]
+> {
   const project = store.getState().configuration.project as IProject
   const createdAt = Timestamp.now()
 
   const newFlag = {
     name,
+    description,
     projectId: project.id,
     enabled: false,
     createdAt,

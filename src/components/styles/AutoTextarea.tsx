@@ -24,7 +24,7 @@ function AutoTextArea(props: TextareaProps) {
 
   return (
     <div style={{ minHeight: parentHeight }}>
-      <Textarea {...props} ref={textAreaRef} rows={5} style={{ height: textAreaHeight }} onChange={onChangeHandler} />
+      <Textarea fontSize="md" {...props} ref={textAreaRef} rows={5} style={{ height: textAreaHeight }} onChange={onChangeHandler} />
     </div>
   )
 }
