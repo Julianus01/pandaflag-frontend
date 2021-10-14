@@ -23,8 +23,9 @@ import useFlagEnvironment from 'hooks/flag/useEnvironmentColor'
 import { ChangeEvent, useState } from 'react'
 import { FiArrowLeft } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import _ from 'lodash/fp'
 
 interface IParams {
   id: string
@@ -33,13 +34,14 @@ interface IParams {
 function FlagPage() {
   const toast = useToast()
   const params = useParams<IParams>()
+  const history = useHistory()
   const queryClient = useQueryClient()
 
   const [flag, setFlag] = usePropState<IFlag | undefined>(undefined)
   const [isDirty, setIsDirty] = useState<boolean>(false)
   const environment = useFlagEnvironment(flag?.environmentName)
 
-  const { isFetching } = useQuery([ApiQueryId.getFlag, params.id], () => FlagsApi.getFlag(params.id), {
+  const { data, isFetching } = useQuery([ApiQueryId.getFlag, params.id], () => FlagsApi.getFlag(params.id), {
     onSuccess: (flag: IFlag) => {
       setFlag(flag)
     },
@@ -48,7 +50,7 @@ function FlagPage() {
   const updateFlagMutation = useMutation(FlagsApi.updateFlag, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
-      setIsDirty(false)
+      history.push(RoutePage.flags())
 
       toast({
         title: `Updated successfully`,
@@ -106,7 +108,9 @@ function FlagPage() {
         Status
       </Heading>
       <Text color="gray.500" mb={2}>
-        You can toggle the status below but takes effect<br />after you complete the update.
+        You can toggle the status below but takes effect
+        <br />
+        after you complete the update.
       </Text>
 
       <FormControl display="flex" alignItems="center">
@@ -155,7 +159,7 @@ function FlagPage() {
           size="sm"
           ml="auto"
           colorScheme="blue"
-          disabled={!isDirty || updateFlagMutation.isLoading}
+          disabled={!isDirty || updateFlagMutation.isLoading || _.isEqual(flag, data)}
         >
           Update
         </Button>
