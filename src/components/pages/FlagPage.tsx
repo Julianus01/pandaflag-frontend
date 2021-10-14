@@ -133,17 +133,29 @@ function FlagPage() {
         Information
       </Heading>
 
-      <Input value={flag.name} onChange={onInputChange('name')} variant="filled" placeholder="Name" mb={2} />
+      <FormControl id="name">
+        <FormLabel fontWeight="normal" mb={2} fontSize="xs" color="gray.500">
+          Name
+        </FormLabel>
 
-      <AutoTextArea
-        borderRadius="md"
-        variant="filled"
-        placeholder="Description"
-        size="sm"
-        resize="none"
-        onChange={onInputChange('description')}
-        value={flag.description}
-      />
+        <Input value={flag.name} onChange={onInputChange('name')} variant="filled" placeholder="Name" mb={4} />
+      </FormControl>
+
+      <FormControl id="description">
+        <FormLabel fontWeight="normal" mb={2} fontSize="xs" color="gray.500">
+          Description
+        </FormLabel>
+
+        <AutoTextArea
+          borderRadius="md"
+          variant="filled"
+          placeholder="Description"
+          size="sm"
+          resize="none"
+          onChange={onInputChange('description')}
+          value={flag.description}
+        />
+      </FormControl>
 
       <FixedFooter>
         <BackLink to={{ pathname: RoutePage.flags() }}>
