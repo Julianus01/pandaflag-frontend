@@ -9,33 +9,49 @@ import {
   FormControl,
   FormErrorMessage,
   Input,
+  useToast,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi from 'api/ProjectsApi'
+import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import useProjectAlreadyExists from 'hooks/project/useProjectAlreadyExists'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { useUpdateEffect } from 'react-use'
 
 interface Props {
+  project: IProject
   isOpen: boolean
   onClose: () => void
 }
 
-function CreateProjectDialog({ isOpen, onClose }: Props) {
+function EditProjectDialog({ project, isOpen, onClose }: Props) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
+  const toast = useToast()
 
-  const [projectName, setProjectName] = useState<string>('')
+  const [projectName, setProjectName] = useState<string>(project.name)
   const [error, setError] = useState<string | undefined>(undefined)
   const doesProjectAlreadyExist = useProjectAlreadyExists()
 
-  const createProjectMutation = useMutation(ProjectsApi.createProject, {
+  const updateProjectMutation = useMutation(ProjectsApi.updateProject, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getProjects)
       setProjectName('')
       onClose()
+
+      toast({
+        title: `Updated successfully`,
+        position: 'top',
+        isClosable: true,
+        variant: 'subtle',
+        status: 'success',
+      })
     },
   })
+
+  useUpdateEffect(() => {
+    setProjectName(project.name)
+  }, [project.name])
 
   function _onClose() {
     onClose()
@@ -53,11 +69,11 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter' && projectName.length >= 3) {
-      createProject()
+      updateProject()
     }
   }
 
-  function createProject() {
+  function updateProject() {
     const name = projectName.trim()
 
     if (doesProjectAlreadyExist(name)) {
@@ -65,7 +81,7 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
       return
     }
 
-    createProjectMutation.mutate(name)
+    updateProjectMutation.mutate({ ...project, name })
   }
 
   return (
@@ -76,13 +92,13 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
       isOpen={isOpen}
       isCentered
       autoFocus={false}
-      closeOnOverlayClick={!createProjectMutation.isLoading}
+      closeOnOverlayClick={!updateProjectMutation.isLoading}
       closeOnEsc
     >
       <AlertDialogOverlay />
 
       <AlertDialogContent>
-        <AlertDialogHeader>Add project</AlertDialogHeader>
+        <AlertDialogHeader>Edit project</AlertDialogHeader>
 
         <AlertDialogBody>
           <FormControl mb={4} isInvalid={Boolean(error)}>
@@ -103,13 +119,15 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
         <AlertDialogFooter>
           <Button
             minWidth="120px"
-            onClick={createProject}
-            loadingText="Adding"
-            disabled={projectName.length < 3 || createProjectMutation.isLoading}
+            onClick={updateProject}
+            loadingText="Updating"
+            disabled={
+              projectName.length < 3 || updateProjectMutation.isLoading || projectName.trim() === project.name.trim()
+            }
             colorScheme="blue"
-            isLoading={createProjectMutation.isLoading}
+            isLoading={updateProjectMutation.isLoading}
           >
-            Add
+            Update
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -117,4 +135,4 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   )
 }
 
-export default CreateProjectDialog
+export default EditProjectDialog

@@ -11,6 +11,7 @@ import {
   doc,
   Timestamp,
   orderBy,
+  setDoc,
 } from 'firebase/firestore'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
@@ -34,7 +35,7 @@ export interface IProject {
   members: IMember[]
   environments: IEnvironment[]
   apiKey: string
-  createdAt: number
+  createdAt: Timestamp
 }
 
 export interface IMember {
@@ -60,7 +61,7 @@ async function getProjects(): Promise<IProject[]> {
   )
   const projects = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
-    return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
+    return { ...data, id: doc.id }
   }) as IProject[]
 
   return projects
@@ -80,7 +81,16 @@ async function createProject(name: string): Promise<IProject> {
   }
   const newProjectDoc = await addDoc(collection(getFirestore(), FirestoreCollection.projects), newProject)
 
-  return { ...newProject, id: newProjectDoc.id, createdAt: createdAt.seconds }
+  return { ...newProject, id: newProjectDoc.id }
+}
+
+// Update Project
+export interface IUpdateProjectRequestParams extends Partial<IProject> {
+  id: string
+}
+
+async function updateProject({ id, ...updates }: IUpdateProjectRequestParams): Promise<void> {
+  return setDoc(doc(getFirestore(), FirestoreCollection.projects, id), updates, { merge: true })
 }
 
 // Delete Project
@@ -97,6 +107,9 @@ const ProjectsApi = {
 
   // Create
   createProject,
+
+  // Update
+  updateProject,
 
   // Delete
   deleteProject,

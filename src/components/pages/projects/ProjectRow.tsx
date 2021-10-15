@@ -1,4 +1,4 @@
-import { Box, Button, Icon, IconButton, Td, Tr, Tooltip, HStack } from '@chakra-ui/react'
+import { Box, Button, Icon, IconButton, Td, Tr, Tooltip, HStack, useDisclosure } from '@chakra-ui/react'
 import { IProject } from 'api/ProjectsApi'
 import moment from 'moment'
 import { FiKey, FiEdit2 } from 'react-icons/fi'
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 import styled from 'styled-components/macro'
 import ProjectRemoveButton from './ProjectRemoveButton'
+import EditProjectDialog from './EditProjectDialog'
 
 interface IProps {
   project: IProject
@@ -14,6 +15,7 @@ interface IProps {
 
 function ProjectRow({ project }: IProps) {
   const activeProject = useSelector((state: IStoreState) => state.configuration.project)
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const { hasCopied, onCopy } = useClipboard(project.apiKey)
 
   return (
@@ -33,14 +35,16 @@ function ProjectRow({ project }: IProps) {
       </Td>
 
       <Td whiteSpace="nowrap" isNumeric>
-        {moment.unix(project.createdAt).format('Do MMM YYYY')}
+        {moment.unix(project.createdAt.seconds).format('Do MMM YYYY')}
       </Td>
 
       <Td>
         <HStack spacing="2" display="flex" justifyContent="flex-end">
           <Tooltip placement="top" label="Edit">
             <Box>
-              <IconButton onClick={() => null} size="xs" aria-label="edit" icon={<Icon as={FiEdit2} />} />
+              <IconButton onClick={onOpen} size="xs" aria-label="edit" icon={<Icon as={FiEdit2} />} />
+
+              <EditProjectDialog project={project} isOpen={isOpen} onClose={onClose} />
             </Box>
           </Tooltip>
 

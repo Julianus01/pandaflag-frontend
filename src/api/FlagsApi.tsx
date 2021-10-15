@@ -26,7 +26,7 @@ export interface IFlag {
   description?: string
   enabled: boolean
   environmentName: string
-  createdAt: number
+  createdAt: Timestamp
 }
 
 // Get Flags
@@ -44,7 +44,7 @@ async function getFlags(): Promise<IFlag[]> {
 
   const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
-    return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
+    return { ...data, id: doc.id }
   }) as IFlag[]
 
   return flags.sort((a, b) => a.name.localeCompare(b.name))
@@ -81,7 +81,7 @@ async function createFlag({ name, description = '' }: ICreateFlagRequestParams):
 
   const newFlagDoc = await addDoc(collection(getFirestore(), FirestoreCollection.flags), newFlag)
 
-  return { ...newFlag, id: newFlagDoc.id, createdAt: createdAt.seconds }
+  return { ...newFlag, id: newFlagDoc.id }
 }
 
 interface ICreateFlagForAllEnvironmentsRequestParams {
