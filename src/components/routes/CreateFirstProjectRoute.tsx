@@ -22,7 +22,7 @@ function CreateFirstProjectRoute(props: RouteProps) {
   }
 
   if (projects?.length) {
-    return <Redirect to={RoutePage.root()} />
+    return <Redirect to={RoutePage.projects()} />
   }
 
   return <Route {...props} />

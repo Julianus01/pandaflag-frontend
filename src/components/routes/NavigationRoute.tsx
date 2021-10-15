@@ -70,7 +70,7 @@ function NavigationRoute(props: RouteProps) {
 
   const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects, {
     onSuccess: (projects: IProject[]) => {
-      if (!configuration.project) {
+      if (!configuration.project || !projects.length) {
         return
       }
 
