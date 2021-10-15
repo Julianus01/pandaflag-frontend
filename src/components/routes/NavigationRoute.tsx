@@ -34,7 +34,7 @@ function useUpdateConfigurationEnvironment() {
   }, [project, dispatch])
 }
 
-function useUpdateConfigurationProject(projects: IProject[] | undefined) {
+function useInitConfigurationProject(projects: IProject[] | undefined) {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -43,9 +43,12 @@ function useUpdateConfigurationProject(projects: IProject[] | undefined) {
     }
 
     const storeConfiguration = store.getState().configuration as IConfigurationState
-    const lastProjectName: string = LSUtils.lastProjectName()
+    if (storeConfiguration.project) {
+      return
+    }
 
-    if (!storeConfiguration.project && lastProjectName) {
+    const lastProjectName: string = LSUtils.lastProjectName()
+    if (lastProjectName) {
       const foundProject = projects.find((project: IProject) => project.name === lastProjectName)
 
       if (foundProject) {
@@ -62,10 +65,24 @@ function useUpdateConfigurationProject(projects: IProject[] | undefined) {
 }
 
 function NavigationRoute(props: RouteProps) {
+  const dispatch = useDispatch()
   const configuration = useSelector((state: IStoreState) => state.configuration)
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
-  useUpdateConfigurationProject(projects)
+  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects, {
+    onSuccess: (projects: IProject[]) => {
+      if (!configuration.project) {
+        return
+      }
+
+      const foundProject = projects.find((project: IProject) => project.name === configuration.project?.name)
+      if (!foundProject) {
+        // Selected project was deleted. change selected project
+        dispatch(configurationActions.changeProject(projects[0]))
+      }
+    },
+  })
+
+  useInitConfigurationProject(projects)
   useUpdateConfigurationEnvironment()
 
   if (!configuration.project || !configuration.environment) {

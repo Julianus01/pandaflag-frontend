@@ -29,7 +29,7 @@ function Routes() {
         <AuthenticatedRoute component={DashboardPage} exact path={RoutePage.dashboard()} />
 
         <AuthenticatedRoute component={FlagsPage} exact path={RoutePage.flags()} />
-        <AuthenticatedRoute component={FlagPage} exact path={RoutePage.rawFlag()} />
+        <AuthenticatedRoute component={FlagPage} exact path={RoutePage.flag(':id')} />
 
         <AuthenticatedRoute component={SettingsPage} exact path={RoutePage.settings()} />
         <AuthenticatedRoute component={ProjectsPage} exact path={RoutePage.projects()} />

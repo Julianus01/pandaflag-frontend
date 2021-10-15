@@ -22,10 +22,6 @@ function flag(id: string) {
   return `/flags/${id}`
 }
 
-function rawFlag() {
-  return `/flags/:id`
-}
-
 function settings() {
   return `/settings`
 }
@@ -45,7 +41,6 @@ const RoutePage = {
   emailVerification,
   flags,
   flag,
-  rawFlag,
   settings,
   projects,
   createFirstProject,
