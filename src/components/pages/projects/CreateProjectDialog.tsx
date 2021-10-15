@@ -11,10 +11,12 @@ import {
   Input,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi from 'api/ProjectsApi'
+import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import useProjectAlreadyExists from 'hooks/project/useProjectAlreadyExists'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { useDispatch } from 'react-redux'
+import { configurationActions } from 'redux/ducks/configurationDuck'
 
 interface Props {
   isOpen: boolean
@@ -23,6 +25,7 @@ interface Props {
 
 function CreateProjectDialog({ isOpen, onClose }: Props) {
   const inputRef = useRef()
+  const dispatch = useDispatch()
   const queryClient = useQueryClient()
 
   const [projectName, setProjectName] = useState<string>('')
@@ -30,8 +33,9 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   const doesProjectAlreadyExist = useProjectAlreadyExists()
 
   const createProjectMutation = useMutation(ProjectsApi.createProject, {
-    onSuccess: () => {
+    onSuccess: (newProject: IProject) => {
       queryClient.invalidateQueries(ApiQueryId.getProjects)
+      dispatch(configurationActions.changeProject(newProject))
       setProjectName('')
       onClose()
     },
