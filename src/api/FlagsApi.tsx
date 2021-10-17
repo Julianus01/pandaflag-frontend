@@ -73,6 +73,7 @@ async function createFlag({ name, description = '' }: ICreateFlagRequestParams):
 
   const newFlag = {
     name,
+    description,
     projectId: project.id,
     enabled: false,
     environmentName: environment.name,

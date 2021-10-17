@@ -51,6 +51,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
   function resetState() {
     setFlagName('')
+    setDescription('')
     setAddForAll(false)
     setError(undefined)
   }
