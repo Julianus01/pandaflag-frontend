@@ -56,6 +56,10 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
     setError(undefined)
   }
 
+  function formatNameSnakeCase() {
+    setFlagName(_.snakeCase(flagName))
+  }
+
   function onFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
     setFlagName(event.target.value)
 
@@ -120,6 +124,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
           <FormControl mb={10} isInvalid={Boolean(error)}>
             <Input
+              onBlur={formatNameSnakeCase}
               ref={inputRef as any}
               onKeyDown={onKeyDown}
               value={flagName}

@@ -73,6 +73,10 @@ function FlagPage() {
     onDirty()
   }
 
+  function formatNameSnakeCase() {
+    setFlag({ ...flag, name: _.snakeCase(flag?.name as string) } as IFlag)
+  }
+
   function onInputChange(key: string) {
     return function (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
       setFlag({ ...flag, [key]: event.target.value } as IFlag)
@@ -151,7 +155,14 @@ function FlagPage() {
           Name
         </FormLabel>
 
-        <Input value={flag.name} onChange={onInputChange('name')} variant="filled" placeholder="Name" mb={4} />
+        <Input
+          onBlur={formatNameSnakeCase}
+          value={flag.name}
+          onChange={onInputChange('name')}
+          variant="filled"
+          placeholder="Name"
+          mb={4}
+        />
       </FormControl>
 
       <FormControl id="description">
