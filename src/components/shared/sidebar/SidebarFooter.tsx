@@ -26,13 +26,13 @@ function SidebarFooter() {
       <Menu closeOnSelect={false} autoSelect={false} matchWidth isOpen={isOpen}>
         <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
           <Container>
-            <Avatar size="sm" shadow="lg" ignoreFallback src={auth.user?.picture}>
+            <Avatar size="md" shadow="lg" ignoreFallback src={auth.user?.picture}>
               <AvatarBadge boxSize="1em" bg="green.500" />
             </Avatar>
 
             <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
               <Text isTruncated fontWeight="medium">
-                {auth.user?.name}
+                {auth.user?.name.substr(0, auth.user?.name.indexOf('@'))}
               </Text>
             </Box>
 
@@ -41,9 +41,7 @@ function SidebarFooter() {
         </CustomMenuButton>
 
         <MenuList shadow="lg">
-          <MenuItem onClick={() => auth.logout({ returnTo: window.location.origin })}>
-            Logout
-          </MenuItem>
+          <MenuItem onClick={() => auth.logout({ returnTo: window.location.origin })}>Logout</MenuItem>
         </MenuList>
       </Menu>
     </div>
