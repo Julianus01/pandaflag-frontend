@@ -23,7 +23,7 @@ import useFlagEnvironment from 'hooks/flag/useEnvironmentColor'
 import { ChangeEvent, useState } from 'react'
 import { FiArrowLeft } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { Link, useHistory, useParams } from 'react-router-dom'
+import { Link, NavLink, useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import _ from 'lodash/fp'
 
@@ -86,21 +86,34 @@ function FlagPage() {
 
   if (isFetching) {
     return (
-      <BoxedPage>
-        <Spinner />
-      </BoxedPage>
+      <Container>
+        <Box display="flex">
+          <Heading flex={1} mb={10} as="h3" size="lg">
+            <FlagsLink to={RoutePage.flags()}>Flags</FlagsLink>
+            <Spinner ml={4} size="sm" />
+          </Heading>
+        </Box>
+      </Container>
     )
   }
 
   if (!flag) {
-    return <div>No such flag</div>
+    return (
+      <Container>
+        <Box display="flex">
+          <Heading flex={1} mb={10} as="h3" size="lg">
+            <FlagsLink to={RoutePage.flags()}>Flag not found</FlagsLink>
+          </Heading>
+        </Box>
+      </Container>
+    )
   }
 
   return (
     <Container>
       <Box display="flex">
         <Heading flex={1} mb={10} as="h3" size="lg">
-          {flag.name}
+          <FlagsLink to={RoutePage.flags()}>Flags</FlagsLink> &gt; {flag.name}
         </Heading>
       </Box>
 
@@ -190,4 +203,10 @@ const BackLink = styled(Link)`
   display: flex;
   align-items: center;
   cursor: pointer;
+`
+
+const FlagsLink = styled(NavLink)`
+  :hover {
+    text-decoration: underline;
+  }
 `
