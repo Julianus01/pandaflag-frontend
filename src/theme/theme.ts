@@ -5,5 +5,10 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 }
 
-const theme = extendTheme({ config })
+const fonts = {
+  heading: 'Inter, sans-serif',
+  body: 'Inter, sans-serif'
+}
+
+const theme = extendTheme({ config, fonts })
 export default theme
