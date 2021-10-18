@@ -42,7 +42,7 @@ const Footer = styled.footer`
   flex: 1;
   display: flex;
   align-items: center;
-  height: 72px;
+  min-height: 72px;
   /* Boxed Page max-width !! */
   max-width: 1200px;
   width: 100%;
@@ -50,7 +50,7 @@ const Footer = styled.footer`
   margin-bottom: ${({ theme }) => theme.space[10]};
   border-radius: ${({ theme }) => theme.radii.md};
   box-shadow: ${({ theme }) => theme.shadows.xs};
-  padding: ${({ theme }) => `${theme.space[8]}`};
+  padding: ${({ theme }) => `0 ${theme.space[8]}`};
   border-radius: ${({ theme }) => theme.radii.md};
   box-shadow: ${({ theme }) => theme.shadows.xs};
   background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[900])(theme)};

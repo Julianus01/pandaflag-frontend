@@ -29,7 +29,8 @@ import { EmptyEnvironment } from 'api/ProjectsApi'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
-import { FiFlag } from 'react-icons/fi'
+import { FiFlag, FiCode } from 'react-icons/fi'
+import FixedFooter from 'components/styles/FixedFooter'
 
 function SkeletonTable() {
   return (
@@ -128,6 +129,12 @@ function FlagsPage() {
       {!isLoading && !Boolean(flags?.length) && <Text>No flags. Go ahead and add your first flag</Text>}
 
       <CreateFlagDialog doesFlagAlreadyExist={doesFlagAlreadyExist} isOpen={isOpen} onClose={onClose} />
+
+      <FixedFooter>
+        <Button size="sm" variant="ghost" leftIcon={<Icon as={FiCode} />}>
+          Try api
+        </Button>
+      </FixedFooter>
     </BoxedPage>
   )
 }

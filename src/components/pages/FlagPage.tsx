@@ -97,6 +97,14 @@ function FlagPage() {
             <Spinner ml={4} size="sm" />
           </Heading>
         </Box>
+
+        <FixedFooter>
+          <BackLink to={{ pathname: RoutePage.flags() }}>
+            <Button size="sm" variant="ghost" leftIcon={<Icon as={FiArrowLeft} />}>
+              Back
+            </Button>
+          </BackLink>
+        </FixedFooter>
       </Container>
     )
   }
@@ -109,6 +117,14 @@ function FlagPage() {
             <FlagsLink to={RoutePage.flags()}>Flag not found</FlagsLink>
           </Heading>
         </Box>
+
+        <FixedFooter>
+          <BackLink to={{ pathname: RoutePage.flags() }}>
+            <Button size="sm" variant="ghost" leftIcon={<Icon as={FiArrowLeft} />}>
+              Back
+            </Button>
+          </BackLink>
+        </FixedFooter>
       </Container>
     )
   }

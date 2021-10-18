@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
+import usePropState from 'hooks/common/usePropState'
 import useProjectAlreadyExists from 'hooks/project/useProjectAlreadyExists'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
@@ -29,7 +30,7 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
   const queryClient = useQueryClient()
   const toast = useToast()
 
-  const [projectName, setProjectName] = useState<string>(project.name)
+  const [projectName, setProjectName] = usePropState<string>(project.name)
   const [error, setError] = useState<string | undefined>(undefined)
   const doesProjectAlreadyExist = useProjectAlreadyExists()
 
@@ -50,8 +51,10 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
   })
 
   useUpdateEffect(() => {
-    setProjectName(project.name)
-  }, [project.name])
+    if (isOpen) {
+      setProjectName(project.name)
+    }
+  }, [project.name, isOpen])
 
   function _onClose() {
     onClose()
