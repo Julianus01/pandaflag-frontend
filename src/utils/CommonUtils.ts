@@ -6,8 +6,13 @@ function stopPropagation(
   event.stopPropagation()
 }
 
+function wait(time: number = 2000) {
+  return new Promise((resolve) => setTimeout(resolve, time))
+}
+
 const CommonUtils = {
   stopPropagation,
+  wait,
 }
 
 export default CommonUtils

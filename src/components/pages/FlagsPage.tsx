@@ -38,9 +38,11 @@ function SkeletonTable() {
       <CustomTable variant="simple">
         <TableHead>
           <Tr>
-            <Th>Name</Th>
-
-            <Th isNumeric>Created at</Th>
+            <Th textTransform="capitalize">Name</Th>
+            <Th textTransform="capitalize">Active</Th>
+            <Th textTransform="capitalize" isNumeric>
+              Created at
+            </Th>
 
             <Th />
           </Tr>
@@ -111,8 +113,8 @@ function FlagsPage() {
           colorScheme={environment?.color}
         >
           <TabList>
-            <Tab pb="5px">production</Tab>
-            <Tab pb="5px">development</Tab>
+            <Tab>production</Tab>
+            <Tab>development</Tab>
           </TabList>
         </Tabs>
 
@@ -127,8 +129,8 @@ function FlagsPage() {
       )}
 
       {!isLoading && Boolean(flags?.length) && (
-        <CodeContainer mt={4}>
-          <TryApi />
+        <CodeContainer shadow="xs" mt={4}>
+          <TryApi flags={flags as IFlag[]} />
         </CodeContainer>
       )}
 

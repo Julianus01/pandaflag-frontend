@@ -140,7 +140,8 @@ function FlagPage() {
       <Heading as="h5" size="sm">
         Status
       </Heading>
-      <Text color="gray.500" mb={2}>
+
+      <Text fontSize="md" color="gray.500" mb={2}>
         You can toggle the status below but takes effect
         <br />
         after you complete the update.
