@@ -29,8 +29,8 @@ import { EmptyEnvironment } from 'api/ProjectsApi'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
-import { FiFlag, FiCode } from 'react-icons/fi'
-import FixedFooter from 'components/styles/FixedFooter'
+import { FiFlag } from 'react-icons/fi'
+import TryApi from './flags/TryApi'
 
 function SkeletonTable() {
   return (
@@ -126,15 +126,15 @@ function FlagsPage() {
         </TableContainer>
       )}
 
+      {!isLoading && Boolean(flags?.length) && (
+        <CodeContainer mt={4}>
+          <TryApi />
+        </CodeContainer>
+      )}
+
       {!isLoading && !Boolean(flags?.length) && <Text>No flags. Go ahead and add your first flag</Text>}
 
       <CreateFlagDialog doesFlagAlreadyExist={doesFlagAlreadyExist} isOpen={isOpen} onClose={onClose} />
-
-      <FixedFooter>
-        <Button size="sm" variant="ghost" leftIcon={<Icon as={FiCode} />}>
-          Try api
-        </Button>
-      </FixedFooter>
     </BoxedPage>
   )
 }
@@ -153,4 +153,10 @@ const TableHead = styled(Thead)`
 
 const CustomTable = styled(Table)`
   background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
+`
+
+const CodeContainer = styled(Box)`
+  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[900])(theme)};
+  border-radius: ${({ theme }) => theme.radii.md};
+  padding: ${({ theme }) => theme.space[2]};
 `

@@ -48,7 +48,6 @@ const Footer = styled.footer`
   width: 100%;
   margin: 0 auto;
   margin-bottom: ${({ theme }) => theme.space[10]};
-  border-radius: ${({ theme }) => theme.radii.md};
   padding: ${({ theme }) => `0 ${theme.space[8]}`};
   border-radius: ${({ theme }) => theme.radii.md};
   box-shadow: ${({ theme }) => theme.shadows.xs};
