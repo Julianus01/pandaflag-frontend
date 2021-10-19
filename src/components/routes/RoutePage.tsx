@@ -18,8 +18,8 @@ function flags() {
   return `/flags`
 }
 
-function flag(id: string) {
-  return `/flags/${id}`
+function flag(name: string) {
+  return `/flags/${name}`
 }
 
 function settings() {

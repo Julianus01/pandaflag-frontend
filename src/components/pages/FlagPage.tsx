@@ -28,7 +28,7 @@ import styled from 'styled-components/macro'
 import _ from 'lodash/fp'
 
 interface IParams {
-  id: string
+  name: string
 }
 
 function FlagPage() {
@@ -41,7 +41,7 @@ function FlagPage() {
   const [isDirty, setIsDirty] = useState<boolean>(false)
   const environment = useFlagEnvironment(flag?.environmentName)
 
-  const { data, isFetching } = useQuery([ApiQueryId.getFlag, params.id], () => FlagsApi.getFlag(params.id), {
+  const { data, isFetching } = useQuery([ApiQueryId.getFlagByName, params.name], () => FlagsApi.getFlagByName(params.name), {
     onSuccess: (flag: IFlag) => {
       setFlag(flag)
     },

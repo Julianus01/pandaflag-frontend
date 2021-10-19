@@ -41,7 +41,7 @@ function FlagRow({ flag }: IProps) {
   }
 
   function onEdit() {
-    history.push(RoutePage.flag(flag.id))
+    history.push(RoutePage.flag(flag.name))
   }
 
   return (

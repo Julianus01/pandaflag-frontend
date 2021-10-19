@@ -60,6 +60,31 @@ async function getFlag(id: string): Promise<IFlag | undefined> {
   return { id, ...snapshot.data() } as IFlag
 }
 
+async function getFlagByName(name: string): Promise<IFlag | undefined> {
+  const project = store.getState().configuration.project as IProject
+  const environment = store.getState().configuration.environment as IEnvironment
+
+  const querySnapshot = await getDocs(
+    query(
+      collection(getFirestore(), FirestoreCollection.flags),
+      where('projectId', '==', project.id),
+      where('environmentName', '==', environment.name),
+      where('name', '==', name)
+    )
+  )
+
+  const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, id: doc.id }
+  }) as IFlag[]
+
+  if (!flags.length) {
+    return undefined
+  }
+
+  return flags[0]
+}
+
 // Create Flag
 interface ICreateFlagRequestParams {
   name: string
@@ -144,6 +169,7 @@ const FlagsApi = {
   // Get
   getFlags,
   getFlag,
+  getFlagByName,
 
   // Create
   createFlag,
