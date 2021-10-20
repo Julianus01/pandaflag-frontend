@@ -35,7 +35,7 @@ function ProjectsTable({ projects }: IProps) {
 
           <Th display="flex" textTransform="capitalize">
             Api key
-            <Popover>
+            <Popover trigger="hover">
               <PopoverTrigger>
                 <Box display="flex" ml={1}>
                   <Icon cursor="pointer" as={FiInfo} w={4} h={4} />
@@ -51,7 +51,7 @@ function ProjectsTable({ projects }: IProps) {
                     This key is being used when calling the REST server in order to get your flags information.
                     <br />
                     <br />
-                    <RouteLink to={RoutePage.flags()}>Try out the api preview here.</RouteLink>
+                    <RouteLink to={RoutePage.flags()}>Try out the api preview here</RouteLink>
                   </Text>
                 </PopoverBody>
               </PopoverContent>

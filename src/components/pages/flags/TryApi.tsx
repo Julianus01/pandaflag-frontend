@@ -37,7 +37,7 @@ function TryApi({ flags }: IProps) {
   }
 
   return (
-    <Accordion defaultIndex={0} allowToggle>
+    <Accordion allowToggle>
       <AccordionItem isDisabled={isLoading} border="none">
         <h2>
           <AccordionButton _hover={{ background: 'transparent' }} _focus={{ boxShadow: 'none', outline: 'none' }}>
@@ -52,11 +52,11 @@ function TryApi({ flags }: IProps) {
         </h2>
 
         <AccordionPanel pb={4}>
-          <Text color="gray.500">
+          <Text fontSize="sm" color="gray.500">
             Test out the api endpoints below and inspect what kind of response will be retrieved
           </Text>
 
-          <Text mb={4} color="gray.500">
+          <Text fontSize="sm" mb={4} color="gray.500">
             Pick for which flag you'd like to run the test below
           </Text>
 
