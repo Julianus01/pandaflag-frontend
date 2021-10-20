@@ -1,5 +1,21 @@
-import { Table, Tbody, Th, Thead, Tr, Box } from '@chakra-ui/react'
+import {
+  Table,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+  Box,
+  Icon,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  Text,
+} from '@chakra-ui/react'
 import { IProject } from 'api/ProjectsApi'
+import RoutePage from 'components/routes/RoutePage'
+import { FiInfo } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import ProjectRow from './ProjectRow'
@@ -17,7 +33,30 @@ function ProjectsTable({ projects }: IProps) {
             <Box ml="26px">Name</Box>
           </Th>
 
-          <Th textTransform="capitalize">Api key</Th>
+          <Th display="flex" textTransform="capitalize">
+            Api key
+            <Popover>
+              <PopoverTrigger>
+                <Box display="flex" ml={1}>
+                  <Icon cursor="pointer" as={FiInfo} w={4} h={4} />
+                </Box>
+              </PopoverTrigger>
+
+              <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
+                <PopoverBody shadow="lg" p="4">
+                  <Text textTransform="none" lineHeight="5" letterSpacing="normal" fontWeight="normal" fontSize="sm">
+                    Every project has an Api Key.
+                    <br />
+                    <br />
+                    This key is being used when calling the REST server in order to get your flags information.
+                    <br />
+                    <br />
+                    <RouteLink to={RoutePage.flags()}>Try out the api preview here.</RouteLink>
+                  </Text>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Th>
 
           <Th textTransform="capitalize" isNumeric>
             Created at
@@ -44,4 +83,9 @@ const TableHead = styled(Thead)`
 
 const CustomTable = styled(Table)`
   background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
+`
+
+const RouteLink = styled(Link)`
+  color: ${({ theme }) => theme.colors.blue[400]};
+  text-decoration: underline;
 `

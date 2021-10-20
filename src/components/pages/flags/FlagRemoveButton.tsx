@@ -59,7 +59,7 @@ function FlagRemoveButton({ flag }: IProps) {
 
       <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
         <PopoverBody textAlign="right" shadow="lg" p="4">
-          <Text textAlign="left" mb="4">
+          <Text fontSize="sm" textAlign="left" mb="4">
             Are you sure you want to delete this flag?
           </Text>
 
