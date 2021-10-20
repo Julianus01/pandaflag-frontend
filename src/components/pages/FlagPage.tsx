@@ -41,11 +41,15 @@ function FlagPage() {
   const [isDirty, setIsDirty] = useState<boolean>(false)
   const environment = useFlagEnvironment(flag?.environmentName)
 
-  const { data, isFetching } = useQuery([ApiQueryId.getFlagByName, params.name], () => FlagsApi.getFlagByName(params.name), {
-    onSuccess: (flag: IFlag) => {
-      setFlag(flag)
-    },
-  })
+  const { data, isFetching } = useQuery(
+    [ApiQueryId.getFlagByName, params.name],
+    () => FlagsApi.getFlagByName(params.name),
+    {
+      onSuccess: (flag: IFlag) => {
+        setFlag(flag)
+      },
+    }
+  )
 
   const updateFlagMutation = useMutation(FlagsApi.updateFlag, {
     onSuccess: () => {

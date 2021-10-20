@@ -44,7 +44,7 @@ const Footer = styled.footer`
   align-items: center;
   min-height: 72px;
   /* Boxed Page max-width !! */
-  max-width: 1200px;
+  max-width: 900px;
   width: 100%;
   margin: 0 auto;
   margin-bottom: ${({ theme }) => theme.space[10]};
