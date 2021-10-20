@@ -10,11 +10,9 @@ import AuthenticatedRoute from './AuthenticatedRoute'
 import EmailVerificationRoute from './EmailVerificationRoute'
 import RedirectAuthenticatedRoute from './RedirectAuthenticatedRoute'
 import FlagsPage from 'components/pages/FlagsPage'
-import SettingsPage from 'components/pages/SettingsPage'
 import CreateFirstProjectPage from 'components/pages/CreateFirstProjectPage'
 import CreateFirstProjectRoute from './CreateFirstProjectRoute'
 import ProjectsPage from 'components/pages/ProjectsPage'
-import DashboardPage from 'components/pages/DashboardPage'
 import FlagPage from 'components/pages/FlagPage'
 
 function Routes() {
@@ -26,12 +24,9 @@ function Routes() {
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.login()} />
 
         {/* Authenticated routes */}
-        <AuthenticatedRoute component={DashboardPage} exact path={RoutePage.dashboard()} />
-
         <AuthenticatedRoute component={FlagsPage} exact path={RoutePage.flags()} />
         <AuthenticatedRoute component={FlagPage} exact path={RoutePage.flag(':name')} />
 
-        <AuthenticatedRoute component={SettingsPage} exact path={RoutePage.settings()} />
         <AuthenticatedRoute component={ProjectsPage} exact path={RoutePage.projects()} />
 
         {/* Use case routes */}

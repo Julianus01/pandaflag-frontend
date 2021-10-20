@@ -10,20 +10,12 @@ function emailVerification() {
   return `/email-verification`
 }
 
-function dashboard() {
-  return `/dashboard`
-}
-
 function flags() {
   return `/flags`
 }
 
 function flag(name: string) {
   return `/flags/${name}`
-}
-
-function settings() {
-  return `/settings`
 }
 
 function projects() {
@@ -36,12 +28,10 @@ function createFirstProject() {
 
 const RoutePage = {
   root,
-  dashboard,
   login,
   emailVerification,
   flags,
   flag,
-  settings,
   projects,
   createFirstProject,
 }
