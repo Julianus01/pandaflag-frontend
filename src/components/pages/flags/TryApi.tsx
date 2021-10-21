@@ -13,11 +13,19 @@ import {
   MenuList,
   Button,
   Code,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  PopoverBody,
 } from '@chakra-ui/react'
 import { IFlag } from 'api/FlagsApi'
+import RoutePage from 'components/routes/RoutePage'
 import { useState } from 'react'
 import { AiOutlineApi } from 'react-icons/ai'
-import { FiChevronDown, FiPlay } from 'react-icons/fi'
+import { FiChevronDown, FiInfo, FiPlay } from 'react-icons/fi'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { IStoreState } from 'redux/store'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import CommonUtils from 'utils/CommonUtils'
@@ -26,14 +34,39 @@ interface IProps {
   flags: IFlag[]
 }
 
+const ALL_FLAGS_SELECTION = 'All Flags'
+
+function mapFlagForResponse(flag: IFlag) {
+  return {
+    name: flag.name,
+    description: flag.description,
+    enabled: flag.enabled,
+    environmentName: flag.environmentName,
+  }
+}
+
+function mapFlagsForResponse(flags: IFlag[]) {
+  return flags.map(mapFlagForResponse)
+}
+
 function TryApi({ flags }: IProps) {
-  const [selected, setSelected] = useState<string>('All Flags')
+  const configuration = useSelector((state: IStoreState) => state.configuration)
+
+  const [selected, setSelected] = useState<string>(ALL_FLAGS_SELECTION)
+  const [selectedAfterRun, setSelectedAfterRun] = useState<string>(ALL_FLAGS_SELECTION)
+
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isFirstRun, setIsFirstRun] = useState<boolean>(true)
 
   async function runApi() {
     setIsLoading(true)
     await CommonUtils.wait()
     setIsLoading(false)
+
+    setSelectedAfterRun(selected)
+    if (isFirstRun) {
+      setIsFirstRun(false)
+    }
   }
 
   return (
@@ -56,6 +89,49 @@ function TryApi({ flags }: IProps) {
             Test out the api endpoints below and inspect what kind of response will be retrieved
           </Text>
 
+          <Box display="flex" fontSize="sm" color="gray.500">
+            The endpoint is built using the project's api key{' '}
+            <Box display="flex" alignItems="center">
+              <Popover trigger="hover">
+                <PopoverTrigger>
+                  <Box display="flex" ml={0.5}>
+                    <Icon cursor="pointer" as={FiInfo} w={4} h={4} />
+                  </Box>
+                </PopoverTrigger>
+
+                <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
+                  <PopoverBody shadow="lg" p="4">
+                    <PopoverText fontSize="sm">
+                      Every project has an Api Key.
+                      <br />
+                      <br />
+                      This key is being used when calling the REST API in order to get your flags information. You
+                      current's project key can be found below
+                      <br />
+                      <br />
+                      <RouteLink to={RoutePage.projects()}>Your projects api keys</RouteLink>
+                    </PopoverText>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Box>
+            , project, environment and flag name.
+          </Box>
+
+          <Text mb={4}>
+            <Code>
+              https://smartlaunch.com/
+              <Box color="orange.500" as="span">
+                API_KEY
+              </Box>
+              /
+              <Box color="teal.500" as="span">
+                ENVIRONMENT
+              </Box>
+              /
+            </Code>
+          </Text>
+
           <Text fontSize="sm" mb={4} color="gray.500">
             Pick for which flag you'd like to run the test below
           </Text>
@@ -72,7 +148,7 @@ function TryApi({ flags }: IProps) {
               </MenuButton>
 
               <MenuList>
-                <MenuItem onClick={() => setSelected('All Flags')}>All Flags</MenuItem>
+                <MenuItem onClick={() => setSelected(ALL_FLAGS_SELECTION)}>{ALL_FLAGS_SELECTION}</MenuItem>
 
                 {flags.map((flag: IFlag) => (
                   <MenuItem key={flag.id} onClick={() => setSelected(flag.name)}>
@@ -99,24 +175,47 @@ function TryApi({ flags }: IProps) {
           <Text mb={2} fontSize="sm">
             Request
           </Text>
+
           <CodeContainer mb={4}>
-            <Code>fetch('https://jsonplaceholder.typicode.com/todos/1')</Code>
+            <Code>
+              fetch('https://smartlaunch.com/
+              {
+                <Box color="orange.500" as="span">
+                  {configuration.project?.apiKey}
+                </Box>
+              }
+              /
+              {
+                <Box as="span" color="teal.500">
+                  {configuration.environment?.name}
+                </Box>
+              }
+              /')
+            </Code>
             <Code>{`  .then(response => response.json())`}</Code>
             <Code>{`  .then(json => console.log(json))`}</Code>
           </CodeContainer>
 
-          {!isLoading && (
+          {!isFirstRun && (
             <>
               <Text mb={2} fontSize="sm">
                 Response
               </Text>
+
               <CodeContainer>
-                <Code>{`{`}</Code>
-                <Code>{`  "test": {`}</Code>
-                <Code>{`    "enabled": false,`}</Code>
-                <Code>{`    "value": null`}</Code>
-                <Code>{`  }`}</Code>
-                <Code>{`}`}</Code>
+                {selectedAfterRun === ALL_FLAGS_SELECTION && (
+                  <JsonCode $loading={isLoading}>{JSON.stringify(mapFlagsForResponse(flags), null, 2)}</JsonCode>
+                )}
+
+                {selectedAfterRun !== ALL_FLAGS_SELECTION && (
+                  <JsonCode $loading={isLoading}>
+                    {JSON.stringify(
+                      mapFlagForResponse(flags.find((flag: IFlag) => flag.name === selectedAfterRun) as IFlag),
+                      Object.keys(flags.find((flag: IFlag) => flag.name === selectedAfterRun) as any).sort(),
+                      2
+                    )}
+                  </JsonCode>
+                )}
               </CodeContainer>
             </>
           )}
@@ -140,4 +239,17 @@ const CodeContainer = styled(Box)`
     background: transparent;
     white-space: pre;
   }
+`
+
+const RouteLink = styled(Link)`
+  color: ${({ theme }) => theme.colors.blue[400]};
+  text-decoration: underline;
+`
+
+const PopoverText = styled(Text)`
+  color: ${({ theme }) => applyColorMode(theme.colors.gray[800], theme.colors.whiteAlpha[900])(theme)};
+`
+
+const JsonCode = styled(Code)`
+  opacity: ${({ $loading }) => ($loading ? 0.4 : 1)};
 `

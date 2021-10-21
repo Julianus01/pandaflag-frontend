@@ -44,15 +44,21 @@ function ProjectsTable({ projects }: IProps) {
 
               <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
                 <PopoverBody shadow="lg" p="4">
-                  <Text textTransform="none" lineHeight="5" letterSpacing="normal" fontWeight="normal" fontSize="sm">
+                  <PopoverText
+                    textTransform="none"
+                    lineHeight="5"
+                    letterSpacing="normal"
+                    fontWeight="normal"
+                    fontSize="sm"
+                  >
                     Every project has an Api Key.
                     <br />
                     <br />
-                    This key is being used when calling the REST server in order to get your flags information.
+                    This key is being used when calling the REST API in order to get your flags information.
                     <br />
                     <br />
                     <RouteLink to={RoutePage.flags()}>Try out the api preview here</RouteLink>
-                  </Text>
+                  </PopoverText>
                 </PopoverBody>
               </PopoverContent>
             </Popover>
@@ -88,4 +94,8 @@ const CustomTable = styled(Table)`
 const RouteLink = styled(Link)`
   color: ${({ theme }) => theme.colors.blue[400]};
   text-decoration: underline;
+`
+
+const PopoverText = styled(Text)`
+  color: ${({ theme }) => applyColorMode(theme.colors.gray[800], theme.colors.whiteAlpha[900])(theme)};
 `
