@@ -59,7 +59,7 @@ function ProfilePage() {
         </FormControl>
       </Section>
 
-      <Section mb={4}>
+      <Section mb={8}>
         <FormControl id="subscription">
           <FormLabel mb={1} fontSize="sm" color="gray.500">
             Subscription
