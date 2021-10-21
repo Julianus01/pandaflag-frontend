@@ -57,30 +57,35 @@ function mapFlagsForResponse(flags: IFlag[]) {
 function TryApi({ flags }: IProps) {
   const configuration = useSelector((state: IStoreState) => state.configuration)
 
+  const [response, setResponse] = useState<IFlag[] | IFlag | undefined>(undefined)
   const [selected, setSelected] = useState<string>(ALL_FLAGS_SELECTION)
-  const [selectedAfterRun, setSelectedAfterRun] = useState<string>(ALL_FLAGS_SELECTION)
-
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isFirstRun, setIsFirstRun] = useState<boolean>(true)
+
+  const selectedFlag = flags.find((flag: IFlag) => flag.name === selected)
 
   useEffect(() => {
-    const foundSelected = flags.find((flag: IFlag) => flag.name === selected)
+    if (selected !== ALL_FLAGS_SELECTION) {
+      const foundSelected = flags.find((flag: IFlag) => flag.name === selected)
 
-    if (!foundSelected) {
-      setSelectedAfterRun(ALL_FLAGS_SELECTION)
-      setSelected(ALL_FLAGS_SELECTION)
+      if (!foundSelected) {
+        setSelected(ALL_FLAGS_SELECTION)
+        setResponse(undefined)
+      }
     }
   }, [flags, selected])
 
   async function runApi() {
     setIsLoading(true)
     await CommonUtils.wait()
-    setIsLoading(false)
 
-    setSelectedAfterRun(selected)
-    if (isFirstRun) {
-      setIsFirstRun(false)
+    if (selected === ALL_FLAGS_SELECTION) {
+      setResponse(flags)
+    } else {
+      const foundSelected = flags.find((flag: IFlag) => flag.name === selected)
+      setResponse(foundSelected)
     }
+
+    setIsLoading(false)
   }
 
   return (
@@ -212,33 +217,34 @@ function TryApi({ flags }: IProps) {
                   {configuration.environment?.name}
                 </Box>
               }
-              /')
+              /
+              {selected !== ALL_FLAGS_SELECTION && (
+                <Box as="span" color="blue.500">
+                  {selectedFlag?.name}
+                </Box>
+              )}
+              ')
             </Code>
             <Code>{`  .then(response => response.json())`}</Code>
             <Code>{`  .then(json => console.log(json))`}</Code>
           </CodeContainer>
 
-          {!isFirstRun && (
+          {Boolean(response) && (
             <>
               <Text mb={2} fontSize="sm">
                 Response
               </Text>
 
               <CodeContainer>
-                {selectedAfterRun === ALL_FLAGS_SELECTION && (
+                {Array.isArray(response) && (
                   <JsonCode $loading={isLoading}>{JSON.stringify(mapFlagsForResponse(flags), null, 2)}</JsonCode>
                 )}
 
-                {selectedAfterRun !== ALL_FLAGS_SELECTION &&
-                  flags.find((flag: IFlag) => flag.name === selectedAfterRun) && (
-                    <JsonCode $loading={isLoading}>
-                      {JSON.stringify(
-                        mapFlagForResponse(flags.find((flag: IFlag) => flag.name === selectedAfterRun)),
-                        Object.keys(flags.find((flag: IFlag) => flag.name === selectedAfterRun) as any).sort(),
-                        2
-                      )}
-                    </JsonCode>
-                  )}
+                {!Array.isArray(response) && (
+                  <JsonCode $loading={isLoading}>
+                    {JSON.stringify(mapFlagForResponse(response), Object.keys(response as IFlag).sort(), 2)}
+                  </JsonCode>
+                )}
               </CodeContainer>
             </>
           )}
