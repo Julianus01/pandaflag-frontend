@@ -11,17 +11,17 @@ import {
   Tag,
   Button,
   useToast,
+  IconButton,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
 import AutoTextArea from 'components/styles/AutoTextarea'
 import BoxedPage from 'components/styles/BoxedPage'
-import FixedFooter from 'components/styles/FixedFooter'
 import usePropState from 'hooks/common/usePropState'
 import useFlagEnvironment from 'hooks/flag/useEnvironmentColor'
 import { ChangeEvent, useState } from 'react'
-import { FiArrowLeft } from 'react-icons/fi'
+import { FiChevronLeft } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Link, NavLink, useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -94,51 +94,74 @@ function FlagPage() {
 
   if (isFetching) {
     return (
-      <Container>
+      <BoxedPage>
         <Box display="flex">
-          <Heading flex={1} mb={10} as="h3" size="lg">
+          <BackLink to={{ pathname: RoutePage.flags() }}>
+            <IconButton
+              mt="2px"
+              size="sm"
+              aria-label="Back button"
+              icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiChevronLeft} />}
+            />
+          </BackLink>
+
+          <Heading flex={1} ml={3} as="h3" size="lg">
             <FlagsLink to={RoutePage.flags()}>Flags</FlagsLink>
             <Spinner ml={4} size="sm" />
           </Heading>
         </Box>
-
-        <FixedFooter>
-          <BackLink to={{ pathname: RoutePage.flags() }}>
-            <Button size="sm" variant="ghost" leftIcon={<Icon as={FiArrowLeft} />}>
-              Back
-            </Button>
-          </BackLink>
-        </FixedFooter>
-      </Container>
+      </BoxedPage>
     )
   }
 
   if (!flag) {
     return (
-      <Container>
+      <BoxedPage>
         <Box display="flex">
-          <Heading flex={1} mb={10} as="h3" size="lg">
+          <BackLink to={{ pathname: RoutePage.flags() }}>
+            <IconButton
+              mt="2px"
+              size="sm"
+              aria-label="Back button"
+              icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiChevronLeft} />}
+            />
+          </BackLink>
+
+          <Heading flex={1} ml={3} as="h3" size="lg">
             <FlagsLink to={RoutePage.flags()}>Flag not found</FlagsLink>
           </Heading>
         </Box>
-
-        <FixedFooter>
-          <BackLink to={{ pathname: RoutePage.flags() }}>
-            <Button size="sm" variant="ghost" leftIcon={<Icon as={FiArrowLeft} />}>
-              Back
-            </Button>
-          </BackLink>
-        </FixedFooter>
-      </Container>
+      </BoxedPage>
     )
   }
 
   return (
-    <Container>
-      <Box display="flex">
-        <Heading flex={1} mb={10} as="h3" size="lg">
+    <BoxedPage>
+      <Box mb={10} display="flex">
+        <BackLink to={{ pathname: RoutePage.flags() }}>
+          <IconButton
+            mt="2px"
+            size="sm"
+            aria-label="Back button"
+            icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiChevronLeft} />}
+          />
+        </BackLink>
+
+        <Heading flex={1} ml={3} as="h3" size="lg">
           <FlagsLink to={RoutePage.flags()}>Flags</FlagsLink> &gt; {flag.name}
         </Heading>
+
+        <Button
+          isLoading={updateFlagMutation.isLoading}
+          loadingText="Updating"
+          onClick={onUpdate}
+          size="sm"
+          ml="auto"
+          colorScheme="blue"
+          disabled={!isDirty || updateFlagMutation.isLoading || _.isEqual(flag, data)}
+        >
+          Update
+        </Button>
       </Box>
 
       <Heading as="h5" size="sm">
@@ -201,35 +224,11 @@ function FlagPage() {
           value={flag.description}
         />
       </FormControl>
-
-      <FixedFooter>
-        <BackLink to={{ pathname: RoutePage.flags() }}>
-          <Button size="sm" variant="ghost" leftIcon={<Icon as={FiArrowLeft} />}>
-            Back
-          </Button>
-        </BackLink>
-
-        <Button
-          isLoading={updateFlagMutation.isLoading}
-          loadingText="Updating"
-          onClick={onUpdate}
-          size="sm"
-          ml="auto"
-          colorScheme="blue"
-          disabled={!isDirty || updateFlagMutation.isLoading || _.isEqual(flag, data)}
-        >
-          Update
-        </Button>
-      </FixedFooter>
-    </Container>
+    </BoxedPage>
   )
 }
 
 export default FlagPage
-
-const Container = styled(BoxedPage)`
-  padding-bottom: ${({ theme }) => theme.space[40]};
-`
 
 const BackLink = styled(Link)`
   display: flex;
