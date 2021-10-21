@@ -162,6 +162,9 @@ function TryApi({ flags, isOpen }: IProps) {
                 ENVIRONMENT
               </Box>
               /
+              <Box color="blue.500" as="span">
+                FLAG_NAME
+              </Box>
             </Code>
           </Text>
 
