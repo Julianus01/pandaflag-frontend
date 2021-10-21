@@ -78,6 +78,11 @@ function TryApi({ flags, isOpen }: IProps) {
     }
   }, [flags, selected])
 
+  useEffect(() => {
+    setSelected(ALL_FLAGS_SELECTION)
+    setResponse(undefined)
+  }, [configuration.environment?.name])
+
   async function runApi() {
     setIsLoading(true)
     await CommonUtils.wait()
