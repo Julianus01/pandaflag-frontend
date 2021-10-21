@@ -2,13 +2,16 @@ import { Box } from '@chakra-ui/layout'
 import { Text, Icon, Avatar, AvatarBadge, MenuList, MenuItem, Menu, MenuButton } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { useAuth } from 'hooks/auth/useAuth'
-import { FiChevronDown } from 'react-icons/fi'
+import { FiChevronDown, FiLogOut, FiUser } from 'react-icons/fi'
 import { useClickAway } from 'react-use'
 import { useState, useRef } from 'react'
 import { applyColorMode } from 'theme/StyledThemeProvider'
+import { useHistory } from 'react-router'
+import RoutePage from 'components/routes/RoutePage'
 
 function SidebarFooter() {
   const auth = useAuth()
+  const history = useHistory()
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const ref = useRef(null)
@@ -21,9 +24,14 @@ function SidebarFooter() {
     setIsOpen(!isOpen)
   }
 
+  function navigateToProfile() {
+    history.push(RoutePage.profile())
+    setIsOpen(false)
+  }
+
   return (
     <div ref={ref}>
-      <Menu closeOnSelect={false} autoSelect={false} matchWidth isOpen={isOpen}>
+      <Menu autoSelect={false} matchWidth isOpen={isOpen}>
         <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
           <Container>
             <Avatar size="md" shadow="lg" ignoreFallback src={auth.user?.picture}>
@@ -41,7 +49,16 @@ function SidebarFooter() {
         </CustomMenuButton>
 
         <MenuList shadow="lg">
-          <MenuItem onClick={() => auth.logout({ returnTo: window.location.origin })}>Logout</MenuItem>
+          <MenuItem icon={<Icon as={FiUser} w={5} h={5} />} onClick={navigateToProfile}>
+            Profile
+          </MenuItem>
+
+          <MenuItem
+            icon={<Icon as={FiLogOut} w={5} h={5} />}
+            onClick={() => auth.logout({ returnTo: window.location.origin })}
+          >
+            Logout
+          </MenuItem>
         </MenuList>
       </Menu>
     </div>

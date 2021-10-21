@@ -14,6 +14,7 @@ import CreateFirstProjectPage from 'components/pages/CreateFirstProjectPage'
 import CreateFirstProjectRoute from './CreateFirstProjectRoute'
 import ProjectsPage from 'components/pages/ProjectsPage'
 import FlagPage from 'components/pages/FlagPage'
+import ProfilePage from 'components/pages/ProfilePage'
 
 function Routes() {
   return (
@@ -29,12 +30,14 @@ function Routes() {
 
         <AuthenticatedRoute component={ProjectsPage} exact path={RoutePage.projects()} />
 
+        <AuthenticatedRoute component={ProfilePage} exact path={RoutePage.profile()} />
+
         {/* Use case routes */}
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
         <CreateFirstProjectRoute component={CreateFirstProjectPage} exact path={RoutePage.createFirstProject()} />
 
         {/* Redirect to root */}
-        <Route component={() => <Redirect to={RoutePage.root()} />} exact={true} path="/*" />
+        <Route component={() => <Redirect to={RoutePage.root()} />} exact path="/*" />
       </Switch>
     </Router>
   )

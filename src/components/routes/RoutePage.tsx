@@ -26,6 +26,10 @@ function createFirstProject() {
   return `/create-first-project`
 }
 
+function profile() {
+  return `/profile`
+}
+
 const RoutePage = {
   root,
   login,
@@ -34,6 +38,7 @@ const RoutePage = {
   flag,
   projects,
   createFirstProject,
+  profile
 }
 
 export default RoutePage
