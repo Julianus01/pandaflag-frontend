@@ -31,6 +31,7 @@ import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
 import { FiFlag } from 'react-icons/fi'
 import TryApi from './flags/TryApi'
+import AccessibleBackground from 'components/styles/AccessibleBackground'
 
 function SkeletonTable() {
   return (
@@ -157,8 +158,7 @@ const CustomTable = styled(Table)`
   background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
 `
 
-const CodeContainer = styled(Box)`
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[900])(theme)};
+const CodeContainer = styled(AccessibleBackground)`
   border-radius: ${({ theme }) => theme.radii.md};
   padding: ${({ theme }) => theme.space[2]};
 `

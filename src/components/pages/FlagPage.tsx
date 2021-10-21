@@ -26,6 +26,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Link, NavLink, useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import _ from 'lodash/fp'
+import Section from 'components/styles/Section'
 
 interface IParams {
   name: string
@@ -164,66 +165,72 @@ function FlagPage() {
         </Button>
       </Box>
 
-      <Heading as="h5" size="sm">
-        Status
-      </Heading>
+      <Section mb={4}>
+        <Heading as="h5" size="sm">
+          Status
+        </Heading>
 
-      <Text fontSize="md" color="gray.500" mb={2}>
-        You can toggle the status below but takes effect
-        <br />
-        after you complete the update.
-      </Text>
+        <Text fontSize="md" color="gray.500" mb={2}>
+          You can toggle the status below but takes effect
+          <br />
+          after you complete the update.
+        </Text>
 
-      <FormControl display="flex" alignItems="center">
-        <Switch id="status" mr={2} size="md" isChecked={flag.enabled} onChange={toggleStatus} colorScheme="green" />
+        <FormControl display="flex" alignItems="center">
+          <Switch id="status" mr={2} size="md" isChecked={flag.enabled} onChange={toggleStatus} colorScheme="green" />
 
-        <FormLabel cursor="pointer" fontWeight="normal" htmlFor="status" mb="0">
-          {flag.enabled ? 'Enabled' : 'Disabled'}
-        </FormLabel>
-      </FormControl>
+          <FormLabel cursor="pointer" fontWeight="normal" htmlFor="status" mb="0">
+            {flag.enabled ? 'Enabled' : 'Disabled'}
+          </FormLabel>
+        </FormControl>
+      </Section>
 
-      <Heading mt={10} mb={2} as="h5" size="sm">
-        Environment
-      </Heading>
+      <Section mb={4}>
+        <Heading mb={2} as="h5" size="sm">
+          Environment
+        </Heading>
 
-      <Tag variant="subtle" colorScheme={environment?.color}>
-        {flag.environmentName}
-      </Tag>
+        <Tag variant="subtle" colorScheme={environment?.color}>
+          {flag.environmentName}
+        </Tag>
+      </Section>
 
-      <Heading mt={10} mb={2} as="h5" size="sm">
-        Information
-      </Heading>
+      <Section>
+        <Heading mb={2} as="h5" size="sm">
+          Information
+        </Heading>
 
-      <FormControl id="name">
-        <FormLabel fontWeight="normal" mb={2} fontSize="xs" color="gray.500">
-          Name
-        </FormLabel>
+        <FormControl id="name">
+          <FormLabel fontSize="sm" color="gray.500">
+            Name
+          </FormLabel>
 
-        <Input
-          onBlur={formatNameSnakeCase}
-          value={flag.name}
-          onChange={onInputChange('name')}
-          variant="filled"
-          placeholder="Name"
-          mb={4}
-        />
-      </FormControl>
+          <Input
+            onBlur={formatNameSnakeCase}
+            value={flag.name}
+            onChange={onInputChange('name')}
+            variant="filled"
+            placeholder="Name"
+            mb={4}
+          />
+        </FormControl>
 
-      <FormControl id="description">
-        <FormLabel fontWeight="normal" mb={2} fontSize="xs" color="gray.500">
-          Description
-        </FormLabel>
+        <FormControl id="description">
+          <FormLabel fontSize="sm" color="gray.500">
+            Description
+          </FormLabel>
 
-        <AutoTextArea
-          borderRadius="md"
-          variant="filled"
-          placeholder="Description"
-          size="sm"
-          resize="none"
-          onChange={onInputChange('description')}
-          value={flag.description}
-        />
-      </FormControl>
+          <AutoTextArea
+            borderRadius="md"
+            variant="filled"
+            placeholder="Description"
+            size="sm"
+            resize="none"
+            onChange={onInputChange('description')}
+            value={flag.description}
+          />
+        </FormControl>
+      </Section>
     </BoxedPage>
   )
 }

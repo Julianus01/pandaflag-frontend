@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
+import AccessibleBackground from './AccessibleBackground'
 
 interface IProps {
   children: ReactNode
@@ -38,7 +39,7 @@ const Content = styled.div`
   }
 `
 
-const Footer = styled.footer`
+const Footer = styled(AccessibleBackground)`
   flex: 1;
   display: flex;
   align-items: center;
@@ -51,5 +52,4 @@ const Footer = styled.footer`
   padding: ${({ theme }) => `0 ${theme.space[8]}`};
   border-radius: ${({ theme }) => theme.radii.md};
   box-shadow: ${({ theme }) => theme.shadows.xs};
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[900])(theme)};
 `

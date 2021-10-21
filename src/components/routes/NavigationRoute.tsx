@@ -9,7 +9,7 @@ import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
 import LSUtils from 'utils/LSUtils'
 import { configurationActions, IConfigurationState } from 'redux/ducks/configurationDuck'
 import { useEffect } from 'react'
-import { applyColorMode } from 'theme/StyledThemeProvider'
+import AccessibleBackground from 'components/styles/AccessibleBackground'
 
 function useUpdateConfigurationEnvironment() {
   const dispatch = useDispatch()
@@ -108,7 +108,7 @@ const Container = styled.div`
   width: 100%;
 `
 
-const SidebarContainer = styled.div`
+const SidebarContainer = styled(AccessibleBackground)`
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -116,7 +116,6 @@ const SidebarContainer = styled.div`
   left: 0;
   bottom: 0;
   width: 280px;
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[900])(theme)};
   box-shadow: ${({ theme }) => theme.shadows.xs};
   z-index: 1;
 `

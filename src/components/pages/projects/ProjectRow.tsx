@@ -35,7 +35,7 @@ function ProjectRow({ project }: IProps) {
       </Td>
 
       <Td whiteSpace="nowrap" isNumeric>
-        {moment.unix(project.createdAt.seconds).format('Do MMM YYYY')}
+        {moment.unix(project.createdAt.seconds).format('L')}
       </Td>
 
       <Td>

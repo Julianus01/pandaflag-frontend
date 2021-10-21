@@ -46,7 +46,7 @@ function ProjectRemoveButton({ project }: IProps) {
   }
 
   return (
-    <Popover placement="left" isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
+    <Popover isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
       <PopoverTrigger>
         <IconButton
           disabled={deleteMutation.isLoading}

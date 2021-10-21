@@ -221,7 +221,7 @@ function TryApi({ flags, isOpen }: IProps) {
           </Text>
 
           <CodeContainer mb={4}>
-            <Code>
+            <Code display="flex" flexWrap="wrap">
               fetch('https://smartlaunch.com/
               {
                 <Box color="orange.500" as="span">
