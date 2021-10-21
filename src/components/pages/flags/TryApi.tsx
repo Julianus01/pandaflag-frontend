@@ -21,11 +21,13 @@ import {
 } from '@chakra-ui/react'
 import { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
+import useQueryParam from 'hooks/routing/useQueryParam'
+import { QueryParam, TryApiParam } from 'hooks/routing/useQueryParams'
 import { useEffect, useState } from 'react'
 import { AiOutlineApi } from 'react-icons/ai'
 import { FiChevronDown, FiInfo, FiPlay } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, Redirect, useHistory } from 'react-router-dom'
 import { IStoreState } from 'redux/store'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
@@ -33,6 +35,7 @@ import CommonUtils from 'utils/CommonUtils'
 
 interface IProps {
   flags: IFlag[]
+  isOpen: boolean
 }
 
 const ALL_FLAGS_SELECTION = 'All Flags'
@@ -54,7 +57,8 @@ function mapFlagsForResponse(flags: IFlag[]) {
   return flags.map(mapFlagForResponse)
 }
 
-function TryApi({ flags }: IProps) {
+function TryApi({ flags, isOpen }: IProps) {
+  const history = useHistory()
   const configuration = useSelector((state: IStoreState) => state.configuration)
 
   const [response, setResponse] = useState<IFlag[] | IFlag | undefined>(undefined)
@@ -88,8 +92,13 @@ function TryApi({ flags }: IProps) {
     setIsLoading(false)
   }
 
+  function onAccordionChange(index: number) {
+    const nextAccordionState = index === 0 ? TryApiParam.open : TryApiParam.closed
+    history.replace(`${RoutePage.flags()}?${QueryParam.tryApi}=${nextAccordionState}`)
+  }
+
   return (
-    <Accordion allowToggle>
+    <Accordion allowToggle onChange={onAccordionChange} index={isOpen ? 0 : -1}>
       <AccordionItem isDisabled={isLoading} border="none">
         <h2>
           <AccordionButton _hover={{ background: 'transparent' }} _focus={{ boxShadow: 'none', outline: 'none' }}>
@@ -254,7 +263,21 @@ function TryApi({ flags }: IProps) {
   )
 }
 
-export default TryApi
+interface RootProps {
+  flags: IFlag[]
+}
+
+function Root(props: RootProps) {
+  const tryParam = useQueryParam(QueryParam.tryApi) as TryApiParam
+
+  if (!Object.values(TryApiParam).includes(tryParam)) {
+    return <Redirect to={`${RoutePage.flags()}?${QueryParam.tryApi}=${TryApiParam.closed}`} />
+  }
+
+  return <TryApi isOpen={tryParam === TryApiParam.open} {...props} />
+}
+
+export default Root
 
 const CodeContainer = styled(Box)`
   display: flex;

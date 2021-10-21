@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { IProject } from 'api/ProjectsApi'
 import RoutePage from 'components/routes/RoutePage'
+import { QueryParam, TryApiParam } from 'hooks/routing/useQueryParams'
 import { FiInfo } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -57,7 +58,9 @@ function ProjectsTable({ projects }: IProps) {
                     This key is being used when calling the REST API in order to get your flags information.
                     <br />
                     <br />
-                    <RouteLink to={RoutePage.flags()}>Try out the api preview here</RouteLink>
+                    <RouteLink to={`${RoutePage.flags()}?${QueryParam.tryApi}=${TryApiParam.open}`}>
+                      Try out the api preview
+                    </RouteLink>
                   </PopoverText>
                 </PopoverBody>
               </PopoverContent>
