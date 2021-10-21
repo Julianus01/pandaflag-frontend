@@ -9,7 +9,6 @@ import {
   Text,
   Menu,
   MenuButton,
-  MenuItem,
   MenuList,
   Button,
   Code,
@@ -17,10 +16,12 @@ import {
   PopoverContent,
   PopoverTrigger,
   PopoverBody,
+  MenuOptionGroup,
+  MenuItemOption,
 } from '@chakra-ui/react'
 import { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineApi } from 'react-icons/ai'
 import { FiChevronDown, FiInfo, FiPlay } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
@@ -36,7 +37,11 @@ interface IProps {
 
 const ALL_FLAGS_SELECTION = 'All Flags'
 
-function mapFlagForResponse(flag: IFlag) {
+function mapFlagForResponse(flag: IFlag | undefined) {
+  if (!flag) {
+    return {}
+  }
+
   return {
     name: flag.name,
     description: flag.description,
@@ -57,6 +62,15 @@ function TryApi({ flags }: IProps) {
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isFirstRun, setIsFirstRun] = useState<boolean>(true)
+
+  useEffect(() => {
+    const foundSelected = flags.find((flag: IFlag) => flag.name === selected)
+
+    if (!foundSelected) {
+      setSelectedAfterRun(ALL_FLAGS_SELECTION)
+      setSelected(ALL_FLAGS_SELECTION)
+    }
+  }, [flags, selected])
 
   async function runApi() {
     setIsLoading(true)
@@ -137,7 +151,7 @@ function TryApi({ flags }: IProps) {
           </Text>
 
           <Box mb={4} display="flex">
-            <Menu>
+            <Menu autoSelect={false}>
               <MenuButton
                 disabled={isLoading}
                 size="sm"
@@ -148,13 +162,21 @@ function TryApi({ flags }: IProps) {
               </MenuButton>
 
               <MenuList>
-                <MenuItem onClick={() => setSelected(ALL_FLAGS_SELECTION)}>{ALL_FLAGS_SELECTION}</MenuItem>
+                <MenuOptionGroup
+                  fontWeight="semibold"
+                  onChange={(value) => setSelected(value as string)}
+                  value={selected}
+                  type="radio"
+                  title="Flags"
+                >
+                  <MenuItemOption value={ALL_FLAGS_SELECTION}>{ALL_FLAGS_SELECTION}</MenuItemOption>
 
-                {flags.map((flag: IFlag) => (
-                  <MenuItem key={flag.id} onClick={() => setSelected(flag.name)}>
-                    {flag.name}
-                  </MenuItem>
-                ))}
+                  {flags.map((flag: IFlag) => (
+                    <MenuItemOption key={flag.id} value={flag.name}>
+                      {flag.name}
+                    </MenuItemOption>
+                  ))}
+                </MenuOptionGroup>
               </MenuList>
             </Menu>
 
@@ -207,15 +229,16 @@ function TryApi({ flags }: IProps) {
                   <JsonCode $loading={isLoading}>{JSON.stringify(mapFlagsForResponse(flags), null, 2)}</JsonCode>
                 )}
 
-                {selectedAfterRun !== ALL_FLAGS_SELECTION && (
-                  <JsonCode $loading={isLoading}>
-                    {JSON.stringify(
-                      mapFlagForResponse(flags.find((flag: IFlag) => flag.name === selectedAfterRun) as IFlag),
-                      Object.keys(flags.find((flag: IFlag) => flag.name === selectedAfterRun) as any).sort(),
-                      2
-                    )}
-                  </JsonCode>
-                )}
+                {selectedAfterRun !== ALL_FLAGS_SELECTION &&
+                  flags.find((flag: IFlag) => flag.name === selectedAfterRun) && (
+                    <JsonCode $loading={isLoading}>
+                      {JSON.stringify(
+                        mapFlagForResponse(flags.find((flag: IFlag) => flag.name === selectedAfterRun)),
+                        Object.keys(flags.find((flag: IFlag) => flag.name === selectedAfterRun) as any).sort(),
+                        2
+                      )}
+                    </JsonCode>
+                  )}
               </CodeContainer>
             </>
           )}

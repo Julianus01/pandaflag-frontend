@@ -78,6 +78,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter' && flagName.length >= 3) {
+      formatNameSnakeCase()
       createFlag()
     }
   }
