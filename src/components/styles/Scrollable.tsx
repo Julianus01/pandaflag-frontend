@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Scrollable = styled.div`
   position: absolute;
@@ -6,10 +6,9 @@ const Scrollable = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-
   overflow-y: overlay;
-  overflow-y: auto;
-  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
 
   ::-webkit-scrollbar {
     background-color: transparent;
@@ -40,3 +39,5 @@ const Scrollable = styled.div`
     background-color: #a0a0a5;
   }
 `
+
+export default Scrollable

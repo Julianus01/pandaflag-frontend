@@ -2,8 +2,6 @@ import { Avatar, Heading, Box, Tag, TagLabel, FormControl, FormLabel, Text, Butt
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
 import { useAuth } from 'hooks/authHooks'
-import styled from 'styled-components/macro'
-import { applyColorMode } from 'theme/StyledThemeProvider'
 
 function ProfilePage() {
   const auth = useAuth()
@@ -31,31 +29,12 @@ function ProfilePage() {
       </Box>
 
       <Section mb={4}>
-        <FormControl mb={4} id="email">
+        <FormControl id="email">
           <FormLabel mb={1} fontSize="sm" color="gray.500">
             Email
           </FormLabel>
 
-          <Text fontWeight="bold">{auth.user?.email}</Text>
-        </FormControl>
-
-        <FormControl id="password">
-          <FormLabel fontSize="sm" color="gray.500">
-            Password
-          </FormLabel>
-
-          <PasswordContainer>
-            <Dot />
-            <Dot />
-            <Dot />
-            <Dot />
-            <Dot />
-            <Dot />
-            <Dot />
-            <Dot />
-            <Dot />
-            <Dot />
-          </PasswordContainer>
+          <Text fontWeight="semibold">{auth.user?.email}</Text>
         </FormControl>
       </Section>
 
@@ -65,30 +44,15 @@ function ProfilePage() {
             Subscription
           </FormLabel>
 
-          <Text fontWeight="bold">Free Plan</Text>
+          <Text fontWeight="semibold">Free Plan</Text>
         </FormControl>
       </Section>
 
       <Box display="flex" justifyContent="center">
-        <Button>Delete account</Button>
+        <Button size="sm">Delete account</Button>
       </Box>
     </BoxedPage>
   )
 }
 
 export default ProfilePage
-
-const Dot = styled(Box)`
-  border-radius: 50%;
-  width: 6px;
-  height: 6px;
-  background: ${({ theme }) => applyColorMode(theme.colors.gray[800], theme.colors.white)(theme)};
-`
-
-const PasswordContainer = styled.div`
-  display: flex;
-
-  ${Dot}:not(:last-child) {
-    margin-right: ${({ theme }) => theme.space[1.5]};
-  }
-`
