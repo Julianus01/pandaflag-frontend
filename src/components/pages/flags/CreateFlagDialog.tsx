@@ -165,6 +165,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
             disabled={flagName.length < 3 || isLoading}
             colorScheme="blue"
             isLoading={isLoading}
+            size="sm"
           >
             Add
           </Button>

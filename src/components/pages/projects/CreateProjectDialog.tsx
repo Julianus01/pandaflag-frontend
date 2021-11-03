@@ -112,6 +112,7 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
             disabled={projectName.length < 3 || createProjectMutation.isLoading}
             colorScheme="blue"
             isLoading={createProjectMutation.isLoading}
+            size="sm"
           >
             Add
           </Button>

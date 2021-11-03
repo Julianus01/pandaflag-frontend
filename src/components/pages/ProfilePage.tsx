@@ -1,7 +1,8 @@
-import { Avatar, Heading, Box, Tag, TagLabel, FormControl, FormLabel, Text, Button } from '@chakra-ui/react'
+import { Avatar, Heading, Box, Tag, TagLabel, FormControl, FormLabel, Text, Button, Icon } from '@chakra-ui/react'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
 import { useAuth } from 'hooks/authHooks'
+import { FiLogOut } from 'react-icons/fi'
 
 function ProfilePage() {
   const auth = useAuth()
@@ -49,7 +50,13 @@ function ProfilePage() {
       </Section>
 
       <Box display="flex" justifyContent="center">
-        <Button size="sm">Delete account</Button>
+        <Button
+          leftIcon={<Icon as={FiLogOut} />}
+          onClick={() => auth.logout({ returnTo: window.location.origin })}
+          size="sm"
+        >
+          Logout
+        </Button>
       </Box>
     </BoxedPage>
   )

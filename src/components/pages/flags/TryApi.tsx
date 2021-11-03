@@ -85,7 +85,7 @@ function TryApi({ flags, isOpen }: IProps) {
 
   async function runApi() {
     setIsLoading(true)
-    await CommonUtils.wait()
+    await CommonUtils.wait(1000)
 
     if (selected === ALL_FLAGS_SELECTION) {
       setResponse(flags)
