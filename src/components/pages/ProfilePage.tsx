@@ -7,6 +7,8 @@ import { FiLogOut } from 'react-icons/fi'
 function ProfilePage() {
   const auth = useAuth()
 
+  const displayName = auth.user?.name.substr(0, auth.user?.name.indexOf('@'))
+
   return (
     <BoxedPage>
       <Heading flex={1} mb={10} as="h3" size="lg">
@@ -18,7 +20,7 @@ function ProfilePage() {
 
         <Box display="flex" flexDirection="column" justifyContent="center" ml={4}>
           <Heading mb={1} fontWeight="semibold" size="md">
-            {auth.user?.name.substr(0, auth.user?.name.indexOf('@'))}
+            {displayName}
           </Heading>
 
           <Box>
