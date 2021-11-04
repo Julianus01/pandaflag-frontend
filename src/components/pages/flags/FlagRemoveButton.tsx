@@ -67,7 +67,6 @@ function FlagRemoveButton({ flag }: IProps) {
             isDisabled={flagsFetching}
             textAlign="right"
             onClick={deleteFlag}
-            size="sm"
             colorScheme="red"
             variant="ghost"
           >

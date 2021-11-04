@@ -11,7 +11,9 @@ function GlobalStyles() {
       styles={css`
         body {
           background: ${bgColor};
+        }
 
+        * {
           ::-webkit-scrollbar {
             background-color: transparent;
             width: 6px;

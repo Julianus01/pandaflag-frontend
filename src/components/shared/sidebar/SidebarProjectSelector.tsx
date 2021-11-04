@@ -22,6 +22,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 
+function getProjectNameSize(projectNameLength: number | undefined): string {
+  if (!projectNameLength || projectNameLength < 20) {
+    return 'lg'
+  }
+
+  return 'md'
+}
+
 function SidebarProjectSelector() {
   const dispatch = useDispatch()
   const toast = useToast()
@@ -61,12 +69,12 @@ function SidebarProjectSelector() {
       <Menu matchWidth autoSelect={false} isOpen={isOpen}>
         <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
           <Container>
-            <Box flex="1">
+            <Box overflow="hidden" flex="1">
               <Text fontSize="xs" color="gray.500">
                 selected project
               </Text>
 
-              <Heading as="h5" size="lg">
+              <Heading as="h5" size={getProjectNameSize(configuration.project?.name?.length)}>
                 {configuration.project?.name}
               </Heading>
             </Box>

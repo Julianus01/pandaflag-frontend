@@ -50,6 +50,9 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
     },
   })
 
+  const disabledEdit =
+    projectName.length < 3 || updateProjectMutation.isLoading || projectName.trim() === project.name.trim()
+
   useUpdateEffect(() => {
     if (isOpen) {
       setProjectName(project.name)
@@ -63,7 +66,13 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
   }
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setProjectName(event.target.value)
+    const value = event.target.value
+
+    if (value.length > 40) {
+      return
+    }
+
+    setProjectName(value)
 
     if (error) {
       setError(undefined)
@@ -71,6 +80,10 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (disabledEdit) {
+      return
+    }
+
     if (event.key === 'Enter' && projectName.length >= 3) {
       updateProject()
     }

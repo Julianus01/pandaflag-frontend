@@ -55,7 +55,6 @@ function ProfilePage() {
         <Button
           leftIcon={<Icon as={FiLogOut} />}
           onClick={() => auth.logout({ returnTo: window.location.origin })}
-          size="sm"
         >
           Logout
         </Button>

@@ -48,7 +48,13 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   }
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setProjectName(event.target.value)
+    const value = event.target.value
+
+    if (value.length > 40) {
+      return
+    }
+
+    setProjectName(value)
 
     if (error) {
       setError(undefined)
@@ -112,7 +118,6 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
             disabled={projectName.length < 3 || createProjectMutation.isLoading}
             colorScheme="blue"
             isLoading={createProjectMutation.isLoading}
-            size="sm"
           >
             Add
           </Button>
