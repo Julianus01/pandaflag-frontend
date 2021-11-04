@@ -153,7 +153,7 @@ function TryApi({ flags, isOpen }: IProps) {
 
           <Text mb={4}>
             <Code>
-              https://smartlaunch.com/
+              https://smartlaunch-api-dev.ey.r.appspot.com/api/v1/
               <Box color="orange.500" as="span">
                 API_KEY
               </Box>
@@ -222,7 +222,7 @@ function TryApi({ flags, isOpen }: IProps) {
 
           <CodeContainer mb={4}>
             <Code display="flex" flexWrap="wrap">
-              fetch('https://smartlaunch.com/
+              fetch('https://smartlaunch-api-dev.ey.r.appspot.com/api/v1/
               {
                 <Box color="orange.500" as="span">
                   {configuration.project?.apiKey}
