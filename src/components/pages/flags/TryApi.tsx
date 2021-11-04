@@ -148,7 +148,7 @@ function TryApi({ flags, isOpen }: IProps) {
                 </PopoverContent>
               </Popover>
             </Box>
-            , project, environment and flag name.
+            , environment and flag name.
           </Box>
 
           <Text mb={4}>
