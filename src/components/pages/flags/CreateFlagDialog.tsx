@@ -61,7 +61,13 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   }
 
   function onFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setFlagName(event.target.value)
+    const value = event.target.value
+
+    if (value.length > 40) {
+      return
+    }
+
+    setFlagName(value)
 
     if (error) {
       setError(undefined)

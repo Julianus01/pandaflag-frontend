@@ -155,7 +155,7 @@ function FlagPage() {
           onClick={onUpdate}
           ml="auto"
           colorScheme="blue"
-          disabled={!isDirty || updateFlagMutation.isLoading || _.isEqual(flag, data)}
+          disabled={!isDirty || updateFlagMutation.isLoading || _.isEqual(flag, data) || flag.name.length < 3}
         >
           Update
         </Button>
