@@ -74,7 +74,7 @@ function NavigationRoute(props: RouteProps) {
         return
       }
 
-      const foundProject = projects.find((project: IProject) => project.name === configuration.project?.name)
+      const foundProject = projects.find((project: IProject) => project.id === configuration.project?.id)
       if (!foundProject) {
         // Selected project was deleted. change selected project
         dispatch(configurationActions.changeProject(projects[0]))
