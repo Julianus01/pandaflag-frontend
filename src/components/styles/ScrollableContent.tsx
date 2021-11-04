@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
-import Scrollable from './Scrollable'
+import ScrollableAbsolute from './ScrollableAbsolute'
 
 interface Props {
   children: ReactNode
@@ -10,7 +10,7 @@ interface Props {
 const ScrollableContent = ({ children }: Props) => {
   return (
     <Container>
-      <Scrollable>{children}</Scrollable>
+      <ScrollableAbsolute>{children}</ScrollableAbsolute>
     </Container>
   )
 }

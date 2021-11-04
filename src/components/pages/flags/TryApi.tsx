@@ -176,14 +176,13 @@ function TryApi({ flags, isOpen }: IProps) {
             <Menu autoSelect={false}>
               <MenuButton
                 disabled={isLoading}
-                size="sm"
                 as={Button}
                 rightIcon={<Icon strokeWidth={2.4} as={FiChevronDown} />}
               >
                 {selected}
               </MenuButton>
 
-              <MenuList>
+              <MenuList maxHeight="300px" overflowY="scroll">
                 <MenuOptionGroup
                   fontWeight="semibold"
                   onChange={(value) => setSelected(value as string)}
@@ -208,7 +207,6 @@ function TryApi({ flags, isOpen }: IProps) {
               isLoading={isLoading}
               disabled={isLoading}
               loadingText="Running"
-              size="sm"
               ml="auto"
               rightIcon={<Icon strokeWidth={2.4} as={FiPlay} />}
             >
@@ -292,8 +290,9 @@ const CodeContainer = styled(Box)`
   flex-direction: column;
   background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[200])(theme)};
   border-radius: ${({ theme }) => theme.radii.md};
-  overflow: hidden;
   padding: ${({ theme }) => theme.space[2]};
+  max-height: 600px;
+  overflow-y: overlay;
 
   > code {
     background: transparent;

@@ -100,7 +100,7 @@ function FlagsPage() {
           Flags
         </Heading>
 
-        <Button size="sm" leftIcon={<Icon as={FiFlag} />} onClick={onOpen} colorScheme="blue">
+        <Button leftIcon={<Icon as={FiFlag} />} onClick={onOpen} colorScheme="blue">
           Add Flag
         </Button>
       </Box>

@@ -100,7 +100,6 @@ function FlagPage() {
           <BackLink to={{ pathname: RoutePage.flags() }}>
             <IconButton
               mt="2px"
-              size="sm"
               aria-label="Back button"
               icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiChevronLeft} />}
             />
@@ -122,7 +121,6 @@ function FlagPage() {
           <BackLink to={{ pathname: RoutePage.flags() }}>
             <IconButton
               mt="2px"
-              size="sm"
               aria-label="Back button"
               icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiChevronLeft} />}
             />
@@ -142,7 +140,6 @@ function FlagPage() {
         <BackLink to={{ pathname: RoutePage.flags() }}>
           <IconButton
             mt="2px"
-            size="sm"
             aria-label="Back button"
             icon={<Icon strokeWidth={2.4} w={4} h={4} as={FiChevronLeft} />}
           />
@@ -156,7 +153,6 @@ function FlagPage() {
           isLoading={updateFlagMutation.isLoading}
           loadingText="Updating"
           onClick={onUpdate}
-          size="sm"
           ml="auto"
           colorScheme="blue"
           disabled={!isDirty || updateFlagMutation.isLoading || _.isEqual(flag, data)}

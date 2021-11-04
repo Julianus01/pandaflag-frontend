@@ -20,7 +20,7 @@ function ProjectsPage() {
           Projects
         </Heading>
 
-        <Button size="sm" leftIcon={<Icon as={FiLayers} />} onClick={onOpen} colorScheme="blue">
+        <Button leftIcon={<Icon as={FiLayers} />} onClick={onOpen} colorScheme="blue">
           Add Project
         </Button>
       </Box>
