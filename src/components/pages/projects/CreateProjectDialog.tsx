@@ -48,7 +48,13 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   }
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setProjectName(event.target.value)
+    const value = event.target.value
+
+    if (value.length > 40) {
+      return
+    }
+
+    setProjectName(value)
 
     if (error) {
       setError(undefined)
