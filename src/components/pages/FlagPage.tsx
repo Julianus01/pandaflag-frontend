@@ -82,11 +82,20 @@ function FlagPage() {
     setFlag({ ...flag, name: _.snakeCase(flag?.name as string) } as IFlag)
   }
 
-  function onInputChange(key: string) {
-    return function (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-      setFlag({ ...flag, [key]: event.target.value } as IFlag)
-      onDirty()
+  function onNameChange(event: ChangeEvent<HTMLInputElement>) {
+    const value = event.target.value
+
+    if (value.length > 40) {
+      return
     }
+
+    setFlag({ ...flag, name: value } as IFlag)
+    onDirty()
+  }
+
+  function onDescriptionChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    setFlag({ ...flag, name: event.target.value } as IFlag)
+    onDirty()
   }
 
   function onUpdate() {
@@ -145,7 +154,7 @@ function FlagPage() {
           />
         </BackLink>
 
-        <Heading flex={1} ml={3} as="h3" size="lg">
+        <Heading overflow="hidden" whiteSpace="nowrap" flex={1} ml={3} mr={4} as="h3" size="lg">
           <FlagsLink to={RoutePage.flags()}>Flags</FlagsLink> &gt; {flag.name}
         </Heading>
 
@@ -204,7 +213,7 @@ function FlagPage() {
           <Input
             onBlur={formatNameSnakeCase}
             value={flag.name}
-            onChange={onInputChange('name')}
+            onChange={onNameChange}
             variant="filled"
             placeholder="Name"
             mb={4}
@@ -222,7 +231,7 @@ function FlagPage() {
             placeholder="Description"
             size="sm"
             resize="none"
-            onChange={onInputChange('description')}
+            onChange={onDescriptionChange}
             value={flag.description}
           />
         </FormControl>
