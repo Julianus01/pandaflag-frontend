@@ -10,16 +10,12 @@ function emailVerification() {
   return `/email-verification`
 }
 
-function dashboard() {
-  return `/dashboard`
-}
-
 function flags() {
   return `/flags`
 }
 
-function settings() {
-  return `/settings`
+function flag(name: string) {
+  return `/flags/${name}`
 }
 
 function projects() {
@@ -30,15 +26,19 @@ function createFirstProject() {
   return `/create-first-project`
 }
 
+function profile() {
+  return `/profile`
+}
+
 const RoutePage = {
   root,
-  dashboard,
   login,
   emailVerification,
   flags,
-  settings,
+  flag,
   projects,
   createFirstProject,
+  profile
 }
 
 export default RoutePage

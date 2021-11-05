@@ -9,7 +9,7 @@ import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
 import LSUtils from 'utils/LSUtils'
 import { configurationActions, IConfigurationState } from 'redux/ducks/configurationDuck'
 import { useEffect } from 'react'
-import { applyColorMode } from 'theme/StyledThemeProvider'
+import AccessibleBackground from 'components/styles/AccessibleBackground'
 
 function useUpdateConfigurationEnvironment() {
   const dispatch = useDispatch()
@@ -34,7 +34,7 @@ function useUpdateConfigurationEnvironment() {
   }, [project, dispatch])
 }
 
-function useUpdateConfigurationProject(projects: IProject[] | undefined) {
+function useInitConfigurationProject(projects: IProject[] | undefined) {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -43,9 +43,12 @@ function useUpdateConfigurationProject(projects: IProject[] | undefined) {
     }
 
     const storeConfiguration = store.getState().configuration as IConfigurationState
-    const lastProjectName: string = LSUtils.lastProjectName()
+    if (storeConfiguration.project) {
+      return
+    }
 
-    if (!storeConfiguration.project && lastProjectName) {
+    const lastProjectName: string = LSUtils.lastProjectName()
+    if (lastProjectName) {
       const foundProject = projects.find((project: IProject) => project.name === lastProjectName)
 
       if (foundProject) {
@@ -62,10 +65,24 @@ function useUpdateConfigurationProject(projects: IProject[] | undefined) {
 }
 
 function NavigationRoute(props: RouteProps) {
+  const dispatch = useDispatch()
   const configuration = useSelector((state: IStoreState) => state.configuration)
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
-  useUpdateConfigurationProject(projects)
+  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects, {
+    onSuccess: (projects: IProject[]) => {
+      if (!configuration.project || !projects.length) {
+        return
+      }
+
+      const foundProject = projects.find((project: IProject) => project.id === configuration.project?.id)
+      if (!foundProject) {
+        // Selected project was deleted. change selected project
+        dispatch(configurationActions.changeProject(projects[0]))
+      }
+    },
+  })
+
+  useInitConfigurationProject(projects)
   useUpdateConfigurationEnvironment()
 
   if (!configuration.project || !configuration.environment) {
@@ -91,7 +108,7 @@ const Container = styled.div`
   width: 100%;
 `
 
-const SidebarContainer = styled.div`
+const SidebarContainer = styled(AccessibleBackground)`
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -99,7 +116,6 @@ const SidebarContainer = styled.div`
   left: 0;
   bottom: 0;
   width: 280px;
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[900])(theme)};
   box-shadow: ${({ theme }) => theme.shadows.xs};
   z-index: 1;
 `
@@ -108,10 +124,11 @@ const Content = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 276px;
+  /* Sidebar width !! */
+  margin-left: 280px;
 
-  padding: ${({ theme }) => `${theme.space[14]} ${theme.space[28]}`};
+  padding: ${({ theme }) => `0 ${theme.space[28]}`};
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
-    padding: ${({ theme }) => `${theme.space[14]} ${theme.space[16]}`};
+    padding: ${({ theme }) => `0 ${theme.space[16]}`};
   }
 `

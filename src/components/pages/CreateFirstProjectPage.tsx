@@ -1,4 +1,4 @@
-import { Button, Heading, Input, Text } from '@chakra-ui/react'
+import { Button, Heading, Input } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 
 function CreateFirstProjectPage() {
-  const { user, logout } = useAuth()
+  const { logout } = useAuth()
   const queryClient = useQueryClient()
 
   const [projectName, setProjectName] = useState<string>('')
@@ -21,7 +21,13 @@ function CreateFirstProjectPage() {
   })
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setProjectName(event.target.value)
+    const value = event.target.value
+
+    if (value.length > 40) {
+      return
+    }
+
+    setProjectName(value)
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -39,13 +45,9 @@ function CreateFirstProjectPage() {
     <Container>
       <Content>
         <CreateBox>
-          <Heading mb={1} as="h4" size="md">
-            Hey {user?.name}
-          </Heading>
-
-          <Text mb={4} color="gray.500">
+          <Heading mb={4} as="h4" size="md">
             Create your first project
-          </Text>
+          </Heading>
 
           <Input
             onKeyDown={onKeyDown}
@@ -53,7 +55,7 @@ function CreateFirstProjectPage() {
             onChange={onProjectNameChange}
             mb={4}
             variant="filled"
-            placeholder="Project Name"
+            placeholder="Ex: Flags Investigator"
           />
 
           <Button
@@ -92,13 +94,14 @@ const Content = styled.div`
 `
 
 const CreateBox = styled.div`
-  box-shadow: ${({ theme }) => theme.shadows.lg};
-  border: ${({ theme }) => `1px solid ${applyColorMode(theme.colors.gray[300], theme.colors.whiteAlpha[200])(theme)}`};
-  border-radius: ${({ theme }) => theme.radii.lg};
-  padding: ${({ theme }) => theme.space[10]};
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[700])(theme)};
-  max-width: 500px;
-  width: 100%;
+  /* box-shadow: ${({ theme }) => theme.shadows.lg}; */
+  /* border: ${({ theme }) =>
+    `1px solid ${applyColorMode(theme.colors.gray[300], theme.colors.whiteAlpha[200])(theme)}`}; */
+  /* border-radius: ${({ theme }) => theme.radii.lg}; */
+  /* padding: ${({ theme }) => theme.space[10]}; */
+  /* background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[700])(theme)}; */
   display: flex;
   flex-direction: column;
+  max-width: 500px;
+  width: 100%;
 `

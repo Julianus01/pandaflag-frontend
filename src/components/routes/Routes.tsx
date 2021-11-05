@@ -10,11 +10,11 @@ import AuthenticatedRoute from './AuthenticatedRoute'
 import EmailVerificationRoute from './EmailVerificationRoute'
 import RedirectAuthenticatedRoute from './RedirectAuthenticatedRoute'
 import FlagsPage from 'components/pages/FlagsPage'
-import SettingsPage from 'components/pages/SettingsPage'
 import CreateFirstProjectPage from 'components/pages/CreateFirstProjectPage'
 import CreateFirstProjectRoute from './CreateFirstProjectRoute'
 import ProjectsPage from 'components/pages/ProjectsPage'
-import DashboardPage from 'components/pages/DashboardPage'
+import FlagPage from 'components/pages/FlagPage'
+import ProfilePage from 'components/pages/ProfilePage'
 
 function Routes() {
   return (
@@ -25,17 +25,19 @@ function Routes() {
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.login()} />
 
         {/* Authenticated routes */}
-        <AuthenticatedRoute component={DashboardPage} exact path={RoutePage.dashboard()} />
         <AuthenticatedRoute component={FlagsPage} exact path={RoutePage.flags()} />
-        <AuthenticatedRoute component={SettingsPage} exact path={RoutePage.settings()} />
+        <AuthenticatedRoute component={FlagPage} exact path={RoutePage.flag(':name')} />
+
         <AuthenticatedRoute component={ProjectsPage} exact path={RoutePage.projects()} />
+
+        <AuthenticatedRoute component={ProfilePage} exact path={RoutePage.profile()} />
 
         {/* Use case routes */}
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
         <CreateFirstProjectRoute component={CreateFirstProjectPage} exact path={RoutePage.createFirstProject()} />
 
         {/* Redirect to root */}
-        <Route component={() => <Redirect to={RoutePage.root()} />} exact={true} path="/*" />
+        <Route component={() => <Redirect to={RoutePage.root()} />} exact path="/*" />
       </Switch>
     </Router>
   )

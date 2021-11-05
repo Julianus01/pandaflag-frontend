@@ -1,4 +1,4 @@
-import { Text, Kbd } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ReactNode } from 'react'
 import { useHistory } from 'react-router'
@@ -8,7 +8,7 @@ export interface ISidebarMenuItem {
   name: string
   href: string
   icon: ReactNode
-  keyboardLetter: string
+  endComponent?: () => ReactNode
 }
 
 interface IProps {
@@ -30,7 +30,7 @@ function SidebarMenuItem({ children, menuItem, active = false }: IProps) {
 
       <Text ml={3}>{children}</Text>
 
-      <Kbd ml="auto">{menuItem.keyboardLetter}</Kbd>
+      {menuItem.endComponent && <End>{menuItem.endComponent()}</End>}
     </Container>
   )
 }
@@ -41,7 +41,8 @@ const Container = styled.div<{ active: boolean }>`
   font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: ${({ theme, active }) => (active ? theme.fontWeights.bold : theme.fontWeights.medium)};
   border-radius: ${({ theme }) => theme.radii.lg};
-  padding: ${({ theme }) => `${theme.space[3]} ${theme.space[3]}`};
+  padding: ${({ theme }) => `0 ${theme.space[3]}`};
+  height: ${({ theme }) => theme.space[12]};
   width: 100%;
   display: flex;
   align-items: center;
@@ -53,4 +54,8 @@ const Container = styled.div<{ active: boolean }>`
       ? applyColorMode(theme.colors.gray[800], theme.colors.whiteAlpha[800])(theme)
       : applyColorMode(theme.colors.gray[500], theme.colors.gray[500])(theme)};
   user-select: none;
+`
+
+const End = styled.div`
+  margin-left: auto;
 `

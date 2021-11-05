@@ -15,6 +15,7 @@ import {
   Tab,
   Spinner,
   Icon,
+  Text,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
@@ -24,11 +25,13 @@ import CreateFlagDialog from './flags/CreateFlagDialog'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import { EmptyEnvironment, IEnvironment } from 'api/ProjectsApi'
+import { EmptyEnvironment } from 'api/ProjectsApi'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
 import { FiFlag } from 'react-icons/fi'
+import TryApi from './flags/TryApi'
+import AccessibleBackground from 'components/styles/AccessibleBackground'
 
 function SkeletonTable() {
   return (
@@ -36,9 +39,11 @@ function SkeletonTable() {
       <CustomTable variant="simple">
         <TableHead>
           <Tr>
-            <Th>Name</Th>
-
-            <Th isNumeric>Created at</Th>
+            <Th textTransform="capitalize">Name</Th>
+            <Th textTransform="capitalize">Active</Th>
+            <Th textTransform="capitalize" isNumeric>
+              Created at
+            </Th>
 
             <Th />
           </Tr>
@@ -64,19 +69,6 @@ function SkeletonTable() {
   )
 }
 
-function environmentColorScheme(environment: IEnvironment) {
-  switch (environment.name) {
-    case EmptyEnvironment.production.name:
-      return 'orange'
-
-    case EmptyEnvironment.development.name:
-      return 'blue'
-
-    default:
-      return 'orange'
-  }
-}
-
 function FlagsPage() {
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -97,7 +89,7 @@ function FlagsPage() {
   }
 
   function doesFlagAlreadyExist(name: string): boolean {
-    const found = flags?.find((flag: IFlag) => flag.name === name)
+    const found = flags?.find((flag: IFlag) => flag.name.toLowerCase() === name.toLowerCase())
     return Boolean(found)
   }
 
@@ -119,11 +111,11 @@ function FlagsPage() {
           index={environment?.name === 'production' ? 0 : 1}
           size="sm"
           variant="soft-rounded"
-          colorScheme={environmentColorScheme(environment as IEnvironment)}
+          colorScheme={environment?.color}
         >
           <TabList>
-            <Tab pb="5px">production</Tab>
-            <Tab pb="5px">development</Tab>
+            <Tab>production</Tab>
+            <Tab>development</Tab>
           </TabList>
         </Tabs>
 
@@ -136,6 +128,14 @@ function FlagsPage() {
           <FlagsTable flags={flags as IFlag[]} />
         </TableContainer>
       )}
+
+      {!isLoading && Boolean(flags?.length) && (
+        <CodeContainer shadow="xs" mt={4}>
+          <TryApi flags={flags as IFlag[]} />
+        </CodeContainer>
+      )}
+
+      {!isLoading && !Boolean(flags?.length) && <Text>No flags. Go ahead and add your first flag</Text>}
 
       <CreateFlagDialog doesFlagAlreadyExist={doesFlagAlreadyExist} isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
@@ -156,4 +156,9 @@ const TableHead = styled(Thead)`
 
 const CustomTable = styled(Table)`
   background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
+`
+
+const CodeContainer = styled(AccessibleBackground)`
+  border-radius: ${({ theme }) => theme.radii.md};
+  padding: ${({ theme }) => theme.space[2]};
 `

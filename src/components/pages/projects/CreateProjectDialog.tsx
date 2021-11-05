@@ -11,27 +11,31 @@ import {
   Input,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi from 'api/ProjectsApi'
+import ProjectsApi, { IProject } from 'api/ProjectsApi'
+import useProjectAlreadyExists from 'hooks/project/useProjectAlreadyExists'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import CommonUtils from 'utils/CommonUtils'
+import { useDispatch } from 'react-redux'
+import { configurationActions } from 'redux/ducks/configurationDuck'
 
 interface Props {
   isOpen: boolean
   onClose: () => void
-  doesProjectAlreadyExist: (projectName: string) => boolean
 }
 
-function CreateProjectDialog({ isOpen, onClose, doesProjectAlreadyExist }: Props) {
+function CreateProjectDialog({ isOpen, onClose }: Props) {
   const inputRef = useRef()
+  const dispatch = useDispatch()
   const queryClient = useQueryClient()
 
   const [projectName, setProjectName] = useState<string>('')
   const [error, setError] = useState<string | undefined>(undefined)
+  const doesProjectAlreadyExist = useProjectAlreadyExists()
 
   const createProjectMutation = useMutation(ProjectsApi.createProject, {
-    onSuccess: () => {
+    onSuccess: (newProject: IProject) => {
       queryClient.invalidateQueries(ApiQueryId.getProjects)
+      dispatch(configurationActions.changeProject(newProject))
       setProjectName('')
       onClose()
     },
@@ -44,7 +48,13 @@ function CreateProjectDialog({ isOpen, onClose, doesProjectAlreadyExist }: Props
   }
 
   function onProjectNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setProjectName(event.target.value)
+    const value = event.target.value
+
+    if (value.length > 40) {
+      return
+    }
+
+    setProjectName(value)
 
     if (error) {
       setError(undefined)
@@ -52,8 +62,6 @@ function CreateProjectDialog({ isOpen, onClose, doesProjectAlreadyExist }: Props
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    CommonUtils.stopPropagation(event)
-
     if (event.key === 'Enter' && projectName.length >= 3) {
       createProject()
     }

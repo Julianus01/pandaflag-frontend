@@ -1,26 +1,18 @@
 import { Box, Heading, Icon, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
-import { FiHome, FiSettings, FiLayers, FiFlag } from 'react-icons/fi'
+import { FiLayers, FiFlag } from 'react-icons/fi'
 import RoutePage from 'components/routes/RoutePage'
-import { useEffect } from 'react'
-import { useHistory } from 'react-router'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
 import ThemeButton from 'theme/ThemeButton'
+import SidebarProjectsCount from './SidebarProjectsCounts'
 
 const MENU_ITEMS: ISidebarMenuItem[] = [
-  {
-    name: 'Dashboard',
-    href: RoutePage.dashboard(),
-    icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiHome} />,
-    keyboardLetter: 'D',
-  },
   {
     name: 'Flags',
     href: RoutePage.flags(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiFlag} />,
-    keyboardLetter: 'F',
   },
 ]
 
@@ -29,47 +21,15 @@ const CONFIGURATION_MENU_ITEMS: ISidebarMenuItem[] = [
     name: 'Projects',
     href: RoutePage.projects(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiLayers} />,
-    keyboardLetter: 'P',
-  },
-  {
-    name: 'Settings',
-    href: RoutePage.settings(),
-    icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiSettings} />,
-    keyboardLetter: 'S',
-  },
+    endComponent: () => <SidebarProjectsCount />,
+  }
 ]
 
-const KeyDownKey = 'keydown'
-
-function useKeyboardListener(callback: (event: KeyboardEvent) => void) {
-  useEffect(() => {
-    document.addEventListener(KeyDownKey, callback)
-
-    return () => {
-      document.removeEventListener(KeyDownKey, callback)
-    }
-  }, [callback])
-}
-
 function Sidebar() {
-  const history = useHistory()
-
-  useKeyboardListener((event: KeyboardEvent) => {
-    const sidebarMenuItemBasedOnKey = [...MENU_ITEMS, ...CONFIGURATION_MENU_ITEMS].find(
-      (menuItem) => menuItem.keyboardLetter.toLowerCase() === event.key.toLowerCase()
-    )
-
-    if (!sidebarMenuItemBasedOnKey) {
-      return
-    }
-
-    history.push(sidebarMenuItemBasedOnKey.href)
-  })
-
   return (
     <Container>
       <Heading fontWeight="extrabold" textAlign="left" mb={16} ml={4} as="h4" size="md">
-        Smartlaunch
+        pandaflag
       </Heading>
 
       <Box mb={6}>

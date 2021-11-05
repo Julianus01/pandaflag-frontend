@@ -9,16 +9,16 @@ import {
   FormControl,
   FormErrorMessage,
   Input,
-  Stack,
   Switch,
   Text,
+  FormLabel,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi from 'api/FlagsApi'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import CommonUtils from 'utils/CommonUtils'
 import _ from 'lodash/fp'
+import AutoTextArea from 'components/styles/AutoTextarea'
 
 interface Props {
   isOpen: boolean
@@ -31,6 +31,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   const queryClient = useQueryClient()
 
   const [flagName, setFlagName] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
   const [addForAll, setAddForAll] = useState<boolean>(false)
   const [error, setError] = useState<string | undefined>(undefined)
 
@@ -50,16 +51,31 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
   function resetState() {
     setFlagName('')
+    setDescription('')
     setAddForAll(false)
     setError(undefined)
   }
 
+  function formatNameSnakeCase() {
+    setFlagName(_.snakeCase(flagName))
+  }
+
   function onFlagNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setFlagName(event.target.value)
+    const value = event.target.value
+
+    if (value.length > 40) {
+      return
+    }
+
+    setFlagName(value)
 
     if (error) {
       setError(undefined)
     }
+  }
+
+  function onDescriptionChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    setDescription(event.target.value)
   }
 
   function toggleAddForAll() {
@@ -67,9 +83,8 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    CommonUtils.stopPropagation(event)
-
     if (event.key === 'Enter' && flagName.length >= 3) {
+      formatNameSnakeCase()
       createFlag()
     }
   }
@@ -82,10 +97,12 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
       return
     }
 
+    const params = { name, description: description.trim() }
+
     if (addForAll) {
-      createFlagForAllMutation.mutate(name)
+      createFlagForAllMutation.mutate(params)
     } else {
-      createFlagMutation.mutate(name)
+      createFlagMutation.mutate(params)
     }
   }
 
@@ -114,6 +131,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
           <FormControl mb={10} isInvalid={Boolean(error)}>
             <Input
+              onBlur={formatNameSnakeCase}
               ref={inputRef as any}
               onKeyDown={onKeyDown}
               value={flagName}
@@ -123,13 +141,26 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
             />
 
             <FormErrorMessage>{error}</FormErrorMessage>
+
+            <AutoTextArea
+              mt={2}
+              borderRadius="md"
+              variant="filled"
+              placeholder="Optional: Description"
+              size="sm"
+              resize="none"
+              onChange={onDescriptionChange}
+              value={description}
+            />
           </FormControl>
 
-          <Stack alignItems="flex-end" direction="row">
-            <Switch isChecked={addForAll} onChange={toggleAddForAll} colorScheme="blue" />
+          <FormControl display="flex" alignItems="center">
+            <Switch id="add-for-all" mr={2} isChecked={addForAll} onChange={toggleAddForAll} colorScheme="blue" />
 
-            <Text>Add flag for all environments</Text>
-          </Stack>
+            <FormLabel cursor="pointer" fontWeight="normal" htmlFor="add-for-all" mb="0">
+              Add flag for all environments
+            </FormLabel>
+          </FormControl>
         </AlertDialogBody>
 
         <AlertDialogFooter>

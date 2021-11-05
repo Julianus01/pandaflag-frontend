@@ -2,6 +2,7 @@ import {
   collection,
   query,
   getDocs,
+  getDoc,
   getFirestore,
   QueryDocumentSnapshot,
   DocumentData,
@@ -22,9 +23,10 @@ export interface IFlag {
   id: string
   projectId: string
   name: string
+  description?: string
   enabled: boolean
   environmentName: string
-  createdAt: number
+  createdAt: Timestamp
 }
 
 // Get Flags
@@ -42,20 +44,61 @@ async function getFlags(): Promise<IFlag[]> {
 
   const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
-    return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
+    return { ...data, id: doc.id }
   }) as IFlag[]
 
   return flags.sort((a, b) => a.name.localeCompare(b.name))
 }
 
+async function getFlag(id: string): Promise<IFlag | undefined> {
+  const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.flags, id))
+
+  if (!snapshot.exists()) {
+    return undefined
+  }
+
+  return { id, ...snapshot.data() } as IFlag
+}
+
+async function getFlagByName(name: string): Promise<IFlag | undefined> {
+  const project = store.getState().configuration.project as IProject
+  const environment = store.getState().configuration.environment as IEnvironment
+
+  const querySnapshot = await getDocs(
+    query(
+      collection(getFirestore(), FirestoreCollection.flags),
+      where('projectId', '==', project.id),
+      where('environmentName', '==', environment.name),
+      where('name', '==', name)
+    )
+  )
+
+  const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, id: doc.id }
+  }) as IFlag[]
+
+  if (!flags.length) {
+    return undefined
+  }
+
+  return flags[0]
+}
+
 // Create Flag
-async function createFlag(name: string): Promise<IFlag> {
+interface ICreateFlagRequestParams {
+  name: string
+  description?: string
+}
+
+async function createFlag({ name, description = '' }: ICreateFlagRequestParams): Promise<IFlag> {
   const project = store.getState().configuration.project as IProject
   const environment = store.getState().configuration.environment as IEnvironment
   const createdAt = Timestamp.now()
 
   const newFlag = {
     name,
+    description,
     projectId: project.id,
     enabled: false,
     environmentName: environment.name,
@@ -64,17 +107,26 @@ async function createFlag(name: string): Promise<IFlag> {
 
   const newFlagDoc = await addDoc(collection(getFirestore(), FirestoreCollection.flags), newFlag)
 
-  return { ...newFlag, id: newFlagDoc.id, createdAt: createdAt.seconds }
+  return { ...newFlag, id: newFlagDoc.id }
 }
 
-async function createFlagForAllEnvironments(
+interface ICreateFlagForAllEnvironmentsRequestParams {
   name: string
-): Promise<[DocumentReference<DocumentData>, DocumentReference<DocumentData>]> {
+  description?: string
+}
+
+async function createFlagForAllEnvironments({
+  name,
+  description = '',
+}: ICreateFlagForAllEnvironmentsRequestParams): Promise<
+  [DocumentReference<DocumentData>, DocumentReference<DocumentData>]
+> {
   const project = store.getState().configuration.project as IProject
   const createdAt = Timestamp.now()
 
   const newFlag = {
     name,
+    description,
     projectId: project.id,
     enabled: false,
     createdAt,
@@ -116,6 +168,8 @@ async function deleteProjectFlags(projectId: string): Promise<void> {
 const FlagsApi = {
   // Get
   getFlags,
+  getFlag,
+  getFlagByName,
 
   // Create
   createFlag,

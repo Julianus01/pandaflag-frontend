@@ -1,75 +1,14 @@
-import {
-  Box,
-  Button,
-  Icon,
-  IconButton,
-  Spinner,
-  Td,
-  Tooltip,
-  Tr,
-  useDisclosure,
-  Switch,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  Text,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Icon, IconButton, Spinner, Td, Tooltip, Tr, Switch, useToast, HStack } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
+import RoutePage from 'components/routes/RoutePage'
 import usePropState from 'hooks/common/usePropState'
 import moment from 'moment'
-import { FiMinus } from 'react-icons/fi'
-import { useQueryClient, useMutation, useQuery } from 'react-query'
+import { FiEdit2 } from 'react-icons/fi'
+import { useQueryClient, useMutation } from 'react-query'
+import { useHistory } from 'react-router'
 import styled, { css } from 'styled-components/macro'
-
-interface IRemoveButtonProps {
-  flagId: string
-}
-
-function RemoveButton({ flagId }: IRemoveButtonProps) {
-  const queryClient = useQueryClient()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const { isFetching: flagsFetching } = useQuery(ApiQueryId.getFlags, FlagsApi.getFlags)
-  const deleteMutation = useMutation(FlagsApi.deleteFlag, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getFlags)
-    },
-  })
-
-  function deleteFlag() {
-    onClose()
-    deleteMutation.mutate(flagId)
-  }
-
-  return (
-    <Popover placement="left" isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
-      <PopoverTrigger>
-        <IconButton
-          disabled={deleteMutation.isLoading}
-          onClick={onOpen}
-          size="xs"
-          aria-label="delete"
-          icon={deleteMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiMinus} strokeWidth={2.4} />}
-        />
-      </PopoverTrigger>
-
-      <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
-        <PopoverBody textAlign="right" shadow="lg" p="4">
-          <Text textAlign="left" mb="4">
-            Are you sure you want to delete this project?
-          </Text>
-
-          <Button isDisabled={flagsFetching} textAlign="right" onClick={deleteFlag} size="sm" colorScheme="red" variant="ghost">
-            Delete
-          </Button>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
-  )
-}
+import FlagRemoveButton from './FlagRemoveButton'
 
 interface IProps {
   flag: IFlag
@@ -77,7 +16,9 @@ interface IProps {
 
 function FlagRow({ flag }: IProps) {
   const toast = useToast()
+  const history = useHistory()
   const queryClient = useQueryClient()
+
   const [enabled, setEnabled] = usePropState(flag.enabled)
 
   const updateFlagMutation = useMutation(FlagsApi.updateFlag, {
@@ -94,9 +35,13 @@ function FlagRow({ flag }: IProps) {
     },
   })
 
-  function toggleFlag() {
+  function toggleStatus() {
     setEnabled(!enabled)
     updateFlagMutation.mutate({ id: flag.id, enabled: !flag.enabled })
+  }
+
+  function onEdit() {
+    history.push(RoutePage.flag(flag.name))
   }
 
   return (
@@ -109,24 +54,28 @@ function FlagRow({ flag }: IProps) {
         {/* Potential thread to follow */}
         {/* https://giters.com/chakra-ui/chakra-ui/issues/4596 */}
         <SwitchContainer disabled={updateFlagMutation.isLoading}>
-          <Switch mr={4} size="md" isChecked={enabled} onChange={toggleFlag} colorScheme="green" shadow="none" />
+          <Switch mr={4} size="md" isChecked={enabled} onChange={toggleStatus} colorScheme="green" shadow="none" />
         </SwitchContainer>
 
         {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
       </Td>
 
-      <Td isNumeric>
-        {moment.unix(flag.createdAt).format('Do MMM YYYY')}
-      </Td>
+      <Td isNumeric>{moment.unix(flag.createdAt.seconds).format('L')}</Td>
 
       <Td>
-        <Box display="flex" justifyContent="flex-end">
-          <Tooltip placement="top" label="Remove">
+        <HStack spacing="2" display="flex" justifyContent="flex-end">
+          <Tooltip placement="top" label="Edit">
             <Box>
-              <RemoveButton flagId={flag.id} />
+              <IconButton onClick={onEdit} size="xs" aria-label="edit" icon={<Icon as={FiEdit2} />} />
             </Box>
           </Tooltip>
-        </Box>
+
+          <Tooltip placement="top" label="Remove">
+            <Box>
+              <FlagRemoveButton flag={flag} />
+            </Box>
+          </Tooltip>
+        </HStack>
       </Td>
     </Tr>
   )

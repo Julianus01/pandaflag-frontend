@@ -11,19 +11,22 @@ import {
   doc,
   Timestamp,
   orderBy,
+  setDoc,
 } from 'firebase/firestore'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
 import FlagsApi from './FlagsApi'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface IEnvironment {
-  name: string;
+  name: string
+  color: string
 }
 
 export const EmptyEnvironment = {
-  production: { name: 'production' },
-  development: { name: 'development' }
+  production: { name: 'production', color: 'orange' },
+  development: { name: 'development', color: 'blue' },
 }
 
 export interface IProject {
@@ -31,16 +34,17 @@ export interface IProject {
   name: string
   members: IMember[]
   environments: IEnvironment[]
-  createdAt: number
+  apiKey: string
+  createdAt: Timestamp
 }
 
 export interface IMember {
-  id: string;
-  type: MemberType;
+  id: string
+  type: MemberType
 }
 
 export enum MemberType {
-  admin = "admin",
+  admin = 'admin',
 }
 
 // Get Projects
@@ -48,30 +52,53 @@ async function getProjects(): Promise<IProject[]> {
   const user = store.getState().auth.user as IUser
   const memberQueryValue = { id: user.sub, type: 'admin' }
 
-  const querySnapshot = await getDocs(query(collection(getFirestore(), FirestoreCollection.projects), where('members', 'array-contains', memberQueryValue), orderBy('createdAt', "desc")))
+  const querySnapshot = await getDocs(
+    query(
+      collection(getFirestore(), FirestoreCollection.projects),
+      where('members', 'array-contains', memberQueryValue),
+      orderBy('createdAt', 'desc')
+    )
+  )
   const projects = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
-    return { ...data, id: doc.id, createdAt: data.createdAt.seconds }
+    return { ...data, id: doc.id }
   }) as IProject[]
 
   return projects
 }
-
 
 // Create Project
 async function createProject(name: string): Promise<IProject> {
   const user = store.getState().auth.user as IUser
   const createdAt = Timestamp.now()
 
-  const newProject = { name, members: [{ id: user.sub, type: MemberType.admin }], environments: [EmptyEnvironment.production, EmptyEnvironment.development], createdAt }
-  const newProjectDoc = await addDoc(collection(getFirestore(), FirestoreCollection.projects), newProject);
+  const newProject = {
+    name,
+    members: [{ id: user.sub, type: MemberType.admin }],
+    environments: [EmptyEnvironment.production, EmptyEnvironment.development],
+    apiKey: uuidv4(),
+    createdAt,
+  }
+  const newProjectDoc = await addDoc(collection(getFirestore(), FirestoreCollection.projects), newProject)
 
-  return { ...newProject, id: newProjectDoc.id, createdAt: createdAt.seconds }
+  return { ...newProject, id: newProjectDoc.id }
+}
+
+// Update Project
+export interface IUpdateProjectRequestParams extends Partial<IProject> {
+  id: string
+}
+
+async function updateProject({ id, ...updates }: IUpdateProjectRequestParams): Promise<void> {
+  return setDoc(doc(getFirestore(), FirestoreCollection.projects, id), updates, { merge: true })
 }
 
 // Delete Project
 async function deleteProject(projectId: string): Promise<void> {
-  await Promise.all([deleteDoc(doc(getFirestore(), FirestoreCollection.projects, projectId)), FlagsApi.deleteProjectFlags(projectId)])
+  await Promise.all([
+    deleteDoc(doc(getFirestore(), FirestoreCollection.projects, projectId)),
+    FlagsApi.deleteProjectFlags(projectId),
+  ])
 }
 
 const ProjectsApi = {
@@ -81,8 +108,11 @@ const ProjectsApi = {
   // Create
   createProject,
 
+  // Update
+  updateProject,
+
   // Delete
-  deleteProject
+  deleteProject,
 }
 
 export default ProjectsApi

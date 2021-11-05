@@ -22,6 +22,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 
+function getProjectNameSize(projectNameLength: number | undefined): string {
+  if (!projectNameLength || projectNameLength < 20) {
+    return 'lg'
+  }
+
+  return 'md'
+}
+
 function SidebarProjectSelector() {
   const dispatch = useDispatch()
   const toast = useToast()
@@ -61,12 +69,12 @@ function SidebarProjectSelector() {
       <Menu matchWidth autoSelect={false} isOpen={isOpen}>
         <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
           <Container>
-            <Box flex="1">
+            <Box overflow="hidden" flex="1">
               <Text fontSize="xs" color="gray.500">
                 selected project
               </Text>
 
-              <Heading as="h5" size="lg">
+              <Heading as="h5" size={getProjectNameSize(configuration.project?.name?.length)}>
                 {configuration.project?.name}
               </Heading>
             </Box>
@@ -77,7 +85,7 @@ function SidebarProjectSelector() {
           </Container>
         </CustomMenuButton>
 
-        <MenuList maxHeight="400px" overflow="scroll" shadow="lg">
+        <StyledMenuList maxHeight="400px" overflowY="overlay" shadow="lg">
           <MenuOptionGroup
             fontWeight="semibold"
             onChange={(value) => changeProject(value as string)}
@@ -91,7 +99,7 @@ function SidebarProjectSelector() {
               </MenuItemOption>
             ))}
           </MenuOptionGroup>
-        </MenuList>
+        </StyledMenuList>
       </Menu>
     </div>
   )
@@ -115,5 +123,36 @@ const CustomMenuButton = styled(MenuButton)<{ $active: boolean }>`
 
   :hover {
     background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme)};
+  }
+`
+
+const StyledMenuList = styled(MenuList)`
+  ::-webkit-scrollbar {
+    background-color: transparent;
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #babac0;
+    border-radius: 16px;
+    border: 4px solid #fff;
+  }
+
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 16px;
+    border: 5px solid transparent;
+  }
+
+  :hover::-webkit-scrollbar-thumb {
+    background-color: #a0a0a5;
   }
 `
