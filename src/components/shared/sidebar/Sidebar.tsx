@@ -29,7 +29,7 @@ function Sidebar() {
   return (
     <Container>
       <Heading fontWeight="extrabold" textAlign="left" mb={16} ml={4} as="h4" size="md">
-        smartlaunch
+        pandaflag
       </Heading>
 
       <Box mb={6}>
