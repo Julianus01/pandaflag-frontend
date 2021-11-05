@@ -47,13 +47,13 @@ const Container = styled.div<{ active: boolean }>`
   display: flex;
   align-items: center;
   cursor: pointer;
+  user-select: none;
   background: ${({ theme, active }) =>
     active ? applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme) : ''};
   color: ${({ theme, active }) =>
     active
       ? applyColorMode(theme.colors.gray[800], theme.colors.whiteAlpha[800])(theme)
       : applyColorMode(theme.colors.gray[500], theme.colors.gray[500])(theme)};
-  user-select: none;
 `
 
 const End = styled.div`
