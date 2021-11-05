@@ -11,6 +11,7 @@ function GlobalStyles() {
       styles={css`
         body {
           background: ${bgColor};
+          overflow-y: overlay;
         }
 
         * {

@@ -85,7 +85,7 @@ function SidebarProjectSelector() {
           </Container>
         </CustomMenuButton>
 
-        <StyledMenuList maxHeight="400px" overflowY="scroll" shadow="lg">
+        <StyledMenuList maxHeight="400px" overflowY="overlay" shadow="lg">
           <MenuOptionGroup
             fontWeight="semibold"
             onChange={(value) => changeProject(value as string)}

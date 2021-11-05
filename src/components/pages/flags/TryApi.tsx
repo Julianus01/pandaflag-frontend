@@ -182,7 +182,7 @@ function TryApi({ flags, isOpen }: IProps) {
                 {selected}
               </MenuButton>
 
-              <MenuList maxHeight="300px" overflowY="scroll">
+              <MenuList maxHeight="300px" overflowY={`overlay` as any}>
                 <MenuOptionGroup
                   fontWeight="semibold"
                   onChange={(value) => setSelected(value as string)}
