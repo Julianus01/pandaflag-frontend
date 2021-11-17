@@ -4,10 +4,16 @@ import Section from 'components/styles/Section'
 import { useAuth } from 'hooks/authHooks'
 import { FiLogOut } from 'react-icons/fi'
 
+function userDisplayName(name: string) {
+  if (name.includes('@')) {
+    return name.substr(0, name.indexOf('@'))
+  }
+
+  return name
+}
+
 function ProfilePage() {
   const auth = useAuth()
-
-  const displayName = auth.user?.name.substr(0, auth.user?.name.indexOf('@'))
 
   return (
     <BoxedPage>
@@ -20,7 +26,7 @@ function ProfilePage() {
 
         <Box display="flex" flexDirection="column" justifyContent="center" ml={4}>
           <Heading mb={1} fontWeight="semibold" size="md">
-            {displayName}
+            {auth.user?.name && userDisplayName(auth.user?.name)}
           </Heading>
 
           <Box>
@@ -52,10 +58,7 @@ function ProfilePage() {
       </Section>
 
       <Box display="flex" justifyContent="center">
-        <Button
-          leftIcon={<Icon as={FiLogOut} />}
-          onClick={() => auth.logout({ returnTo: window.location.origin })}
-        >
+        <Button leftIcon={<Icon as={FiLogOut} />} onClick={() => auth.logout({ returnTo: window.location.origin })}>
           Logout
         </Button>
       </Box>
