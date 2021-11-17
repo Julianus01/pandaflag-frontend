@@ -60,7 +60,7 @@ function FlagRow({ flag }: IProps) {
         {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
       </Td>
 
-      <Td isNumeric>{moment.unix(flag.createdAt.seconds).format('L')}</Td>
+      <Td isNumeric>{moment.unix(flag.createdAt.seconds).format('MMM Do')}</Td>
 
       <Td>
         <HStack spacing="2" display="flex" justifyContent="flex-end">
