@@ -9,6 +9,14 @@ import { applyColorMode } from 'theme/StyledThemeProvider'
 import { useHistory } from 'react-router'
 import RoutePage from 'components/routes/RoutePage'
 
+function userDisplayName(name: string) {
+  if(name.includes('@')) {
+    return name.substr(0, name.indexOf('@'))
+  }
+
+  return name
+}
+
 function SidebarFooter() {
   const auth = useAuth()
   const history = useHistory()
@@ -40,7 +48,7 @@ function SidebarFooter() {
 
             <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
               <Text isTruncated fontWeight="medium">
-                {auth.user?.name.substr(0, auth.user?.name.indexOf('@'))}
+                {auth.user?.name && userDisplayName(auth.user?.name)}
               </Text>
             </Box>
 

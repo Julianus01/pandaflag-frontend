@@ -12,6 +12,8 @@ import {
   Switch,
   Text,
   FormLabel,
+  Tag,
+  Box,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi from 'api/FlagsApi'
@@ -19,6 +21,10 @@ import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import _ from 'lodash/fp'
 import AutoTextArea from 'components/styles/AutoTextarea'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
+import { IEnvironment } from 'api/ProjectsApi'
+import styled from 'styled-components/macro'
 
 interface Props {
   isOpen: boolean
@@ -29,6 +35,8 @@ interface Props {
 function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
+  const project = useSelector((state: IStoreState) => state.configuration.project)
+  const environment = useSelector((state: IStoreState) => state.configuration.environment)
 
   const [flagName, setFlagName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -126,6 +134,26 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
         <AlertDialogBody>
           <Text color="gray.500" mb={2} fontSize="sm">
+            Environment
+          </Text>
+
+          {!addForAll && (
+            <Tag mb={4} variant="subtle" colorScheme={environment?.color}>
+              {environment?.name}
+            </Tag>
+          )}
+
+          {addForAll && (
+            <AllTagsContainer>
+              {project?.environments.map((environment: IEnvironment) => (
+                <Tag key={environment.name} variant="subtle" colorScheme={environment?.color}>
+                  {environment?.name}
+                </Tag>
+              ))}
+            </AllTagsContainer>
+          )}
+
+          <Text color="gray.500" mb={2} fontSize="sm">
             Flag will be transformed into <i>snake_case</i> for easy api access
           </Text>
 
@@ -181,3 +209,14 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 }
 
 export default CreateFlagDialog
+
+const AllTagsContainer = styled(Box)`
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: ${({ theme }) => theme.space[3]};
+
+  > span {
+    margin-right: ${({ theme }) => theme.space[1]};
+    margin-bottom: ${({ theme }) => theme.space[1]};
+  }
+`

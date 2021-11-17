@@ -151,8 +151,8 @@ function TryApi({ flags, isOpen }: IProps) {
             , environment and flag name.
           </Box>
 
-          <Text mb={4}>
-            <Code>
+          <CodeContainer mt={1} mb={4}>
+            <Code display="flex" flexWrap="wrap">
               https://pandaflag-api-dev.ey.r.appspot.com/api/v1/
               <Box color="orange.500" as="span">
                 API_KEY
@@ -166,7 +166,7 @@ function TryApi({ flags, isOpen }: IProps) {
                 FLAG_NAME
               </Box>
             </Code>
-          </Text>
+          </CodeContainer>
 
           <Text fontSize="sm" mb={4} color="gray.500">
             Pick for which flag you'd like to run the test below
@@ -174,11 +174,7 @@ function TryApi({ flags, isOpen }: IProps) {
 
           <Box mb={4} display="flex">
             <Menu autoSelect={false}>
-              <MenuButton
-                disabled={isLoading}
-                as={Button}
-                rightIcon={<Icon strokeWidth={2.4} as={FiChevronDown} />}
-              >
+              <MenuButton disabled={isLoading} as={Button} rightIcon={<Icon strokeWidth={2.4} as={FiChevronDown} />}>
                 {selected}
               </MenuButton>
 
