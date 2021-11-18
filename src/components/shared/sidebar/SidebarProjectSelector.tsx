@@ -33,6 +33,7 @@ function getProjectNameSize(projectNameLength: number | undefined): string {
 function SidebarProjectSelector() {
   const dispatch = useDispatch()
   const toast = useToast()
+  const organization = useSelector((state: IStoreState) => state.configuration.organization)
 
   const configuration = useSelector((state: IStoreState) => state.configuration)
   const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
@@ -52,7 +53,7 @@ function SidebarProjectSelector() {
     const project = projects?.find((project: IProject) => project.id === projectId)
 
     if (project) {
-      dispatch(configurationActions.changeProject(project))
+      dispatch(configurationActions.setProject(project))
       setIsOpen(false)
 
       toast({
@@ -91,7 +92,7 @@ function SidebarProjectSelector() {
             onChange={(value) => changeProject(value as string)}
             value={configuration.project?.id}
             type="radio"
-            title="Projects"
+            title={`${organization?.name} projects`}
           >
             {projects?.map((project: IProject) => (
               <MenuItemOption value={project.id} key={project.id}>

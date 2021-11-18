@@ -26,11 +26,11 @@ function useUpdateConfigurationEnvironment() {
     )
 
     if (lastEnvironment) {
-      dispatch(configurationActions.changeEnvironment(lastEnvironment as IEnvironment))
+      dispatch(configurationActions.setEnvironment(lastEnvironment as IEnvironment))
       return
     }
 
-    dispatch(configurationActions.changeEnvironment(project.environments[0]))
+    dispatch(configurationActions.setEnvironment(project.environments[0]))
   }, [project, dispatch])
 }
 
@@ -52,15 +52,15 @@ function useInitConfigurationProject(projects: IProject[] | undefined) {
       const foundProject = projects.find((project: IProject) => project.name === lastProjectName)
 
       if (foundProject) {
-        dispatch(configurationActions.changeProject(foundProject))
+        dispatch(configurationActions.setProject(foundProject))
         return
       }
 
-      dispatch(configurationActions.changeProject(projects[0]))
+      dispatch(configurationActions.setProject(projects[0]))
       return
     }
 
-    dispatch(configurationActions.changeProject(projects[0]))
+    dispatch(configurationActions.setProject(projects[0]))
   }, [projects, dispatch])
 }
 
@@ -77,7 +77,7 @@ function NavigationRoute(props: RouteProps) {
       const foundProject = projects.find((project: IProject) => project.id === configuration.project?.id)
       if (!foundProject) {
         // Selected project was deleted. change selected project
-        dispatch(configurationActions.changeProject(projects[0]))
+        dispatch(configurationActions.setProject(projects[0]))
       }
     },
   })
