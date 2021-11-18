@@ -34,37 +34,39 @@ function ProjectsTable({ projects }: IProps) {
             <Box ml="26px">Name</Box>
           </Th>
 
-          <Th display="flex" textTransform="capitalize">
-            Api key
-            <Popover trigger="hover">
-              <PopoverTrigger>
-                <Box display="flex" ml={1}>
-                  <Icon cursor="pointer" as={FiInfo} w={4} h={4} />
-                </Box>
-              </PopoverTrigger>
+          <Th textTransform="capitalize">
+            <Box display="flex">
+              Api key
+              <Popover trigger="hover">
+                <PopoverTrigger>
+                  <Box display="flex" ml={1}>
+                    <Icon cursor="pointer" as={FiInfo} w={4} h={4} />
+                  </Box>
+                </PopoverTrigger>
 
-              <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
-                <PopoverBody shadow="lg" p="4">
-                  <PopoverText
-                    textTransform="none"
-                    lineHeight="5"
-                    letterSpacing="normal"
-                    fontWeight="normal"
-                    fontSize="sm"
-                  >
-                    Every project has an Api Key.
-                    <br />
-                    <br />
-                    This key is being used when calling the REST API in order to get your flags information.
-                    <br />
-                    <br />
-                    <RouteLink to={`${RoutePage.flags()}?${QueryParam.tryApi}=${TryApiParam.open}`}>
-                      Try out the api preview
-                    </RouteLink>
-                  </PopoverText>
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
+                <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
+                  <PopoverBody shadow="lg" p="4">
+                    <PopoverText
+                      textTransform="none"
+                      lineHeight="5"
+                      letterSpacing="normal"
+                      fontWeight="normal"
+                      fontSize="sm"
+                    >
+                      Every project has an Api Key.
+                      <br />
+                      <br />
+                      This key is being used when calling the REST API in order to get your flags information.
+                      <br />
+                      <br />
+                      <RouteLink to={`${RoutePage.flags()}?${QueryParam.tryApi}=${TryApiParam.open}`}>
+                        Try out the api preview
+                      </RouteLink>
+                    </PopoverText>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Box>
           </Th>
 
           <Th textTransform="capitalize" isNumeric>
