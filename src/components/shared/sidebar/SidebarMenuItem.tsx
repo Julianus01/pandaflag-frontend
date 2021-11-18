@@ -41,7 +41,7 @@ const Container = styled.div<{ active: boolean }>`
   font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: ${({ theme, active }) => (active ? theme.fontWeights.bold : theme.fontWeights.medium)};
   border-radius: ${({ theme }) => theme.radii.lg};
-  padding: ${({ theme }) => `0 ${theme.space[3]}`};
+  padding: ${({ theme }) => `0 ${theme.space[5]}`};
   height: ${({ theme }) => theme.space[12]};
   width: 100%;
   display: flex;

@@ -18,6 +18,7 @@ import {
   PopoverBody,
   MenuOptionGroup,
   MenuItemOption,
+  useClipboard,
 } from '@chakra-ui/react'
 import { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
@@ -25,7 +26,7 @@ import useQueryParam from 'hooks/routing/useQueryParam'
 import { QueryParam, TryApiParam } from 'hooks/routing/useQueryParams'
 import { useEffect, useState } from 'react'
 import { AiOutlineApi } from 'react-icons/ai'
-import { FiChevronDown, FiInfo, FiPlay } from 'react-icons/fi'
+import { FiChevronDown, FiClipboard, FiInfo, FiPlay } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
 import { Link, Redirect, useHistory } from 'react-router-dom'
 import { IStoreState } from 'redux/store'
@@ -64,6 +65,13 @@ function TryApi({ flags, isOpen }: IProps) {
   const [response, setResponse] = useState<IFlag[] | IFlag | undefined>(undefined)
   const [selected, setSelected] = useState<string>(ALL_FLAGS_SELECTION)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const { hasCopied, onCopy } = useClipboard(
+    `fetch('https://pandaflag-api-dev.ey.r.appspot.com/api/v1/${configuration.project?.apiKey}/${configuration.environment?.name}/')
+    .then(response => response.json())
+    .then(json => console.log(json))
+  `
+  )
 
   const selectedFlag = flags.find((flag: IFlag) => flag.name === selected)
 
@@ -238,6 +246,12 @@ function TryApi({ flags, isOpen }: IProps) {
             </Code>
             <Code>{`  .then(response => response.json())`}</Code>
             <Code>{`  .then(json => console.log(json))`}</Code>
+
+            <ClipboardContainer>
+              <Button onClick={onCopy} leftIcon={<Icon as={FiClipboard} />} size="xs">
+                {hasCopied ? 'Copied' : 'Copy'}
+              </Button>
+            </ClipboardContainer>
           </CodeContainer>
 
           {Boolean(response) && (
@@ -289,6 +303,7 @@ const CodeContainer = styled(Box)`
   padding: ${({ theme }) => theme.space[2]};
   max-height: 600px;
   overflow-y: overlay;
+  position: relative;
 
   > code {
     background: transparent;
@@ -296,8 +311,15 @@ const CodeContainer = styled(Box)`
   }
 `
 
+const ClipboardContainer = styled.div`
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+`
+
 const RouteLink = styled(Link)`
   color: ${({ theme }) => theme.colors.blue[400]};
+
   text-decoration: underline;
 `
 
