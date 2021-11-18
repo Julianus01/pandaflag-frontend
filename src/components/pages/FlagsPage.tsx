@@ -84,7 +84,7 @@ function FlagsPage() {
 
   function changeEnvironment(index: number) {
     dispatch(
-      configurationActions.changeEnvironment(index === 0 ? EmptyEnvironment.production : EmptyEnvironment.development)
+      configurationActions.setEnvironment(index === 0 ? EmptyEnvironment.production : EmptyEnvironment.development)
     )
   }
 

@@ -5,7 +5,7 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
 import { useAuth } from 'hooks/auth/useAuth'
 
-function CreateFirstProjectRoute(props: RouteProps) {
+function CreateOrganizationAndProjectRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()
   const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
@@ -28,4 +28,4 @@ function CreateFirstProjectRoute(props: RouteProps) {
   return <Route {...props} />
 }
 
-export default CreateFirstProjectRoute
+export default CreateOrganizationAndProjectRoute

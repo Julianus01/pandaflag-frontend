@@ -1,4 +1,5 @@
 export enum FirestoreCollection {
   projects = 'projects',
-  flags = 'flags'
+  flags = 'flags',
+  organizations = 'organizations',
 }

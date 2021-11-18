@@ -13,11 +13,11 @@ import {
   orderBy,
   setDoc,
 } from 'firebase/firestore'
-import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
 import FlagsApi from './FlagsApi'
 import { v4 as uuidv4 } from 'uuid'
+import { IOrganization } from './OrganizationApi'
 
 export interface IEnvironment {
   name: string
@@ -31,31 +31,25 @@ export const EmptyEnvironment = {
 
 export interface IProject {
   id: string
+  organizationId: string
   name: string
-  members: IMember[]
   environments: IEnvironment[]
   apiKey: string
   createdAt: Timestamp
 }
 
-export interface IMember {
-  id: string
-  type: MemberType
-}
-
-export enum MemberType {
-  admin = 'admin',
-}
-
 // Get Projects
 async function getProjects(): Promise<IProject[]> {
-  const user = store.getState().auth.user as IUser
-  const memberQueryValue = { id: user.sub, type: 'admin' }
+  const organization = store.getState().configuration.organization
+
+  if (!organization) {
+    return []
+  }
 
   const querySnapshot = await getDocs(
     query(
       collection(getFirestore(), FirestoreCollection.projects),
-      where('members', 'array-contains', memberQueryValue),
+      where('organizationId', '==', organization.id),
       orderBy('createdAt', 'desc')
     )
   )
@@ -69,12 +63,12 @@ async function getProjects(): Promise<IProject[]> {
 
 // Create Project
 async function createProject(name: string): Promise<IProject> {
-  const user = store.getState().auth.user as IUser
+  const organization = store.getState().configuration.organization as IOrganization
   const createdAt = Timestamp.now()
 
   const newProject = {
     name,
-    members: [{ id: user.sub, type: MemberType.admin }],
+    organizationId: organization.id,
     environments: [EmptyEnvironment.production, EmptyEnvironment.development],
     apiKey: uuidv4(),
     createdAt,

@@ -23,7 +23,7 @@ function AuthenticatedRoute(props: RouteProps) {
   }
 
   if (!projects?.length) {
-    return <Redirect to={RoutePage.createFirstProject()} />
+    return <Redirect to={RoutePage.createOrganizationAndProject()} />
   }
 
   return <NavigationRoute {...props} />
