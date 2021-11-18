@@ -17,7 +17,7 @@ import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
 import FlagsApi from './FlagsApi'
 import { v4 as uuidv4 } from 'uuid'
-import { IOrganization } from './OrganizationApi'
+import { IOrganization } from './OrganizationsApi'
 
 export interface IEnvironment {
   name: string

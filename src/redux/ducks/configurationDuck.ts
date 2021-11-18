@@ -2,7 +2,7 @@ import createReducer from '../utils/createReducer'
 import { PayloadAction } from 'redux/types'
 import { IEnvironment, IProject } from 'api/ProjectsApi'
 import LSUtils from 'utils/LSUtils'
-import { IOrganization } from 'api/OrganizationApi'
+import { IOrganization } from 'api/OrganizationsApi'
 
 // Types
 const types = {

@@ -68,7 +68,7 @@ async function createOrganization(name: string): Promise<IOrganization> {
   return { ...newOrganization, id: newOrganizationDoc.id }
 }
 
-const OrganizationApi = {
+const OrganizationsApi = {
   // Get
   getOrganization,
 
@@ -76,4 +76,4 @@ const OrganizationApi = {
   createOrganization,
 }
 
-export default OrganizationApi
+export default OrganizationsApi

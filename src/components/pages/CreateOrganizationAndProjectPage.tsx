@@ -6,7 +6,7 @@ import { useAuth } from 'hooks/auth/useAuth'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import Section from 'components/styles/Section'
-import OrganizationApi, { IOrganization } from 'api/OrganizationApi'
+import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 
@@ -21,7 +21,7 @@ function CreateOrganizationAndProjectPage() {
 
   const creationDisabled = projectName.length < 3 || organizationName.length < 3 || isLoading
 
-  const createOrganizationMutation = useMutation(OrganizationApi.createOrganization)
+  const createOrganizationMutation = useMutation(OrganizationsApi.createOrganization)
 
   const createProjectMutation = useMutation(ProjectsApi.createProject, {
     onSuccess: () => {

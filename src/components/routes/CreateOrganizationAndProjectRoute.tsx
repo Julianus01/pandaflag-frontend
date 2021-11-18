@@ -1,13 +1,12 @@
 import { Redirect, RouteProps, Route } from 'react-router-dom'
 import RoutePage from './RoutePage'
-import { useQuery } from 'react-query'
-import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi from 'api/ProjectsApi'
 import { useAuth } from 'hooks/auth/useAuth'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
 
 function CreateOrganizationAndProjectRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()
-  const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const organization = useSelector((state: IStoreState) => state.configuration.organization)
 
   if (!isAuthenticated) {
     return <Redirect to={RoutePage.login()} />
@@ -17,11 +16,7 @@ function CreateOrganizationAndProjectRoute(props: RouteProps) {
     return <Redirect to={RoutePage.emailVerification()} />
   }
 
-  if (projectsLoading) {
-    return null
-  }
-
-  if (projects?.length) {
+  if (!!organization) {
     return <Redirect to={RoutePage.projects()} />
   }
 
