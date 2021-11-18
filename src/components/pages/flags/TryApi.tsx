@@ -319,6 +319,7 @@ const ClipboardContainer = styled.div`
 
 const RouteLink = styled(Link)`
   color: ${({ theme }) => theme.colors.blue[400]};
+
   text-decoration: underline;
 `
 
