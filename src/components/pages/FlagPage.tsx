@@ -94,7 +94,7 @@ function FlagPage() {
   }
 
   function onDescriptionChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    setFlag({ ...flag, name: event.target.value } as IFlag)
+    setFlag({ ...flag, description: event.target.value } as IFlag)
     onDirty()
   }
 
