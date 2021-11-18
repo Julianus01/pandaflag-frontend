@@ -313,8 +313,8 @@ const CodeContainer = styled(Box)`
 
 const ClipboardContainer = styled.div`
   position: absolute;
-  right: 20px;
-  bottom: 20px;
+  right: 12px;
+  bottom: 12px;
 `
 
 const RouteLink = styled(Link)`
