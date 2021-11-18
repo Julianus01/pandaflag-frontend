@@ -114,7 +114,7 @@ function FlagPage() {
             />
           </BackLink>
 
-          <Heading flex={1} ml={3} as="h3" size="lg">
+          <Heading display="flex" alignItems="center" flex={1} ml={3} as="h3" size="lg">
             <FlagsLink to={RoutePage.flags()}>Flags</FlagsLink>
             <Spinner ml={4} size="sm" />
           </Heading>
@@ -135,7 +135,7 @@ function FlagPage() {
             />
           </BackLink>
 
-          <Heading flex={1} ml={3} as="h3" size="lg">
+          <Heading display="flex" alignItems="center" flex={1} ml={3} as="h3" size="lg">
             <FlagsLink to={RoutePage.flags()}>Flag not found</FlagsLink>
           </Heading>
         </Box>
@@ -154,8 +154,21 @@ function FlagPage() {
           />
         </BackLink>
 
-        <Heading overflow="hidden" whiteSpace="nowrap" flex={1} ml={3} mr={4} as="h3" size="lg">
-          <FlagsLink to={RoutePage.flags()}>Flags</FlagsLink> &gt; {flag.name}
+        <Heading
+          display="flex"
+          alignItems="center"
+          overflow="hidden"
+          whiteSpace="nowrap"
+          flex={1}
+          ml={3}
+          mr={4}
+          as="h3"
+          size="lg"
+        >
+          <FlagsLink style={{ marginRight: 8 }} to={RoutePage.flags()}>
+            Flags
+          </FlagsLink>
+          &gt; {flag.name}
         </Heading>
 
         <Button
