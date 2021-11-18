@@ -13,7 +13,7 @@ const fonts = {
 const components = {
   Button: {
     defaultProps: {
-      size: 'md',
+      size: 'sm',
     },
   },
 }
