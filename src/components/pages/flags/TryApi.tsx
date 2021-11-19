@@ -67,13 +67,13 @@ function TryApi({ flags, isOpen }: IProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { hasCopied, onCopy } = useClipboard(
-    `fetch('https://pandaflag-api-dev.ey.r.appspot.com/api/v1/${configuration.project?.apiKey}/${configuration.environment?.name}/')
+    `fetch('https://pandaflag-api-dev.ey.r.appspot.com/api/v1/${configuration.project?.apiKey}/${
+      configuration.environment?.name
+    }/${selected !== ALL_FLAGS_SELECTION ? selected : ''}')
     .then(response => response.json())
     .then(json => console.log(json))
   `
   )
-
-  const selectedFlag = flags.find((flag: IFlag) => flag.name === selected)
 
   useEffect(() => {
     if (selected !== ALL_FLAGS_SELECTION) {
@@ -239,7 +239,7 @@ function TryApi({ flags, isOpen }: IProps) {
               /
               {selected !== ALL_FLAGS_SELECTION && (
                 <Box as="span" color="blue.500">
-                  {selectedFlag?.name}
+                  {selected}
                 </Box>
               )}
               ')
