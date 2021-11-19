@@ -17,10 +17,12 @@ import {
 } from 'firebase/firestore'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
+import { IOrganization } from './OrganizationsApi'
 import { IEnvironment, IProject } from './ProjectsApi'
 
 export interface IFlag {
   id: string
+  organizationId: string
   projectId: string
   name: string
   description?: string
@@ -92,14 +94,16 @@ interface ICreateFlagRequestParams {
 }
 
 async function createFlag({ name, description = '' }: ICreateFlagRequestParams): Promise<IFlag> {
+  const organization = store.getState().configuration.organization as IOrganization
   const project = store.getState().configuration.project as IProject
   const environment = store.getState().configuration.environment as IEnvironment
   const createdAt = Timestamp.now()
 
   const newFlag = {
     name,
-    description,
+    organizationId: organization.id,
     projectId: project.id,
+    description,
     enabled: false,
     environmentName: environment.name,
     createdAt,
@@ -121,13 +125,15 @@ async function createFlagForAllEnvironments({
 }: ICreateFlagForAllEnvironmentsRequestParams): Promise<
   [DocumentReference<DocumentData>, DocumentReference<DocumentData>]
 > {
+  const organization = store.getState().configuration.organization as IOrganization
   const project = store.getState().configuration.project as IProject
   const createdAt = Timestamp.now()
 
   const newFlag = {
     name,
-    description,
+    organizationId: organization.id,
     projectId: project.id,
+    description,
     enabled: false,
     createdAt,
   }
