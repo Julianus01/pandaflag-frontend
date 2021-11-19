@@ -22,8 +22,12 @@ function projects() {
   return `/projects`
 }
 
-function createOrganizationAndProject() {
-  return `/create-organization-and-project`
+function createOrganization() {
+  return `/create-organization`
+}
+
+function createFirstProject() {
+  return `/create-first-project`
 }
 
 function profile() {
@@ -37,7 +41,8 @@ const RoutePage = {
   flags,
   flag,
   projects,
-  createOrganizationAndProject,
+  createOrganization,
+  createFirstProject,
   profile,
 }
 

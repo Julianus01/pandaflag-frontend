@@ -1,14 +1,13 @@
-import { Redirect, RouteProps } from 'react-router-dom'
+import { Redirect, RouteProps, Route } from 'react-router-dom'
 import RoutePage from './RoutePage'
-import NavigationRoute from './NavigationRoute'
-import { useAuth } from 'hooks/auth/useAuth'
-import { useSelector } from 'react-redux'
-import { IStoreState } from 'redux/store'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
+import { useAuth } from 'hooks/auth/useAuth'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
 
-function AuthenticatedRoute(props: RouteProps) {
+function CreateFirstProjectRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
   const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
@@ -29,11 +28,11 @@ function AuthenticatedRoute(props: RouteProps) {
     return null
   }
 
-  if (!projects?.length) {
-    return <Redirect to={RoutePage.createFirstProject()} />
+  if (projects?.length) {
+    return <Redirect to={RoutePage.projects()} />
   }
 
-  return <NavigationRoute {...props} />
+  return <Route {...props} />
 }
 
-export default AuthenticatedRoute
+export default CreateFirstProjectRoute

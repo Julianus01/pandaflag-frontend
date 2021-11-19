@@ -10,11 +10,13 @@ import AuthenticatedRoute from './AuthenticatedRoute'
 import EmailVerificationRoute from './EmailVerificationRoute'
 import RedirectAuthenticatedRoute from './RedirectAuthenticatedRoute'
 import FlagsPage from 'components/pages/FlagsPage'
-import CreateOrganizationAndProjectPage from 'components/pages/CreateOrganizationAndProjectPage'
-import CreateOrganizationAndProjectRoute from './CreateOrganizationAndProjectRoute'
+import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
+import CreateOrganizationRoute from './CreateOrganizationRoute'
 import ProjectsPage from 'components/pages/ProjectsPage'
 import FlagPage from 'components/pages/FlagPage'
 import ProfilePage from 'components/pages/ProfilePage'
+import CreateFirstProjectPage from 'components/pages/CreateFirstProjectPage'
+import CreateFirstProjectRoute from './CreateFirstProjectRoute'
 
 function Routes() {
   return (
@@ -34,11 +36,9 @@ function Routes() {
 
         {/* Use case routes */}
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
-        <CreateOrganizationAndProjectRoute
-          component={CreateOrganizationAndProjectPage}
-          exact
-          path={RoutePage.createOrganizationAndProject()}
-        />
+        <CreateOrganizationRoute component={CreateOrganizationPage} exact path={RoutePage.createOrganization()} />
+
+        <CreateFirstProjectRoute component={CreateFirstProjectPage} exact path={RoutePage.createFirstProject()} />
 
         {/* Redirect to root */}
         <Route component={() => <Redirect to={RoutePage.root()} />} exact path="/*" />

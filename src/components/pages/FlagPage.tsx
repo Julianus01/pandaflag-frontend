@@ -59,7 +59,7 @@ function FlagPage() {
 
       toast({
         title: `Updated successfully`,
-        position: 'top',
+        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
         status: 'success',

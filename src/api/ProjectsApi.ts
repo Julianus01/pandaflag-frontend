@@ -78,6 +78,26 @@ async function createProject(name: string): Promise<IProject> {
   return { ...newProject, id: newProjectDoc.id }
 }
 
+interface ICreateFirstProjectParams {
+  name: string
+  organizationId: string
+}
+
+async function createFirstProject({ name, organizationId }: ICreateFirstProjectParams): Promise<IProject> {
+  const createdAt = Timestamp.now()
+
+  const newProject = {
+    name,
+    organizationId: organizationId,
+    environments: [EmptyEnvironment.production, EmptyEnvironment.development],
+    apiKey: uuidv4(),
+    createdAt,
+  }
+  const newProjectDoc = await addDoc(collection(getFirestore(), FirestoreCollection.projects), newProject)
+
+  return { ...newProject, id: newProjectDoc.id }
+}
+
 // Update Project
 export interface IUpdateProjectRequestParams extends Partial<IProject> {
   id: string
@@ -101,6 +121,7 @@ const ProjectsApi = {
 
   // Create
   createProject,
+  createFirstProject,
 
   // Update
   updateProject,

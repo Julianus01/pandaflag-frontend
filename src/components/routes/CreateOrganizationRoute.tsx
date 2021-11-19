@@ -4,7 +4,7 @@ import { useAuth } from 'hooks/auth/useAuth'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 
-function CreateOrganizationAndProjectRoute(props: RouteProps) {
+function CreateOrganizationRoute(props: RouteProps) {
   const { isAuthenticated, user } = useAuth()
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
 
@@ -17,10 +17,10 @@ function CreateOrganizationAndProjectRoute(props: RouteProps) {
   }
 
   if (!!organization) {
-    return <Redirect to={RoutePage.projects()} />
+    return <Redirect to={RoutePage.createFirstProject()} />
   }
 
   return <Route {...props} />
 }
 
-export default CreateOrganizationAndProjectRoute
+export default CreateOrganizationRoute

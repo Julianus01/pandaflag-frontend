@@ -32,7 +32,7 @@ function FlagRemoveButton({ flag }: IProps) {
 
       toast({
         title: `Removed flag '${flag.name} for ${flag.environmentName}'`,
-        position: 'top',
+        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
         status: 'success',

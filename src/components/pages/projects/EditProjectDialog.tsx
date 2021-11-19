@@ -42,7 +42,7 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
 
       toast({
         title: `Updated successfully`,
-        position: 'top',
+        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
         status: 'success',
