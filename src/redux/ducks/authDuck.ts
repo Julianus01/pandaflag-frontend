@@ -5,7 +5,7 @@ import { PayloadAction } from 'redux/types'
 // Types
 const AUTH_STATE_CHANGED = '[auth] AUTH_STATE_CHANGED'
 
-export type IUser = User
+export type IUser = Required<User>
 export interface IAuthState {
   user: IUser | undefined
 }

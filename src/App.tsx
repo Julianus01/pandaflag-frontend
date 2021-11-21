@@ -7,6 +7,7 @@ import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import { configurationActions } from 'redux/ducks/configurationDuck'
+import UsersApi from 'api/UsersApi'
 
 function useInitUserAndOrganization(): boolean {
   const dispatch = useDispatch()
@@ -27,6 +28,7 @@ function useInitUserAndOrganization(): boolean {
     }
 
     if (auth0User) {
+      UsersApi.upsertUser(auth0User as IUser)
       dispatch(authActions.authStateChanged(auth0User as Required<IUser>))
     } else {
       dispatch(authActions.authStateChanged(undefined))
