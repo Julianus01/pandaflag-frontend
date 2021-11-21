@@ -56,7 +56,7 @@ async function createOrganization(name: string): Promise<IOrganization> {
 
   const newOrganization = {
     name,
-    members: [{ id: user.sub, type: MemberType.admin }],
+    members: [{ id: user.sub as string, type: MemberType.admin }],
     createdAt,
   }
 
