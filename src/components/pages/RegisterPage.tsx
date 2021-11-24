@@ -89,7 +89,13 @@ function RegisterPage() {
             <InputGroup mb={4}>
               <InputLeftElement pointerEvents="none" children={<Icon as={FiMail} />} />
 
-              <Input onKeyDown={onKeyDown} onChange={onInputChange('email')} variant="filled" placeholder="Email" />
+              <Input
+                type="email"
+                onKeyDown={onKeyDown}
+                onChange={onInputChange('email')}
+                variant="filled"
+                placeholder="Email"
+              />
             </InputGroup>
 
             <InputGroup mb={4}>

@@ -1,17 +1,17 @@
 import { Redirect, RouteProps, Route } from 'react-router-dom'
 import RoutePage from './RoutePage'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 import { useEffect } from 'react'
-import { useQueryClient } from 'react-query'
+import { configurationActions } from 'redux/ducks/configurationDuck'
 
 function RedirectAuthenticatedRoute(props: RouteProps) {
-  const queryClient = useQueryClient()
+  const dispatch = useDispatch()
   const user = useSelector((state: IStoreState) => state.auth.user)
 
   useEffect(() => {
-    queryClient.invalidateQueries()
-  }, [queryClient])
+    dispatch(configurationActions.setOrganization(undefined))
+  }, [dispatch])
 
   if (user) {
     if (!user?.emailVerified) {
