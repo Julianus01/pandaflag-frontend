@@ -28,7 +28,10 @@ function ProjectRemoveButton({ project }: IProps) {
   const { isFetching: projectsFetching } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
   const deleteMutation = useMutation(ProjectsApi.deleteProject, {
     onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getProjects)
+      queryClient.setQueryData(ApiQueryId.getProjects, (oldData) => {
+        const oldProjects = oldData as IProject[]
+        return oldProjects?.filter((oldProject: IProject) => oldProject.id !== project.id)
+      })
 
       toast({
         title: `Removed project '${project.name}'`,

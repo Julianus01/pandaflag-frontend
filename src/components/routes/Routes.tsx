@@ -17,6 +17,8 @@ import FlagPage from 'components/pages/FlagPage'
 import ProfilePage from 'components/pages/ProfilePage'
 import CreateFirstProjectPage from 'components/pages/CreateFirstProjectPage'
 import CreateFirstProjectRoute from './CreateFirstProjectRoute'
+import OrganizationPage from 'components/pages/OrganizationPage'
+import RegisterPage from 'components/pages/RegisterPage'
 
 function Routes() {
   return (
@@ -25,13 +27,14 @@ function Routes() {
         {/* Redirect to App if Authenticated */}
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.root()} />
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.login()} />
+        <RedirectAuthenticatedRoute component={RegisterPage} exact path={RoutePage.register()} />
 
         {/* Authenticated routes */}
         <AuthenticatedRoute component={FlagsPage} exact path={RoutePage.flags()} />
         <AuthenticatedRoute component={FlagPage} exact path={RoutePage.flag(':name')} />
 
         <AuthenticatedRoute component={ProjectsPage} exact path={RoutePage.projects()} />
-
+        <AuthenticatedRoute component={OrganizationPage} exact path={RoutePage.organization()} />
         <AuthenticatedRoute component={ProfilePage} exact path={RoutePage.profile()} />
 
         {/* Use case routes */}

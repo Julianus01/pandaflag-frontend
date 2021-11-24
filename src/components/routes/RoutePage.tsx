@@ -6,6 +6,10 @@ function login() {
   return `/login`
 }
 
+function register() {
+  return `/register`
+}
+
 function emailVerification() {
   return `/email-verification`
 }
@@ -20,6 +24,10 @@ function flag(name: string) {
 
 function projects() {
   return `/projects`
+}
+
+function organization() {
+  return `/organization`
 }
 
 function createOrganization() {
@@ -37,10 +45,12 @@ function profile() {
 const RoutePage = {
   root,
   login,
+  register,
   emailVerification,
   flags,
   flag,
   projects,
+  organization,
   createOrganization,
   createFirstProject,
   profile,

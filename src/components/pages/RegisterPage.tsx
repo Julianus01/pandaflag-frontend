@@ -23,7 +23,6 @@ const DefaultCredentials: ICredentials = {
 
 interface IError {
   message: string
-  code: number
 }
 
 interface ICredentials {
@@ -31,7 +30,7 @@ interface ICredentials {
   password: string
 }
 
-function LoginPage() {
+function RegisterPage() {
   const temporaryMessage = useTemporaryMessage()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
@@ -54,7 +53,8 @@ function LoginPage() {
       await ValidationSchema.validate(form)
 
       setIsLoading(true)
-      await AuthApi.loginInWithEmailAndPassword(form.email, form.password)
+      await AuthApi.createAccountWithEmailAndPassword(form.email, form.password)
+      await AuthApi.sendVerificationEmail()
     } catch (err) {
       const error = err as IError
       temporaryMessage.showMessage(error.message)
@@ -70,11 +70,11 @@ function LoginPage() {
         <Section py="12" px="16">
           <LoginContainer>
             <Heading mb={4} as="h3" size="lg">
-              Log in
+              Create new account
             </Heading>
 
             <Text color="gray.500" mb={6}>
-              Sign in to manage your flags
+              Feature flags made easy
             </Text>
 
             <InputGroup mb={4}>
@@ -98,8 +98,8 @@ function LoginPage() {
             {!!temporaryMessage.message && <Text color="red.500">{temporaryMessage.message}</Text>}
 
             <Button
-              loadingText="Logging in"
               isLoading={isLoading}
+              loadingText="Creating Account"
               disabled={isLoading}
               mt={6}
               onClick={onLogin}
@@ -107,13 +107,13 @@ function LoginPage() {
               width="100%"
               size="md"
             >
-              Log in
+              Create Account
             </Button>
           </LoginContainer>
         </Section>
 
         <Text mt={10} mx="auto" color="gray.500">
-          Don't have an account? <RegisterLink to={RoutePage.register}>Create Account</RegisterLink>
+          Already a member? <RegisterLink to={RoutePage.login}>Log in</RegisterLink>
         </Text>
       </Content>
 
@@ -124,7 +124,7 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default RegisterPage
 
 const Container = styled.div`
   height: 100vh;
