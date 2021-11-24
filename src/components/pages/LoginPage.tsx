@@ -12,8 +12,8 @@ import RoutePage from 'components/routes/RoutePage'
 import AuthApi from 'api/AuthApi'
 
 const ValidationSchema = yup.object().shape({
-  password: yup.string().min(6).required(),
-  email: yup.string().email().required(),
+  Password: yup.string().min(6).required(),
+  Email: yup.string().email().required(),
 })
 
 const DefaultCredentials: ICredentials = {
@@ -51,10 +51,13 @@ function LoginPage() {
   async function onLogin() {
     try {
       temporaryMessage.hideMessage()
-      await ValidationSchema.validate(form)
+      const validatedForm = await ValidationSchema.validate({
+        Email: form.email,
+        Password: form.password,
+      })
 
       setIsLoading(true)
-      await AuthApi.loginInWithEmailAndPassword(form.email, form.password)
+      await AuthApi.loginInWithEmailAndPassword(validatedForm.Email, validatedForm.Password)
     } catch (err) {
       const error = err as IError
       temporaryMessage.showMessage(error.message)

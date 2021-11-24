@@ -7,22 +7,18 @@ import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
 
-function AuthenticatedRoute(props: RouteProps) {
-  const user = useSelector((state: IStoreState) => state.auth.user)
-  const organization = useSelector((state: IStoreState) => state.configuration.organization)
-  const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+interface ProjectRouteProps extends RouteProps {
+  organizationId: string
+}
 
-  if (!user) {
-    return <Redirect to={RoutePage.login()} />
-  }
-
-  if (!user?.emailVerified) {
-    return <Redirect to={RoutePage.emailVerification()} />
-  }
-
-  if (!organization) {
-    return <Redirect to={RoutePage.createOrganization()} />
-  }
+function ProjectRoute(props: ProjectRouteProps) {
+  const { data: projects, isLoading: projectsLoading } = useQuery(
+    [ApiQueryId.getProjects, props.organizationId],
+    () => ProjectsApi.getProjectsByOrganizationId(props.organizationId),
+    {
+      cacheTime: 0,
+    }
+  )
 
   if (projectsLoading) {
     return null
@@ -33,6 +29,30 @@ function AuthenticatedRoute(props: RouteProps) {
   }
 
   return <NavigationRoute {...props} />
+}
+
+function OrganizationRoute(props: RouteProps) {
+  const organization = useSelector((state: IStoreState) => state.configuration.organization)
+
+  if (!organization) {
+    return null
+  }
+
+  return <ProjectRoute organizationId={organization.id} {...props} />
+}
+
+function AuthenticatedRoute(props: RouteProps) {
+  const user = useSelector((state: IStoreState) => state.auth.user)
+
+  if (!user) {
+    return <Redirect to={RoutePage.login()} />
+  }
+
+  if (!user?.emailVerified) {
+    return <Redirect to={RoutePage.emailVerification()} />
+  }
+
+  return <OrganizationRoute {...props} />
 }
 
 export default AuthenticatedRoute

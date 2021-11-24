@@ -53,6 +53,24 @@ async function getProjects(): Promise<IProject[]> {
       orderBy('createdAt', 'desc')
     )
   )
+
+  const projects = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, id: doc.id }
+  }) as IProject[]
+
+  return projects
+}
+
+async function getProjectsByOrganizationId(organizationId: string): Promise<IProject[]> {
+  const querySnapshot = await getDocs(
+    query(
+      collection(getFirestore(), FirestoreCollection.projects),
+      where('organizationId', '==', organizationId),
+      orderBy('createdAt', 'desc')
+    )
+  )
+
   const projects = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
     return { ...data, id: doc.id }
@@ -118,6 +136,7 @@ async function deleteProject(projectId: string): Promise<void> {
 const ProjectsApi = {
   // Get
   getProjects,
+  getProjectsByOrganizationId,
 
   // Create
   createProject,

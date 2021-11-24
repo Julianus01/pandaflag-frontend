@@ -11,6 +11,7 @@ function CreateFirstProjectRoute(props: RouteProps) {
   const user = useSelector((state: IStoreState) => state.auth.user)
 
   const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+
   const { data: organization, isLoading: organizationLoading } = useQuery(
     ApiQueryId.getOrganization,
     OrganizationsApi.getOrganization
@@ -24,12 +25,8 @@ function CreateFirstProjectRoute(props: RouteProps) {
     return <Redirect to={RoutePage.emailVerification()} />
   }
 
-  if (organizationLoading) {
+  if (organizationLoading || organizationLoading) {
     return null
-  }
-
-  if (!organization) {
-    return <Redirect to={RoutePage.createOrganization()} />
   }
 
   if (projectsLoading) {

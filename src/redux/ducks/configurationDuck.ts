@@ -43,7 +43,7 @@ export default createReducer(initialState)({
 
 // Actions
 const actions = {
-  setOrganization: (organization: IOrganization) => {
+  setOrganization: (organization: IOrganization | undefined) => {
     return { type: types.SET_ORGANIZATION, payload: organization }
   },
 
