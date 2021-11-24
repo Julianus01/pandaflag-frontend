@@ -1,76 +1,46 @@
 import { Box } from '@chakra-ui/layout'
-import { Text, Icon, Avatar, AvatarBadge, MenuList, MenuItem, Menu, MenuButton } from '@chakra-ui/react'
+import { Text, Icon, Avatar, AvatarBadge } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { useAuth } from 'hooks/auth/useAuth'
-import { FiChevronDown, FiLogOut, FiUser } from 'react-icons/fi'
-import { useClickAway } from 'react-use'
-import { useState, useRef } from 'react'
+import { FiChevronDown } from 'react-icons/fi'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import { useHistory } from 'react-router'
 import RoutePage from 'components/routes/RoutePage'
-import AuthApi from 'api/AuthApi'
+import { IUser } from 'redux/ducks/authDuck'
 
-function userDisplayName(name: string) {
-  if (name.includes('@')) {
-    return name.substr(0, name.indexOf('@'))
+function userDisplayName(user: IUser) {
+  if (user.displayName) {
+    return user.displayName
   }
 
-  return name
+  const email = user.email as string
+  return email.substr(0, email.indexOf('@'))
 }
 
 function SidebarFooter() {
   const user = useAuth()
   const history = useHistory()
 
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const ref = useRef(null)
-
-  useClickAway(ref, () => {
-    setIsOpen(false)
-  })
-
-  function toggleSelector() {
-    setIsOpen(!isOpen)
-  }
-
   function navigateToProfile() {
     history.push(RoutePage.profile())
-    setIsOpen(false)
   }
 
   return (
-    <div ref={ref}>
-      <Menu autoSelect={false} matchWidth isOpen={isOpen}>
-        <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
-          <Container>
-            <Avatar size="md" shadow="lg" ignoreFallback src={user?.photoURL as string}>
-              <AvatarBadge boxSize="1em" bg="green.500" />
-            </Avatar>
+    <CustomMenuButton $active={window.location.pathname.includes(RoutePage.profile())} onClick={navigateToProfile}>
+      <Container>
+        <Avatar name={userDisplayName(user)} size="md" shadow="lg" ignoreFallback src={user?.photoURL as string}>
+          <AvatarBadge boxSize="1em" bg="green.500" />
+        </Avatar>
 
-            <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
-              <Text isTruncated fontWeight="medium">
-                {user?.displayName && userDisplayName(user.displayName)}
-              </Text>
-            </Box>
+        <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
+          <Text isTruncated fontWeight="medium">
+            {userDisplayName(user)}
+          </Text>
+        </Box>
 
-            <Icon as={FiChevronDown} strokeWidth={2.4} w={5} h={5} />
-          </Container>
-        </CustomMenuButton>
-
-        <MenuList shadow="lg">
-          <MenuItem icon={<Icon as={FiUser} w={5} h={5} />} onClick={navigateToProfile}>
-            Profile
-          </MenuItem>
-
-          <MenuItem
-            icon={<Icon as={FiLogOut} w={5} h={5} />}
-            onClick={AuthApi.logout}
-          >
-            Logout
-          </MenuItem>
-        </MenuList>
-      </Menu>
-    </div>
+        <Icon as={FiChevronDown} strokeWidth={2.4} w={5} h={5} />
+      </Container>
+    </CustomMenuButton>
   )
 }
 
@@ -85,14 +55,10 @@ const Container = styled.div`
   align-items: center;
 `
 
-const CustomMenuButton = styled(MenuButton)<{ $active: boolean }>`
+const CustomMenuButton = styled(Box)<{ $active: boolean }>`
   text-align: left;
   border-radius: ${({ theme }) => theme.radii.lg};
   width: 100%;
   background: ${({ theme, $active }) =>
     $active ? applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme) : ''};
-
-  :hover {
-    background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.whiteAlpha[100])(theme)};
-  }
 `

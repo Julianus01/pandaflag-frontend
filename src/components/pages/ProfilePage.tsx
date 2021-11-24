@@ -4,13 +4,15 @@ import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
 import { useAuth } from 'hooks/auth/useAuth'
 import { FiLogOut } from 'react-icons/fi'
+import { IUser } from 'redux/ducks/authDuck'
 
-function userDisplayName(name: string) {
-  if (name.includes('@')) {
-    return name.substr(0, name.indexOf('@'))
+function userDisplayName(user: IUser) {
+  if (user.displayName) {
+    return user.displayName
   }
 
-  return name
+  const email = user.email as string
+  return email.substr(0, email.indexOf('@'))
 }
 
 function ProfilePage() {
@@ -23,11 +25,11 @@ function ProfilePage() {
       </Heading>
 
       <Box mb={10} display="flex">
-        <Avatar size="lg" shadow="lg" ignoreFallback src={user?.photoURL as string} />
+        <Avatar name={userDisplayName(user)} size="lg" shadow="lg" ignoreFallback src={user?.photoURL as string} />
 
         <Box display="flex" flexDirection="column" justifyContent="center" ml={4}>
           <Heading mb={1} fontWeight="semibold" size="md">
-            {user?.displayName && userDisplayName(user?.displayName)}
+            {userDisplayName(user)}
           </Heading>
 
           <Box>
