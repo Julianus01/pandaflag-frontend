@@ -8,6 +8,8 @@ import {
   where,
   QueryDocumentSnapshot,
   DocumentData,
+  setDoc,
+  doc,
 } from 'firebase/firestore'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
@@ -68,12 +70,24 @@ async function createOrganization(name: string): Promise<IOrganization> {
   return { ...newOrganization, id: newOrganizationDoc.id }
 }
 
+// Update Organization
+export interface IUpdateOrganizationRequestParams extends Partial<IOrganization> {
+  id: string
+}
+
+async function updateOrganization({ id, ...updates }: IUpdateOrganizationRequestParams): Promise<void> {
+  return setDoc(doc(getFirestore(), FirestoreCollection.organizations, id), updates, { merge: true })
+}
+
 const OrganizationsApi = {
   // Get
   getOrganization,
 
   // Create
   createOrganization,
+
+  // Update
+  updateOrganization,
 }
 
 export default OrganizationsApi

@@ -1,16 +1,55 @@
-import { Heading, FormControl, FormLabel, Input, Box, Button } from '@chakra-ui/react'
+import { Heading, FormControl, FormLabel, Input, Box, Button, useToast } from '@chakra-ui/react'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
+import _ from 'lodash/fp'
+import { useMutation, useQueryClient } from 'react-query'
+import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
+import { ApiQueryId } from 'api/ApiQueryId'
 
 function OrganizationPage() {
+  const queryClient = useQueryClient()
+  const toast = useToast()
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
+
   const [name, setName] = useState<string>(organization?.name as string)
+  const [isDirty, setIsDirty] = useState<boolean>(false)
+
+  const updateOrganizationMutation = useMutation(OrganizationsApi.updateOrganization)
 
   function onNameChange(event: ChangeEvent<HTMLInputElement>) {
     setName(event.target.value)
+
+    if (!isDirty) {
+      setIsDirty(true)
+    }
+  }
+
+  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      onUpdate()
+    }
+  }
+
+  function onUpdate() {
+    updateOrganizationMutation.mutate({ ...organization, name } as IOrganization, {
+      onSuccess: () => {
+        queryClient.setQueryData(ApiQueryId.getOrganization, (oldData) => {
+          const oldOrganization = oldData as IOrganization
+          return { ...oldOrganization, name } as IOrganization
+        })
+
+        toast({
+          title: `Updated successfully`,
+          position: 'top-right',
+          isClosable: true,
+          variant: 'subtle',
+          status: 'success',
+        })
+      },
+    })
   }
 
   return (
@@ -20,8 +59,16 @@ function OrganizationPage() {
           Organization
         </Heading>
 
-        {/* TODO: Implement this */}
-        <Button disabled onClick={() => null} ml="auto" colorScheme="blue">
+        <Button
+          isLoading={updateOrganizationMutation.isLoading}
+          disabled={
+            !isDirty || _.isEqual(name, organization?.name) || name.length < 3 || updateOrganizationMutation.isLoading
+          }
+          onClick={onUpdate}
+          ml="auto"
+          colorScheme="blue"
+          loadingText="Updating"
+        >
           Update
         </Button>
       </Box>
@@ -36,7 +83,7 @@ function OrganizationPage() {
             Name
           </FormLabel>
 
-          <Input onChange={onNameChange} value={name} variant="filled" placeholder="Name" />
+          <Input onKeyDown={onKeyDown} onChange={onNameChange} value={name} variant="filled" placeholder="Name" />
         </FormControl>
       </Section>
     </BoxedPage>
