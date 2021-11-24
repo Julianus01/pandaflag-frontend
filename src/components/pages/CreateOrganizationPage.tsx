@@ -1,15 +1,16 @@
 import { Button, Heading, Input, Text, useToast } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
-import { useAuth } from 'hooks/auth/useAuth'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
+import AuthApi from 'api/AuthApi'
+import { ApiQueryId } from 'api/ApiQueryId'
 
 function CreateOrganizationPage() {
+  const queryClient = useQueryClient()
   const dispatch = useDispatch()
-  const { logout } = useAuth()
   const toast = useToast()
   const [organizationName, setOrganizationName] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -40,6 +41,7 @@ function CreateOrganizationPage() {
     createOrganizationMutation.mutate(organizationName, {
       onSuccess: (organization: IOrganization) => {
         dispatch(configurationActions.setOrganization(organization))
+        queryClient.invalidateQueries(ApiQueryId.getOrganization)
 
         toast({
           title: `Created organization '${organizationName}'`,
@@ -85,7 +87,7 @@ function CreateOrganizationPage() {
         </CreateBox>
       </Content>
 
-      <Button onClick={() => logout({ returnTo: window.location.origin })} mb={6} variant="ghost" mx="auto">
+      <Button onClick={AuthApi.logout} mb={6} variant="ghost" mx="auto">
         Logout
       </Button>
     </Container>

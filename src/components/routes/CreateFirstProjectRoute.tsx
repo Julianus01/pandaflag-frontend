@@ -4,20 +4,27 @@ import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
 import { useAuth } from 'hooks/auth/useAuth'
-import { useSelector } from 'react-redux'
-import { IStoreState } from 'redux/store'
+import OrganizationsApi from 'api/OrganizationsApi'
 
 function CreateFirstProjectRoute(props: RouteProps) {
-  const { isAuthenticated, user } = useAuth()
-  const organization = useSelector((state: IStoreState) => state.configuration.organization)
-  const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const user = useAuth()
 
-  if (!isAuthenticated) {
+  const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const { data: organization, isLoading: organizationLoading } = useQuery(
+    ApiQueryId.getOrganization,
+    OrganizationsApi.getOrganization
+  )
+
+  if (!user) {
     return <Redirect to={RoutePage.login()} />
   }
 
-  if (isAuthenticated && !user?.email_verified) {
+  if (!user?.emailVerified) {
     return <Redirect to={RoutePage.emailVerification()} />
+  }
+
+  if (organizationLoading) {
+    return null
   }
 
   if (!organization) {

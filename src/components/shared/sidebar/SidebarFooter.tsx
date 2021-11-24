@@ -8,9 +8,10 @@ import { useState, useRef } from 'react'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import { useHistory } from 'react-router'
 import RoutePage from 'components/routes/RoutePage'
+import AuthApi from 'api/AuthApi'
 
 function userDisplayName(name: string) {
-  if(name.includes('@')) {
+  if (name.includes('@')) {
     return name.substr(0, name.indexOf('@'))
   }
 
@@ -18,7 +19,7 @@ function userDisplayName(name: string) {
 }
 
 function SidebarFooter() {
-  const auth = useAuth()
+  const user = useAuth()
   const history = useHistory()
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -42,13 +43,13 @@ function SidebarFooter() {
       <Menu autoSelect={false} matchWidth isOpen={isOpen}>
         <CustomMenuButton $active={isOpen} onClick={toggleSelector}>
           <Container>
-            <Avatar size="md" shadow="lg" ignoreFallback src={auth.user?.picture}>
+            <Avatar size="md" shadow="lg" ignoreFallback src={user?.photoURL as string}>
               <AvatarBadge boxSize="1em" bg="green.500" />
             </Avatar>
 
             <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
               <Text isTruncated fontWeight="medium">
-                {auth.user?.name && userDisplayName(auth.user?.name)}
+                {user?.displayName && userDisplayName(user.displayName)}
               </Text>
             </Box>
 
@@ -63,7 +64,7 @@ function SidebarFooter() {
 
           <MenuItem
             icon={<Icon as={FiLogOut} w={5} h={5} />}
-            onClick={() => auth.logout({ returnTo: window.location.origin })}
+            onClick={AuthApi.logout}
           >
             Logout
           </MenuItem>

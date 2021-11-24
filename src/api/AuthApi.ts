@@ -1,4 +1,12 @@
-import { AuthError, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from '@firebase/auth'
+import {
+  AuthError,
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signOut,
+} from '@firebase/auth'
+import { IUser } from 'redux/ducks/authDuck'
 
 enum FirebaseAuthErrorCode {
   emailAlreadyExists = 'auth/email-already-exists',
@@ -52,9 +60,31 @@ async function createAccountWithEmailAndPassword(email: string, password: string
   }
 }
 
+async function sendVerificationEmail() {
+  try {
+    const auth = getAuth()
+    await sendEmailVerification(auth.currentUser as IUser)
+  } catch (err) {
+    const error: AuthError = err as AuthError
+    throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))
+  }
+}
+
+async function logout() {
+  try {
+    const auth = getAuth()
+    await signOut(auth)
+  } catch (err) {
+    const error: AuthError = err as AuthError
+    throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))
+  }
+}
+
 const AuthApi = {
   loginInWithEmailAndPassword,
   createAccountWithEmailAndPassword,
+  sendVerificationEmail,
+  logout
 }
 
 export default AuthApi

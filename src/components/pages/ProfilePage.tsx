@@ -1,4 +1,5 @@
 import { Avatar, Heading, Box, Tag, TagLabel, FormControl, FormLabel, Text, Button, Icon } from '@chakra-ui/react'
+import AuthApi from 'api/AuthApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
 import { useAuth } from 'hooks/auth/useAuth'
@@ -13,7 +14,7 @@ function userDisplayName(name: string) {
 }
 
 function ProfilePage() {
-  const auth = useAuth()
+  const user = useAuth()
 
   return (
     <BoxedPage>
@@ -22,11 +23,11 @@ function ProfilePage() {
       </Heading>
 
       <Box mb={10} display="flex">
-        <Avatar size="lg" shadow="lg" ignoreFallback src={auth.user?.picture} />
+        <Avatar size="lg" shadow="lg" ignoreFallback src={user?.photoURL as string} />
 
         <Box display="flex" flexDirection="column" justifyContent="center" ml={4}>
           <Heading mb={1} fontWeight="semibold" size="md">
-            {auth.user?.name && userDisplayName(auth.user?.name)}
+            {user?.displayName && userDisplayName(user?.displayName)}
           </Heading>
 
           <Box>
@@ -43,7 +44,7 @@ function ProfilePage() {
             Email
           </FormLabel>
 
-          <Text fontWeight="semibold">{auth.user?.email}</Text>
+          <Text fontWeight="semibold">{user?.email}</Text>
         </FormControl>
       </Section>
 
@@ -58,7 +59,7 @@ function ProfilePage() {
       </Section>
 
       <Box display="flex" justifyContent="center">
-        <Button leftIcon={<Icon as={FiLogOut} />} onClick={() => auth.logout({ returnTo: window.location.origin })}>
+        <Button leftIcon={<Icon as={FiLogOut} />} onClick={AuthApi.logout}>
           Logout
         </Button>
       </Box>

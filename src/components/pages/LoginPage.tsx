@@ -85,6 +85,7 @@ function LoginPage() {
             {!!temporaryMessage.message && <Text color="red.500">{temporaryMessage.message}</Text>}
 
             <Button
+              // loadingText="Logging in"
               isLoading={isLoading}
               disabled={isLoading}
               mt={6}

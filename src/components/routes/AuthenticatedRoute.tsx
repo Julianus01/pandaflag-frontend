@@ -9,15 +9,15 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
 
 function AuthenticatedRoute(props: RouteProps) {
-  const { isAuthenticated, user } = useAuth()
+  const user = useAuth()
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
   const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
-  if (!isAuthenticated) {
+  if (!user) {
     return <Redirect to={RoutePage.login()} />
   }
 
-  if (isAuthenticated && !user?.email_verified) {
+  if (!user?.emailVerified) {
     return <Redirect to={RoutePage.emailVerification()} />
   }
 

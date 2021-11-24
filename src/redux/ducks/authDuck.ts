@@ -1,17 +1,17 @@
 import createReducer from '../utils/createReducer'
-import { User } from '@auth0/auth0-react'
 import { PayloadAction } from 'redux/types'
+import { User } from '@firebase/auth'
 
 // Types
 const AUTH_STATE_CHANGED = '[auth] AUTH_STATE_CHANGED'
 
-export type IUser = Required<User>
+export type IUser = User
 export interface IAuthState {
-  user: IUser | undefined
+  user: User | null
 }
 
 const initialState: IAuthState = {
-  user: undefined,
+  user: null,
 }
 
 // Reducer
@@ -24,7 +24,7 @@ export default createReducer(initialState)({
 
 // Actions
 const authActions = {
-  authStateChanged: (user: IUser | undefined) => ({
+  authStateChanged: (user: IUser | null) => ({
     type: AUTH_STATE_CHANGED,
     payload: user,
   }),

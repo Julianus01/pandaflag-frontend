@@ -3,9 +3,9 @@ import RoutePage from './RoutePage'
 import { useAuth } from 'hooks/auth/useAuth'
 
 function EmailVerificationRoute(props: RouteProps) {
-  const { user, isAuthenticated } = useAuth()
+  const user = useAuth()
 
-  if (!isAuthenticated || user?.email_verified) {
+  if (!user || user?.emailVerified) {
     return <Redirect to={RoutePage.root()} />
   }
 

@@ -2,7 +2,6 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import AuthenticationProvider from './components/shared/AuthenticationProvider'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import { initFirebase } from './firebase_init'
 import GlobalStyles from 'components/styles/GlobalStyles'
@@ -34,9 +33,7 @@ function RootHTML() {
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
 
           <StyledThemeProvider>
-            <AuthenticationProvider>
-              <App />
-            </AuthenticationProvider>
+            <App />
           </StyledThemeProvider>
         </ChakraProvider>
       </QueryClientProvider>

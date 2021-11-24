@@ -46,6 +46,7 @@ function RegisterPage() {
       setIsLoading(true)
       await ValidationSchema.validate(form)
       await AuthApi.createAccountWithEmailAndPassword(form.email, form.password)
+      await AuthApi.sendVerificationEmail()
     } catch (err) {
       const error = err as IError
       temporaryMessage.showMessage(error.message)

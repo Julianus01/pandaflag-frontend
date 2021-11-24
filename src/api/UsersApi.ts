@@ -4,7 +4,7 @@ import { IUser } from 'redux/ducks/authDuck'
 
 // Upsert User
 async function upsertUser(user: IUser): Promise<void> {
-  await setDoc(doc(getFirestore(), FirestoreCollection.users, user.sub), user, { merge: true })
+  await setDoc(doc(getFirestore(), FirestoreCollection.users, user.uid), user, { merge: true })
 }
 
 const UsersApi = {

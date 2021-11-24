@@ -34,7 +34,7 @@ export interface IOrganization {
 // Get Organization
 async function getOrganization(): Promise<IOrganization> {
   const user = store.getState().auth.user as IUser
-  const memberQueryValue = { id: user.sub, type: 'admin' }
+  const memberQueryValue = { id: user.uid, type: 'admin' }
 
   const querySnapshot = await getDocs(
     query(
@@ -58,7 +58,7 @@ async function createOrganization(name: string): Promise<IOrganization> {
 
   const newOrganization = {
     name,
-    members: [{ id: user.sub, type: MemberType.admin }],
+    members: [{ id: user.uid, type: MemberType.admin }],
     createdAt,
   }
 
