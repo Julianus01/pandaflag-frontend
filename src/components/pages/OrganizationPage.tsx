@@ -8,13 +8,14 @@ import _ from 'lodash/fp'
 import { useMutation, useQueryClient } from 'react-query'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { ApiQueryId } from 'api/ApiQueryId'
+import usePropState from 'hooks/common/usePropState'
 
 function OrganizationPage() {
   const queryClient = useQueryClient()
   const toast = useToast()
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
 
-  const [name, setName] = useState<string>(organization?.name as string)
+  const [name, setName] = usePropState<string>(organization?.name as string)
   const [isDirty, setIsDirty] = useState<boolean>(false)
 
   const updateOrganizationMutation = useMutation(OrganizationsApi.updateOrganization)
@@ -34,11 +35,11 @@ function OrganizationPage() {
   }
 
   function onUpdate() {
-    updateOrganizationMutation.mutate({ ...organization, name } as IOrganization, {
+    updateOrganizationMutation.mutate({ ...organization, name: name.trim() } as IOrganization, {
       onSuccess: () => {
         queryClient.setQueryData(ApiQueryId.getOrganization, (oldData) => {
           const oldOrganization = oldData as IOrganization
-          return { ...oldOrganization, name } as IOrganization
+          return { ...oldOrganization, name: name.trim() } as IOrganization
         })
 
         toast({
@@ -62,7 +63,7 @@ function OrganizationPage() {
         <Button
           isLoading={updateOrganizationMutation.isLoading}
           disabled={
-            !isDirty || _.isEqual(name, organization?.name) || name.length < 3 || updateOrganizationMutation.isLoading
+            !isDirty || _.isEqual(name.trim(), organization?.name) || name.length < 3 || updateOrganizationMutation.isLoading
           }
           onClick={onUpdate}
           ml="auto"
