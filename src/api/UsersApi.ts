@@ -2,10 +2,6 @@ import { getFirestore, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore
 import { FirestoreCollection } from './FirestoreCollection'
 import { IUser } from 'redux/ducks/authDuck'
 
-async function upsertUser(user: IUser): Promise<void> {
-  await setDoc(doc(getFirestore(), FirestoreCollection.users, user.uid), user, { merge: true })
-}
-
 async function addUserIfDoesntExist(user: IUser): Promise<void> {
   const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.users, user.uid))
 
@@ -24,6 +20,10 @@ async function addUserIfDoesntExist(user: IUser): Promise<void> {
 
   const newUserDoc = await setDoc(doc(getFirestore(), FirestoreCollection.users, user.uid), newUser)
   return newUserDoc
+}
+
+async function upsertUser(user: IUser): Promise<void> {
+  await setDoc(doc(getFirestore(), FirestoreCollection.users, user.uid), user, { merge: true })
 }
 
 const UsersApi = {

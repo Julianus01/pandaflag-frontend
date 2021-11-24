@@ -10,8 +10,6 @@ import AuthenticatedRoute from './AuthenticatedRoute'
 import EmailVerificationRoute from './EmailVerificationRoute'
 import RedirectAuthenticatedRoute from './RedirectAuthenticatedRoute'
 import FlagsPage from 'components/pages/FlagsPage'
-import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
-import CreateOrganizationRoute from './CreateOrganizationRoute'
 import ProjectsPage from 'components/pages/ProjectsPage'
 import FlagPage from 'components/pages/FlagPage'
 import ProfilePage from 'components/pages/ProfilePage'
@@ -39,7 +37,6 @@ function Routes() {
 
         {/* Use case routes */}
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
-        <CreateOrganizationRoute component={CreateOrganizationPage} exact path={RoutePage.createOrganization()} />
 
         <CreateFirstProjectRoute component={CreateFirstProjectPage} exact path={RoutePage.createFirstProject()} />
 

@@ -18,6 +18,8 @@ function useInitUserAndOrganization(): boolean {
   useQuery(ApiQueryId.getOrganization, OrganizationsApi.getOrganization, {
     enabled: !!user,
     onSuccess: (organization: IOrganization) => {
+      console.log('Fetch organization')
+      console.log(organization?.id)
       dispatch(configurationActions.setOrganization(organization))
       setInitialized(true)
     },

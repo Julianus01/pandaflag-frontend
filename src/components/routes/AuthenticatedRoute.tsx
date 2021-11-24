@@ -20,11 +20,7 @@ function AuthenticatedRoute(props: RouteProps) {
     return <Redirect to={RoutePage.emailVerification()} />
   }
 
-  if (!organization) {
-    return <Redirect to={RoutePage.createOrganization()} />
-  }
-
-  if (projectsLoading) {
+  if (projectsLoading || !organization) {
     return null
   }
 

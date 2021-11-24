@@ -1,7 +1,7 @@
 import Section from 'components/styles/Section'
 import styled from 'styled-components/macro'
 import { Heading, Text, Input, InputLeftElement, Icon, InputGroup, Button, Box } from '@chakra-ui/react'
-import { FiMail, FiKey } from 'react-icons/fi'
+import { FiMail, FiKey, FiDatabase } from 'react-icons/fi'
 import ThemeButton from 'theme/ThemeButton'
 import PandaflagLogo from 'components/shared/PandaflagLogo'
 import { NavLink } from 'react-router-dom'
@@ -10,15 +10,18 @@ import * as yup from 'yup'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import RoutePage from 'components/routes/RoutePage'
 import AuthApi from 'api/AuthApi'
+import OrganizationsApi from 'api/OrganizationsApi'
 
 const ValidationSchema = yup.object().shape({
-  password: yup.string().min(6).required(),
-  email: yup.string().email().required(),
+  Password: yup.string().min(6).required(),
+  Organization: yup.string().trim().required(),
+  Email: yup.string().email().required(),
 })
 
 const DefaultCredentials: ICredentials = {
   email: '',
   password: '',
+  organizationName: '',
 }
 
 interface IError {
@@ -28,6 +31,7 @@ interface IError {
 interface ICredentials {
   email: string
   password: string
+  organizationName: string
 }
 
 function RegisterPage() {
@@ -50,10 +54,15 @@ function RegisterPage() {
   async function onLogin() {
     try {
       temporaryMessage.hideMessage()
-      await ValidationSchema.validate(form)
+      const validatedForm = await ValidationSchema.validate({
+        Email: form.email,
+        Password: form.password,
+        Organization: form.organizationName,
+      })
 
       setIsLoading(true)
-      await AuthApi.createAccountWithEmailAndPassword(form.email, form.password)
+      await AuthApi.createAccountWithEmailAndPassword(validatedForm.Email, validatedForm.Password)
+      await OrganizationsApi.createOrganization(validatedForm.Organization)
       await AuthApi.sendVerificationEmail()
     } catch (err) {
       const error = err as IError
@@ -81,6 +90,17 @@ function RegisterPage() {
               <InputLeftElement pointerEvents="none" children={<Icon as={FiMail} />} />
 
               <Input onKeyDown={onKeyDown} onChange={onInputChange('email')} variant="filled" placeholder="Email" />
+            </InputGroup>
+
+            <InputGroup mb={4}>
+              <InputLeftElement pointerEvents="none" children={<Icon as={FiDatabase} />} />
+
+              <Input
+                onKeyDown={onKeyDown}
+                onChange={onInputChange('organizationName')}
+                variant="filled"
+                placeholder="Organization"
+              />
             </InputGroup>
 
             <InputGroup mb={4}>
