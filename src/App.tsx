@@ -8,6 +8,7 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import { getAuth } from '@firebase/auth'
 import { IStoreState } from 'redux/store'
+import UsersApi from 'api/UsersApi'
 
 function useInitUserAndOrganization(): boolean {
   const dispatch = useDispatch()
@@ -28,6 +29,7 @@ function useInitUserAndOrganization(): boolean {
     const unsubscribe = auth.onAuthStateChanged((user: IUser | null) => {
       if (user) {
         dispatch(authActions.authStateChanged(user))
+        UsersApi.addUserIfDoesntExist(user)
       } else {
         dispatch(authActions.authStateChanged(user))
         setInitialized(true)
