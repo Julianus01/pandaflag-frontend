@@ -1,19 +1,23 @@
 import { Avatar, Heading, Box, Tag, TagLabel, FormControl, FormLabel, Text, Button, Icon } from '@chakra-ui/react'
+import AuthApi from 'api/AuthApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
-import { useAuth } from 'hooks/authHooks'
 import { FiLogOut } from 'react-icons/fi'
+import { useSelector } from 'react-redux'
+import { IUser } from 'redux/ducks/authDuck'
+import { IStoreState } from 'redux/store'
 
-function userDisplayName(name: string) {
-  if (name.includes('@')) {
-    return name.substr(0, name.indexOf('@'))
+function userDisplayName(user: IUser) {
+  if (user.displayName) {
+    return user.displayName
   }
 
-  return name
+  const email = user.email as string
+  return email.substr(0, email.indexOf('@'))
 }
 
 function ProfilePage() {
-  const auth = useAuth()
+  const user = useSelector((state: IStoreState) => state.auth.user)
 
   return (
     <BoxedPage>
@@ -22,11 +26,17 @@ function ProfilePage() {
       </Heading>
 
       <Box mb={10} display="flex">
-        <Avatar size="lg" shadow="lg" ignoreFallback src={auth.user?.picture} />
+        <Avatar
+          name={userDisplayName(user as IUser)}
+          size="lg"
+          shadow="lg"
+          ignoreFallback
+          src={user?.photoURL as string}
+        />
 
         <Box display="flex" flexDirection="column" justifyContent="center" ml={4}>
           <Heading mb={1} fontWeight="semibold" size="md">
-            {auth.user?.name && userDisplayName(auth.user?.name)}
+            {userDisplayName(user as IUser)}
           </Heading>
 
           <Box>
@@ -43,7 +53,7 @@ function ProfilePage() {
             Email
           </FormLabel>
 
-          <Text fontWeight="semibold">{auth.user?.email}</Text>
+          <Text fontWeight="semibold">{user?.email}</Text>
         </FormControl>
       </Section>
 
@@ -58,7 +68,7 @@ function ProfilePage() {
       </Section>
 
       <Box display="flex" justifyContent="center">
-        <Button leftIcon={<Icon as={FiLogOut} />} onClick={() => auth.logout({ returnTo: window.location.origin })}>
+        <Button leftIcon={<Icon as={FiLogOut} />} onClick={AuthApi.logout}>
           Logout
         </Button>
       </Box>

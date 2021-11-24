@@ -1,11 +1,12 @@
 import { Redirect, RouteProps, Route } from 'react-router-dom'
 import RoutePage from './RoutePage'
-import { useAuth } from 'hooks/auth/useAuth'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
 
 function EmailVerificationRoute(props: RouteProps) {
-  const { user, isAuthenticated } = useAuth()
+  const user = useSelector((state: IStoreState) => state.auth.user)
 
-  if (!isAuthenticated || user?.email_verified) {
+  if (!user || user?.emailVerified) {
     return <Redirect to={RoutePage.root()} />
   }
 

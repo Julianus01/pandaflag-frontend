@@ -2,12 +2,11 @@ import { Button, Heading, Input, Text, useToast } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
-import { useAuth } from 'hooks/auth/useAuth'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import AuthApi from 'api/AuthApi'
 
 function CreateFirstProjectPage() {
-  const { logout } = useAuth()
   const queryClient = useQueryClient()
   const toast = useToast()
 
@@ -82,7 +81,7 @@ function CreateFirstProjectPage() {
         </CreateBox>
       </Content>
 
-      <Button onClick={() => logout({ returnTo: window.location.origin })} mb={6} variant="ghost" mx="auto">
+      <Button onClick={AuthApi.logout} mb={6} variant="ghost" mx="auto">
         Logout
       </Button>
     </Container>

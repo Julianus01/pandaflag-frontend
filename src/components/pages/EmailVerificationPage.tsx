@@ -1,38 +1,58 @@
 import { Button, Heading, Box, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
-import { useAuth } from 'hooks/auth/useAuth'
-import { useEffect } from 'react'
-
-function removeAuthLocalStorage() {
-  localStorage.removeItem(
-    `@@auth0spajs@@::${process.env.REACT_APP_AUTH0_CLIENT_ID}::default::openid profile email offline_access`
-  )
-}
+import { useState } from 'react'
+import AuthApi from 'api/AuthApi'
 
 function EmailVerificationPage() {
-  const { logout } = useAuth()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [hasBeenSent, setHasBeenSent] = useState<boolean>(false)
 
-  useEffect(() => {
-    removeAuthLocalStorage()
-  }, [])
+  async function onSendVerificationEmail() {
+    try {
+      setIsLoading(true)
+      await AuthApi.sendVerificationEmail()
+      setIsLoading(false)
+      setHasBeenSent(true)
+    } catch (err) {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Container>
       <Content>
-        <Box>
+        <Box display="flex" flexDirection="column">
           <Heading mb={1} as="h4" size="md">
             Verify your email address inbox
           </Heading>
 
-          <Text mb={4} color="gray.500">
+          <Text mb={8} color="gray.500">
             We need to verify you are truthful and you did not steal this account :)
             <br />
             Refresh this page after you have accessed the link
           </Text>
+
+          <Box display="flex">
+            <Text mb={2} color="gray.500">
+              Didn't get the email?
+            </Text>
+
+            <Button
+              isLoading={isLoading}
+              loadingText="Sending"
+              disabled={hasBeenSent}
+              onClick={onSendVerificationEmail}
+              ml="auto"
+              colorScheme="blue"
+            >
+              {!hasBeenSent && 'Send again'}
+              {hasBeenSent && 'Email sent'}
+            </Button>
+          </Box>
         </Box>
       </Content>
 
-      <Button onClick={() => logout({ returnTo: window.location.origin })} mb={6} variant="ghost" mx="auto">
+      <Button onClick={AuthApi.logout} mb={6} variant="ghost" mx="auto">
         Logout
       </Button>
     </Container>

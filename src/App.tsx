@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react'
 import Routes from './components/routes/Routes'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { authActions, IUser } from 'redux/ducks/authDuck'
-import { useAuth0 } from '@auth0/auth0-react'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import { configurationActions } from 'redux/ducks/configurationDuck'
+import { getAuth } from '@firebase/auth'
+import { IStoreState } from 'redux/store'
 import UsersApi from 'api/UsersApi'
 
 function useInitUserAndOrganization(): boolean {
   const dispatch = useDispatch()
-  const { user: auth0User, isLoading } = useAuth0()
+  const user = useSelector((state: IStoreState) => state.auth.user)
   const [initialized, setInitialized] = useState<boolean>(false)
 
   useQuery(ApiQueryId.getOrganization, OrganizationsApi.getOrganization, {
-    enabled: !!auth0User,
+    enabled: !!user,
     onSuccess: (organization: IOrganization) => {
       dispatch(configurationActions.setOrganization(organization))
       setInitialized(true)
@@ -23,18 +24,22 @@ function useInitUserAndOrganization(): boolean {
   })
 
   useEffect(() => {
-    if (isLoading) {
-      return
-    }
+    const auth = getAuth()
 
-    if (auth0User) {
-      UsersApi.upsertUser(auth0User as IUser)
-      dispatch(authActions.authStateChanged(auth0User as Required<IUser>))
-    } else {
-      dispatch(authActions.authStateChanged(undefined))
-      setInitialized(true)
+    const unsubscribe = auth.onAuthStateChanged((user: IUser | null) => {
+      if (user) {
+        dispatch(authActions.authStateChanged(user))
+        UsersApi.addUserIfDoesntExist(user)
+      } else {
+        dispatch(authActions.authStateChanged(user))
+        setInitialized(true)
+      }
+    })
+
+    return () => {
+      unsubscribe()
     }
-  }, [auth0User, dispatch, isLoading])
+  }, [dispatch])
 
   return initialized
 }

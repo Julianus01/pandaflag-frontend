@@ -6,6 +6,10 @@ function login() {
   return `/login`
 }
 
+function register() {
+  return `/register`
+}
+
 function emailVerification() {
   return `/email-verification`
 }
@@ -41,6 +45,7 @@ function profile() {
 const RoutePage = {
   root,
   login,
+  register,
   emailVerification,
   flags,
   flag,
