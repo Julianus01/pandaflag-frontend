@@ -9,6 +9,7 @@ import { ChangeEvent, useState } from 'react'
 import * as yup from 'yup'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import RoutePage from 'components/routes/RoutePage'
+import AuthApi from 'api/AuthApi'
 
 const ValidationSchema = yup.object().shape({
   password: yup.string().min(6).required(),
@@ -22,6 +23,7 @@ const DefaultCredentials: ICredentials = {
 
 interface IError {
   message: string
+  code: number
 }
 
 interface ICredentials {
@@ -31,6 +33,7 @@ interface ICredentials {
 
 function LoginPage() {
   const temporaryMessage = useTemporaryMessage()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
 
   function onInputChange(inputName: string) {
@@ -41,11 +44,14 @@ function LoginPage() {
 
   async function onLogin() {
     try {
+      setIsLoading(true)
       await ValidationSchema.validate(form)
-      console.log(form)
+
+      await AuthApi.loginInWithEmailAndPassword(form.email, form.password)
     } catch (err) {
       const error = err as IError
       temporaryMessage.showMessage(error.message)
+      setIsLoading(false)
     }
   }
 
@@ -78,7 +84,15 @@ function LoginPage() {
 
             {!!temporaryMessage.message && <Text color="red.500">{temporaryMessage.message}</Text>}
 
-            <Button mt={6} onClick={onLogin} colorScheme="blue" width="100%" size="md">
+            <Button
+              isLoading={isLoading}
+              disabled={isLoading}
+              mt={6}
+              onClick={onLogin}
+              colorScheme="blue"
+              width="100%"
+              size="md"
+            >
               Log in
             </Button>
           </LoginContainer>

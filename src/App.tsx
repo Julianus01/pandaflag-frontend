@@ -8,6 +8,7 @@ import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import UsersApi from 'api/UsersApi'
+import { getAuth, User } from '@firebase/auth'
 
 function useInitUserAndOrganization(): boolean {
   const dispatch = useDispatch()
@@ -35,6 +36,19 @@ function useInitUserAndOrganization(): boolean {
       setInitialized(true)
     }
   }, [auth0User, dispatch, isLoading])
+
+  useEffect(() => {
+    const auth = getAuth()
+
+    const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
+      console.log('Auth State Changed')
+      console.log(user)
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
 
   return initialized
 }
