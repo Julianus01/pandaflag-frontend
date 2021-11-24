@@ -5,7 +5,7 @@ import { FiMail, FiKey } from 'react-icons/fi'
 import ThemeButton from 'theme/ThemeButton'
 import PandaflagLogo from 'components/shared/PandaflagLogo'
 import { NavLink } from 'react-router-dom'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import * as yup from 'yup'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import RoutePage from 'components/routes/RoutePage'
@@ -41,10 +41,18 @@ function RegisterPage() {
     }
   }
 
+  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      onLogin()
+    }
+  }
+
   async function onLogin() {
     try {
-      setIsLoading(true)
+      temporaryMessage.hideMessage()
       await ValidationSchema.validate(form)
+
+      setIsLoading(true)
       await AuthApi.createAccountWithEmailAndPassword(form.email, form.password)
       await AuthApi.sendVerificationEmail()
     } catch (err) {
@@ -72,13 +80,19 @@ function RegisterPage() {
             <InputGroup mb={4}>
               <InputLeftElement pointerEvents="none" children={<Icon as={FiMail} />} />
 
-              <Input onChange={onInputChange('email')} variant="filled" placeholder="Email" />
+              <Input onKeyDown={onKeyDown} onChange={onInputChange('email')} variant="filled" placeholder="Email" />
             </InputGroup>
 
             <InputGroup mb={4}>
               <InputLeftElement pointerEvents="none" children={<Icon as={FiKey} />} />
 
-              <Input onChange={onInputChange('password')} variant="filled" type="password" placeholder="Password" />
+              <Input
+                onKeyDown={onKeyDown}
+                onChange={onInputChange('password')}
+                variant="filled"
+                type="password"
+                placeholder="Password"
+              />
             </InputGroup>
 
             {!!temporaryMessage.message && <Text color="red.500">{temporaryMessage.message}</Text>}
