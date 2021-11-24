@@ -12,10 +12,7 @@ function CreateFirstProjectRoute(props: RouteProps) {
 
   const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
 
-  const { data: organization, isLoading: organizationLoading } = useQuery(
-    ApiQueryId.getOrganization,
-    OrganizationsApi.getOrganization
-  )
+  const { isLoading: organizationLoading } = useQuery(ApiQueryId.getOrganization, OrganizationsApi.getOrganization)
 
   if (!user) {
     return <Redirect to={RoutePage.login()} />
