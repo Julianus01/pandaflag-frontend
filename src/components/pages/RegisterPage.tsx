@@ -29,7 +29,7 @@ interface ICredentials {
   password: string
 }
 
-function LoginPage() {
+function RegisterPage() {
   const temporaryMessage = useTemporaryMessage()
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
 
@@ -57,11 +57,11 @@ function LoginPage() {
         <Section py="12" px="16">
           <LoginContainer>
             <Heading mb={4} as="h3" size="lg">
-              Log in
+              Create new account
             </Heading>
 
             <Text color="gray.500" mb={6}>
-              Sign in to manage your flags
+              Feature flags made easy
             </Text>
 
             <InputGroup mb={4}>
@@ -79,13 +79,13 @@ function LoginPage() {
             {!!temporaryMessage.message && <Text color="red.500">{temporaryMessage.message}</Text>}
 
             <Button mt={6} onClick={onLogin} colorScheme="blue" width="100%" size="md">
-              Log in
+              Create Account
             </Button>
           </LoginContainer>
         </Section>
 
         <Text mt={10} mx="auto" color="gray.500">
-          Don't have an account? <RegisterLink to={RoutePage.register}>Create Account</RegisterLink>
+          Already a member? <RegisterLink to={RoutePage.login}>Log in</RegisterLink>
         </Text>
       </Content>
 
@@ -96,7 +96,7 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default RegisterPage
 
 const Container = styled.div`
   height: 100vh;

@@ -6,7 +6,7 @@ const config: ThemeConfig = {
 }
 
 const fonts = {
-  heading: 'Inter, sans-serif',
+  heading: 'Manrope, sans-serif',
   body: 'Inter, sans-serif',
 }
 
