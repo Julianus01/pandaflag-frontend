@@ -2,9 +2,10 @@ import { Avatar, Heading, Box, Tag, TagLabel, FormControl, FormLabel, Text, Butt
 import AuthApi from 'api/AuthApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
-import { useAuth } from 'hooks/auth/useAuth'
 import { FiLogOut } from 'react-icons/fi'
+import { useSelector } from 'react-redux'
 import { IUser } from 'redux/ducks/authDuck'
+import { IStoreState } from 'redux/store'
 
 function userDisplayName(user: IUser) {
   if (user.displayName) {
@@ -16,7 +17,7 @@ function userDisplayName(user: IUser) {
 }
 
 function ProfilePage() {
-  const user = useAuth()
+  const user = useSelector((state: IStoreState) => state.auth.user)
 
   return (
     <BoxedPage>
@@ -25,11 +26,17 @@ function ProfilePage() {
       </Heading>
 
       <Box mb={10} display="flex">
-        <Avatar name={userDisplayName(user)} size="lg" shadow="lg" ignoreFallback src={user?.photoURL as string} />
+        <Avatar
+          name={userDisplayName(user as IUser)}
+          size="lg"
+          shadow="lg"
+          ignoreFallback
+          src={user?.photoURL as string}
+        />
 
         <Box display="flex" flexDirection="column" justifyContent="center" ml={4}>
           <Heading mb={1} fontWeight="semibold" size="md">
-            {userDisplayName(user)}
+            {userDisplayName(user as IUser)}
           </Heading>
 
           <Box>

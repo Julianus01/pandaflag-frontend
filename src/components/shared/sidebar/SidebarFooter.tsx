@@ -1,12 +1,12 @@
 import { Box } from '@chakra-ui/layout'
-import { Text, Icon, Avatar, AvatarBadge } from '@chakra-ui/react'
+import { Text, Avatar, AvatarBadge } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
-import { useAuth } from 'hooks/auth/useAuth'
-import { FiChevronDown } from 'react-icons/fi'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import { useHistory } from 'react-router'
 import RoutePage from 'components/routes/RoutePage'
 import { IUser } from 'redux/ducks/authDuck'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
 
 function userDisplayName(user: IUser) {
   if (user.displayName) {
@@ -18,7 +18,7 @@ function userDisplayName(user: IUser) {
 }
 
 function SidebarFooter() {
-  const user = useAuth()
+  const user = useSelector((state: IStoreState) => state.auth.user)
   const history = useHistory()
 
   function navigateToProfile() {
@@ -28,17 +28,21 @@ function SidebarFooter() {
   return (
     <CustomMenuButton $active={window.location.pathname.includes(RoutePage.profile())} onClick={navigateToProfile}>
       <Container>
-        <Avatar name={userDisplayName(user)} size="md" shadow="lg" ignoreFallback src={user?.photoURL as string}>
+        <Avatar
+          name={userDisplayName(user as IUser)}
+          size="md"
+          shadow="lg"
+          ignoreFallback
+          src={user?.photoURL as string}
+        >
           <AvatarBadge boxSize="1em" bg="green.500" />
         </Avatar>
 
         <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
           <Text isTruncated fontWeight="medium">
-            {userDisplayName(user)}
+            {userDisplayName(user as IUser)}
           </Text>
         </Box>
-
-        <Icon as={FiChevronDown} strokeWidth={2.4} w={5} h={5} />
       </Container>
     </CustomMenuButton>
   )

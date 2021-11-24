@@ -5,9 +5,9 @@ import { User } from '@firebase/auth'
 // Types
 const AUTH_STATE_CHANGED = '[auth] AUTH_STATE_CHANGED'
 
-export type IUser = User
+export interface IUser extends User {}
 export interface IAuthState {
-  user: User | null
+  user: IUser | null
 }
 
 const initialState: IAuthState = {

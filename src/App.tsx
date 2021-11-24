@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import Routes from './components/routes/Routes'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { authActions, IUser } from 'redux/ducks/authDuck'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import { getAuth } from '@firebase/auth'
-import { useAuth } from 'hooks/auth/useAuth'
+import { IStoreState } from 'redux/store'
 
 function useInitUserAndOrganization(): boolean {
   const dispatch = useDispatch()
-  const user = useAuth()
+  const user = useSelector((state: IStoreState) => state.auth.user)
   const [initialized, setInitialized] = useState<boolean>(false)
 
   useQuery(ApiQueryId.getOrganization, OrganizationsApi.getOrganization, {
@@ -26,9 +26,10 @@ function useInitUserAndOrganization(): boolean {
     const auth = getAuth()
 
     const unsubscribe = auth.onAuthStateChanged((user: IUser | null) => {
-      dispatch(authActions.authStateChanged(user))
-
-      if (!user) {
+      if (user) {
+        dispatch(authActions.authStateChanged(user))
+      } else {
+        dispatch(authActions.authStateChanged(user))
         setInitialized(true)
       }
     })

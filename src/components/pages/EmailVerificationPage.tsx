@@ -46,7 +46,7 @@ function EmailVerificationPage() {
               colorScheme="blue"
             >
               {!hasBeenSent && 'Send again'}
-              {hasBeenSent && 'Sent'}
+              {hasBeenSent && 'Email sent'}
             </Button>
           </Box>
         </Box>

@@ -3,11 +3,12 @@ import RoutePage from './RoutePage'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
-import { useAuth } from 'hooks/auth/useAuth'
 import OrganizationsApi from 'api/OrganizationsApi'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
 
 function CreateFirstProjectRoute(props: RouteProps) {
-  const user = useAuth()
+  const user = useSelector((state: IStoreState) => state.auth.user)
 
   const { data: projects, isLoading: projectsLoading } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
   const { data: organization, isLoading: organizationLoading } = useQuery(
