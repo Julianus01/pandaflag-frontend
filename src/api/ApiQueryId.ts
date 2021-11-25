@@ -4,9 +4,10 @@ export enum ApiQueryId {
 
   // Projects
   getProjects = 'getProjects',
+  getProjectsByOrganizationId = 'getProjectsByOrganizationId',
 
   // Flags
   getFlags = 'getFlags',
   getFlag = 'getFlag',
-  getFlagByName = 'getFlagByName'
+  getFlagByName = 'getFlagByName',
 }

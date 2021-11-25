@@ -13,8 +13,12 @@ import {
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
+import ProjectsContext from 'context/ProjectsContext'
+import { useContext } from 'react'
 import { FiMinus } from 'react-icons/fi'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
 
 interface IProps {
   project: IProject
@@ -22,13 +26,14 @@ interface IProps {
 
 function ProjectRemoveButton({ project }: IProps) {
   const queryClient = useQueryClient()
+  const organizationId = useSelector((state: IStoreState) => state.configuration.organization?.id)
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { isFetching: projectsFetching } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const { isFetching: projectsFetching } = useContext(ProjectsContext)
   const deleteMutation = useMutation(ProjectsApi.deleteProject, {
     onSuccess: () => {
-      queryClient.setQueryData(ApiQueryId.getProjects, (oldData) => {
+      queryClient.setQueryData([ApiQueryId.getProjectsByOrganizationId, organizationId], (oldData) => {
         const oldProjects = oldData as IProject[]
         return oldProjects?.filter((oldProject: IProject) => oldProject.id !== project.id)
       })

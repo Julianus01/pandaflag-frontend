@@ -10,6 +10,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import store from './redux/store'
 import theme from 'theme/theme'
 import StyledThemeProvider from 'theme/StyledThemeProvider'
+import { ProjectsContextProvider } from 'context/ProjectsContext'
 
 let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty('--vh', `${vh}px`)
@@ -29,12 +30,14 @@ function RootHTML() {
     <ReduxProvider store={store}>
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
-          <GlobalStyles />
-          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <ProjectsContextProvider>
+            <GlobalStyles />
+            <ColorModeScript initialColorMode={theme.config.initialColorMode} />
 
-          <StyledThemeProvider>
-            <App />
-          </StyledThemeProvider>
+            <StyledThemeProvider>
+              <App />
+            </StyledThemeProvider>
+          </ProjectsContextProvider>
         </ChakraProvider>
       </QueryClientProvider>
     </ReduxProvider>

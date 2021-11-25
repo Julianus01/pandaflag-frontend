@@ -3,22 +3,15 @@ import RoutePage from './RoutePage'
 import NavigationRoute from './NavigationRoute'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
-import { useQuery } from 'react-query'
-import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi from 'api/ProjectsApi'
+import { useContext } from 'react'
+import ProjectsContext from 'context/ProjectsContext'
 
 interface ProjectRouteProps extends RouteProps {
   organizationId: string
 }
 
 function ProjectRoute(props: ProjectRouteProps) {
-  const { data: projects, isLoading: projectsLoading } = useQuery(
-    [ApiQueryId.getProjects, props.organizationId],
-    () => ProjectsApi.getProjectsByOrganizationId(props.organizationId),
-    {
-      cacheTime: 0,
-    }
-  )
+  const { data: projects, isLoading: projectsLoading } = useContext(ProjectsContext)
 
   if (projectsLoading) {
     return null

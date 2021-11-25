@@ -35,7 +35,7 @@ function CreateFirstProjectPage() {
     setIsLoading(true)
     createProjectMutation.mutate(projectName, {
       onSuccess: () => {
-        queryClient.invalidateQueries(ApiQueryId.getProjects)
+        queryClient.invalidateQueries(ApiQueryId.getProjectsByOrganizationId)
 
         toast({
           title: `Created project '${projectName}'`,

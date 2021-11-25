@@ -1,12 +1,11 @@
 import { Tag } from '@chakra-ui/react'
-import { useQuery } from 'react-query'
-import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi from 'api/ProjectsApi'
+import { useContext } from 'react'
+import ProjectsContext from 'context/ProjectsContext'
 
 function ProjectsCount() {
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const { data: projects } = useContext(ProjectsContext)
 
-  if(projects?.length === 1) {
+  if (projects?.length === 1) {
     return null
   }
 

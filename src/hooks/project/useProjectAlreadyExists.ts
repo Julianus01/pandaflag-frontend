@@ -1,11 +1,11 @@
-import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { IProject } from 'api/ProjectsApi'
-import { useQuery } from 'react-query'
+import { IProject } from 'api/ProjectsApi'
+import ProjectsContext from 'context/ProjectsContext'
+import { useContext } from 'react'
 
 type IUseProjectAlreadyExists = (name: string) => boolean
 
 function useProjectAlreadyExists(): IUseProjectAlreadyExists {
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const { data: projects } = useContext(ProjectsContext)
 
   return function (name: string) {
     const found = projects?.find((project: IProject) => project.name.toLowerCase() === name.toLowerCase())

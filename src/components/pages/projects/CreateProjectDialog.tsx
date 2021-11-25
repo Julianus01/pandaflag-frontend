@@ -34,7 +34,7 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
 
   const createProjectMutation = useMutation(ProjectsApi.createProject, {
     onSuccess: (newProject: IProject) => {
-      queryClient.invalidateQueries(ApiQueryId.getProjects)
+      queryClient.invalidateQueries(ApiQueryId.getProjectsByOrganizationId)
       dispatch(configurationActions.setProject(newProject))
       setProjectName('')
       onClose()

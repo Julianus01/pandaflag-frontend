@@ -67,20 +67,25 @@ function useInitConfigurationProject(projects: IProject[] | undefined) {
 function NavigationRoute(props: RouteProps) {
   const dispatch = useDispatch()
   const configuration = useSelector((state: IStoreState) => state.configuration)
+  const organizationId = configuration.organization?.id
 
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects, {
-    onSuccess: (projects: IProject[]) => {
-      if (!configuration.project || !projects.length) {
-        return
-      }
+  const { data: projects } = useQuery(
+    [ApiQueryId.getProjectsByOrganizationId, organizationId],
+    () => ProjectsApi.getProjectsByOrganizationId(organizationId as string),
+    {
+      onSuccess: (projects: IProject[]) => {
+        if (!configuration.project || !projects.length) {
+          return
+        }
 
-      const foundProject = projects.find((project: IProject) => project.id === configuration.project?.id)
-      if (!foundProject) {
-        // Selected project was deleted. change selected project
-        dispatch(configurationActions.setProject(projects[0]))
-      }
-    },
-  })
+        const foundProject = projects.find((project: IProject) => project.id === configuration.project?.id)
+        if (!foundProject) {
+          // Selected project was deleted. change selected project
+          dispatch(configurationActions.setProject(projects[0]))
+        }
+      },
+    }
+  )
 
   useInitConfigurationProject(projects)
   useUpdateConfigurationEnvironment()

@@ -1,9 +1,9 @@
 import { Box, Button, Heading, Icon, useDisclosure } from '@chakra-ui/react'
-import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { IProject } from 'api/ProjectsApi'
+import { IProject } from 'api/ProjectsApi'
 import BoxedPage from 'components/styles/BoxedPage'
+import ProjectsContext from 'context/ProjectsContext'
+import { useContext } from 'react'
 import { FiLayers } from 'react-icons/fi'
-import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import CreateProjectDialog from './projects/CreateProjectDialog'
@@ -11,7 +11,7 @@ import ProjectsTable from './projects/ProjectsTable'
 
 function ProjectsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const { data: projects } = useContext(ProjectsContext)
 
   return (
     <BoxedPage>

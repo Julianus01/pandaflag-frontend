@@ -11,16 +11,15 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
-import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { IProject } from 'api/ProjectsApi'
-import { useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { HiSelector } from 'react-icons/hi'
-import { useQuery } from 'react-query'
 import { useClickAway } from 'react-use'
 import { IStoreState } from 'redux/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import { applyColorMode } from 'theme/StyledThemeProvider'
+import ProjectsContext from 'context/ProjectsContext'
+import { IProject } from 'api/ProjectsApi'
 
 function getProjectNameSize(projectNameLength: number | undefined): string {
   if (!projectNameLength || projectNameLength < 20) {
@@ -36,7 +35,7 @@ function SidebarProjectSelector() {
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
 
   const configuration = useSelector((state: IStoreState) => state.configuration)
-  const { data: projects } = useQuery(ApiQueryId.getProjects, ProjectsApi.getProjects)
+  const { data: projects } = useContext(ProjectsContext)
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const ref = useRef(null)

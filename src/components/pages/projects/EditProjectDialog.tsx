@@ -36,7 +36,7 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
 
   const updateProjectMutation = useMutation(ProjectsApi.updateProject, {
     onSuccess: () => {
-      queryClient.invalidateQueries(ApiQueryId.getProjects)
+      queryClient.invalidateQueries(ApiQueryId.getProjectsByOrganizationId)
       setProjectName('')
       onClose()
 

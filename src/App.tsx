@@ -31,6 +31,7 @@ function useInitUserAndOrganization(): boolean {
         dispatch(authActions.authStateChanged(user))
         UsersApi.addUserIfDoesntExist(user)
       } else {
+        dispatch(configurationActions.setOrganization(undefined))
         dispatch(authActions.authStateChanged(user))
         setInitialized(true)
       }
