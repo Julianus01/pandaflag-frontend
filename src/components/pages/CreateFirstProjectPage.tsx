@@ -65,7 +65,7 @@ function CreateFirstProjectPage() {
             onChange={onProjectNameChange}
             mb={4}
             variant="filled"
-            placeholder="Electric Car"
+            placeholder="Instagram, Uber, Twitter..."
           />
 
           <Button
