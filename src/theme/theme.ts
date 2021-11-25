@@ -15,7 +15,7 @@ const components = {
     defaultProps: {
       size: 'sm',
     },
-  },
+  }
 }
 
 const theme = extendTheme({ config, fonts, components })
