@@ -1,7 +1,7 @@
 import { Box, Icon, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
-import { FiLayers, FiFlag, FiDatabase } from 'react-icons/fi'
+import { FiLayers, FiFlag, FiGlobe } from 'react-icons/fi'
 import RoutePage from 'components/routes/RoutePage'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
@@ -27,7 +27,7 @@ const CONFIGURATION_MENU_ITEMS: ISidebarMenuItem[] = [
   {
     name: 'Organization',
     href: RoutePage.organization(),
-    icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiDatabase} />,
+    icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiGlobe} />,
   },
 ]
 

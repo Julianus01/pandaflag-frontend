@@ -21,7 +21,12 @@ function OrganizationPage() {
   const updateOrganizationMutation = useMutation(OrganizationsApi.updateOrganization)
 
   function onNameChange(event: ChangeEvent<HTMLInputElement>) {
-    setName(event.target.value)
+    const value = event.target.value
+    if (value.length > 40) {
+      return
+    }
+
+    setName(value)
 
     if (!isDirty) {
       setIsDirty(true)
@@ -63,7 +68,10 @@ function OrganizationPage() {
         <Button
           isLoading={updateOrganizationMutation.isLoading}
           disabled={
-            !isDirty || _.isEqual(name.trim(), organization?.name) || name.length < 3 || updateOrganizationMutation.isLoading
+            !isDirty ||
+            _.isEqual(name.trim(), organization?.name) ||
+            name.length < 3 ||
+            updateOrganizationMutation.isLoading
           }
           onClick={onUpdate}
           ml="auto"

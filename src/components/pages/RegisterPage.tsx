@@ -1,7 +1,7 @@
 import Section from 'components/styles/Section'
 import styled from 'styled-components/macro'
 import { Heading, Text, Input, InputLeftElement, Icon, InputGroup, Button, Box } from '@chakra-ui/react'
-import { FiMail, FiKey, FiDatabase } from 'react-icons/fi'
+import { FiMail, FiKey, FiGlobe } from 'react-icons/fi'
 import ThemeButton from 'theme/ThemeButton'
 import PandaflagLogo from 'components/shared/PandaflagLogo'
 import { NavLink } from 'react-router-dom'
@@ -14,8 +14,8 @@ import OrganizationsApi from 'api/OrganizationsApi'
 
 const ValidationSchema = yup.object().shape({
   Password: yup.string().min(6).required(),
-  Organization: yup.string().trim().required(),
   Email: yup.string().email().required(),
+  Organization: yup.string().trim().required(),
 })
 
 const DefaultCredentials: ICredentials = {
@@ -87,6 +87,17 @@ function RegisterPage() {
             </Text>
 
             <InputGroup mb={4}>
+              <InputLeftElement pointerEvents="none" children={<Icon as={FiGlobe} />} />
+
+              <Input
+                onKeyDown={onKeyDown}
+                onChange={onInputChange('organizationName')}
+                variant="filled"
+                placeholder="Organization"
+              />
+            </InputGroup>
+
+            <InputGroup mb={4}>
               <InputLeftElement pointerEvents="none" children={<Icon as={FiMail} />} />
 
               <Input
@@ -95,17 +106,6 @@ function RegisterPage() {
                 onChange={onInputChange('email')}
                 variant="filled"
                 placeholder="Email"
-              />
-            </InputGroup>
-
-            <InputGroup mb={4}>
-              <InputLeftElement pointerEvents="none" children={<Icon as={FiDatabase} />} />
-
-              <Input
-                onKeyDown={onKeyDown}
-                onChange={onInputChange('organizationName')}
-                variant="filled"
-                placeholder="Organization"
               />
             </InputGroup>
 
