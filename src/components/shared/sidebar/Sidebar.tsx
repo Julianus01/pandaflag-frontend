@@ -5,7 +5,6 @@ import { FiLayers, FiFlag, FiGlobe, FiHash } from 'react-icons/fi'
 import RoutePage from 'components/routes/RoutePage'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
-import ThemeButton from 'theme/ThemeButton'
 import SidebarProjectsCount from './SidebarProjectsCounts'
 import PandaflagLogo from '../PandaflagLogo'
 
@@ -71,10 +70,6 @@ function Sidebar() {
           </SidebarMenuItem>
         ))}
       </Content>
-
-      <Box display="flex" justifyContent="flex-start" ml="23px">
-        <ThemeButton />
-      </Box>
 
       <SidebarFooter />
     </Container>

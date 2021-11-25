@@ -57,19 +57,13 @@ function FlagRemoveButton({ flag }: IProps) {
         />
       </PopoverTrigger>
 
-      <PopoverContent _focus={{ boxShadow: 'none', outline: 'none' }}>
-        <PopoverBody textAlign="right" shadow="lg" p="4">
-          <Text fontSize="sm" textAlign="left" mb="4">
+      <PopoverContent w="auto" _focus={{ boxShadow: 'none', outline: 'none' }}>
+        <PopoverBody display="flex" alignItems="center" shadow="lg" p="4">
+          <Text fontSize="sm" textAlign="left" mr="2">
             Are you sure you want to delete this flag?
           </Text>
 
-          <Button
-            isDisabled={flagsFetching}
-            textAlign="right"
-            onClick={deleteFlag}
-            colorScheme="red"
-            variant="ghost"
-          >
+          <Button isDisabled={flagsFetching} onClick={deleteFlag} colorScheme="red" variant="ghost">
             Delete
           </Button>
         </PopoverBody>

@@ -33,13 +33,11 @@ function ForgotPasswordPage() {
 
   async function sendPasswordReset() {
     try {
-      console.log('here')
       temporaryMessage.hideMessage()
       const { Email: validEmail } = await ValidationSchema.validate({
         Email: email,
       })
 
-      console.log(validEmail)
       setIsLoading(true)
       await AuthApi.sendPasswordReset(validEmail)
       setIsLoading(false)
