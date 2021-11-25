@@ -85,16 +85,6 @@ function ProfilePage() {
         </Box>
       </Section>
 
-      <Section mb={8}>
-        <FormControl id="subscription">
-          <FormLabel mb={1} fontSize="sm" color="gray.500">
-            Subscription
-          </FormLabel>
-
-          <Text fontWeight="semibold">Free Plan</Text>
-        </FormControl>
-      </Section>
-
       <Box display="flex" justifyContent="center">
         <Button leftIcon={<Icon as={FiLogOut} />} onClick={AuthApi.logout}>
           Logout
