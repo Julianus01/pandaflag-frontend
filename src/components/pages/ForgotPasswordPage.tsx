@@ -88,7 +88,7 @@ function ForgotPasswordPage() {
             )}
 
             <Button
-              loadingText="Reset password"
+              loadingText="Send reset password email"
               onClick={sendPasswordReset}
               disabled={isLoading || hasBeenSent}
               ml="auto"
