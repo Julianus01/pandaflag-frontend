@@ -4,6 +4,10 @@ import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import AuthApi from 'api/AuthApi'
 import * as yup from 'yup'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
+import useQueryParam from 'hooks/routing/useQueryParam'
+import { QueryParam } from 'hooks/routing/useQueryParams'
+import { NavLink } from 'react-router-dom'
+import RoutePage from 'components/routes/RoutePage'
 
 const ValidationSchema = yup.object().shape({
   Email: yup.string().email().required(),
@@ -13,7 +17,7 @@ function ForgotPasswordPage() {
   const toast = useToast()
 
   const temporaryMessage = useTemporaryMessage()
-  const [email, setEmail] = useState<string>('')
+  const [email, setEmail] = useState<string>(useQueryParam(QueryParam.email) as string)
   const [hasBeenSent, setHasBeenSent] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -91,12 +95,18 @@ function ForgotPasswordPage() {
               colorScheme="blue"
               isLoading={isLoading}
             >
-              {!hasBeenSent && 'Reset password'}
+              {!hasBeenSent && 'Send reset password email'}
               {hasBeenSent && 'Reset password email sent'}
             </Button>
           </Box>
         </CreateBox>
       </Content>
+
+      <Box mb={6} mx="auto">
+        <NavLink to={RoutePage.login()}>
+          <Button variant="ghost">Go to login</Button>
+        </NavLink>
+      </Box>
     </Container>
   )
 }

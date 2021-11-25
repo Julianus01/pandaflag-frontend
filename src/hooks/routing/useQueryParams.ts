@@ -8,6 +8,7 @@ export enum TryApiParam {
 
 export enum QueryParam {
   tryApi = 'tryApi',
+  email = 'email',
 }
 
 function useQueryParams() {
