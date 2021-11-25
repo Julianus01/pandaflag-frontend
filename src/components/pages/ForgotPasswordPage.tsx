@@ -14,6 +14,7 @@ function ForgotPasswordPage() {
 
   const temporaryMessage = useTemporaryMessage()
   const [email, setEmail] = useState<string>('')
+  const [hasBeenSent, setHasBeenSent] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   function onEmailChange(event: ChangeEvent<HTMLInputElement>) {
@@ -36,7 +37,16 @@ function ForgotPasswordPage() {
 
       console.log(validEmail)
       setIsLoading(true)
-      console.log('Do shit')
+      await AuthApi.sendPasswordReset(validEmail)
+      setIsLoading(false)
+      setHasBeenSent(true)
+
+      toast({
+        title: `Reset password email sent`,
+        position: 'top-right',
+        isClosable: true,
+        variant: 'subtle',
+      })
     } catch (err) {
       const error = err as ErrorEvent
       temporaryMessage.showMessage(error.message)
@@ -76,12 +86,13 @@ function ForgotPasswordPage() {
             <Button
               loadingText="Reset password"
               onClick={sendPasswordReset}
-              disabled={isLoading}
+              disabled={isLoading || hasBeenSent}
               ml="auto"
               colorScheme="blue"
               isLoading={isLoading}
             >
-              Reset password
+              {!hasBeenSent && 'Reset password'}
+              {hasBeenSent && 'Reset password email sent'}
             </Button>
           </Box>
         </CreateBox>

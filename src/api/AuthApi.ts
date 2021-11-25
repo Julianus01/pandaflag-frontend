@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signOut,
+  sendPasswordResetEmail,
 } from '@firebase/auth'
 import { IUser } from 'redux/ducks/authDuck'
 
@@ -70,6 +71,16 @@ async function sendVerificationEmail() {
   }
 }
 
+async function sendPasswordReset(email: string) {
+  try {
+    const auth = getAuth()
+    await sendPasswordResetEmail(auth, email)
+  } catch (err) {
+    const error: AuthError = err as AuthError
+    throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))
+  }
+}
+
 async function logout() {
   try {
     const auth = getAuth()
@@ -84,7 +95,8 @@ const AuthApi = {
   loginInWithEmailAndPassword,
   createAccountWithEmailAndPassword,
   sendVerificationEmail,
-  logout
+  sendPasswordReset,
+  logout,
 }
 
 export default AuthApi

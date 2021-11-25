@@ -1,9 +1,11 @@
-import { Button, Heading, Box, Text } from '@chakra-ui/react'
+import { Button, Heading, Box, Text, useToast } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { useState } from 'react'
 import AuthApi from 'api/AuthApi'
 
 function EmailVerificationPage() {
+  const toast = useToast()
+
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [hasBeenSent, setHasBeenSent] = useState<boolean>(false)
 
@@ -13,6 +15,13 @@ function EmailVerificationPage() {
       await AuthApi.sendVerificationEmail()
       setIsLoading(false)
       setHasBeenSent(true)
+
+      toast({
+        title: `Verification email sent`,
+        position: 'top-right',
+        isClosable: true,
+        variant: 'subtle',
+      })
     } catch (err) {
       setIsLoading(false)
     }
@@ -40,7 +49,7 @@ function EmailVerificationPage() {
             <Button
               isLoading={isLoading}
               loadingText="Sending"
-              disabled={hasBeenSent}
+              disabled={hasBeenSent || isLoading}
               onClick={onSendVerificationEmail}
               ml="auto"
               colorScheme="blue"
