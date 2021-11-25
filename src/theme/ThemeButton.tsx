@@ -3,11 +3,11 @@ import { FiSun, FiMoon } from 'react-icons/fi'
 import styled from 'styled-components/macro'
 import { CSSTransition } from 'react-transition-group'
 import { useColorMode } from '@chakra-ui/color-mode'
-import { Icon } from '@chakra-ui/react'
+import { Icon, Box } from '@chakra-ui/react'
 
 const ANIMATION_DURATION = 200
 
-const ThemeButton = () => {
+const ThemeButton = (props: any) => {
   const { colorMode, toggleColorMode } = useColorMode()
 
   const [inProp, setInProp] = useState(false)
@@ -29,7 +29,7 @@ const ThemeButton = () => {
   }
 
   return (
-    <Container onClick={onClick}>
+    <Container onClick={onClick} {...props}>
       <Transition in={inProp} timeout={ANIMATION_DURATION} classNames="icon">
         {localTheme === 'light' ? <Icon w={5} h={5} as={FiMoon} /> : <Icon w={5} h={5} as={FiSun} />}
       </Transition>
@@ -39,7 +39,7 @@ const ThemeButton = () => {
 
 export default ThemeButton
 
-const Container = styled.div`
+const Container = styled(Box)`
   padding: 0.5rem;
   display: flex;
   align-items: center;

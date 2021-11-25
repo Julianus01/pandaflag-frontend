@@ -1,4 +1,17 @@
-import { Avatar, Heading, Box, Tag, TagLabel, FormControl, FormLabel, Text, Button, Icon } from '@chakra-ui/react'
+import {
+  Avatar,
+  Heading,
+  Box,
+  Tag,
+  TagLabel,
+  FormControl,
+  IconButton,
+  FormLabel,
+  Text,
+  Button,
+  Icon,
+  useColorMode,
+} from '@chakra-ui/react'
 import AuthApi from 'api/AuthApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
@@ -8,6 +21,7 @@ import { IUser } from 'redux/ducks/authDuck'
 import { IStoreState } from 'redux/store'
 import styled from 'styled-components'
 import { applyColorMode } from 'theme/StyledThemeProvider'
+import ThemeButton from 'theme/ThemeButton'
 import ProfileChangePasswordButton from './profile/ProfileChangePasswordButton'
 
 function userDisplayName(user: IUser) {
@@ -20,6 +34,7 @@ function userDisplayName(user: IUser) {
 }
 
 function ProfilePage() {
+  const { colorMode } = useColorMode()
   const user = useSelector((state: IStoreState) => state.auth.user)
 
   return (
@@ -82,6 +97,20 @@ function ProfilePage() {
           </Box>
 
           <ProfileChangePasswordButton />
+        </Box>
+      </Section>
+
+      <Section mb={4}>
+        <Heading as="h5" size="sm">
+          Theme
+        </Heading>
+
+        <Box display="flex" alignItems="center">
+          <Text color="gray.500">{colorMode === 'light' ? 'Light' : 'Dark'}</Text>
+
+          <Box ml="auto">
+            <IconButton aria-label="theme-button" icon={<ThemeButton />} />
+          </Box>
         </Box>
       </Section>
 
