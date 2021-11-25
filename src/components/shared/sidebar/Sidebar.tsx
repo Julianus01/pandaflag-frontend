@@ -1,7 +1,7 @@
 import { Box, Icon, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
-import { FiLayers, FiFlag, FiGlobe } from 'react-icons/fi'
+import { FiLayers, FiFlag, FiGlobe, FiHash } from 'react-icons/fi'
 import RoutePage from 'components/routes/RoutePage'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
@@ -14,6 +14,12 @@ const MENU_ITEMS: ISidebarMenuItem[] = [
     name: 'Flags',
     href: RoutePage.flags(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiFlag} />,
+  },
+  {
+    name: 'Environments',
+    href: RoutePage.environments(),
+    icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiHash} />,
+    endComponent: () => <SidebarProjectsCount />,
   },
 ]
 
@@ -36,15 +42,11 @@ function Sidebar() {
     <Container>
       <PandaflagLogo textAlign="left" mb={16} ml={4} />
 
-      <Box mb={6}>
+      <Box mb={2}>
         <SidebarProjectSelector />
       </Box>
 
       <Content>
-        <Text ml={4} mb={2} fontSize="xs" fontWeight="semibold">
-          General
-        </Text>
-
         {MENU_ITEMS.map((menuItem: ISidebarMenuItem) => (
           <SidebarMenuItem
             menuItem={menuItem}

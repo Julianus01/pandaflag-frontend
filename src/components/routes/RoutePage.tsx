@@ -30,6 +30,10 @@ function projects() {
   return `/projects`
 }
 
+function environments() {
+  return `/environments`
+}
+
 function organization() {
   return `/organization`
 }
@@ -54,6 +58,7 @@ const RoutePage = {
   flags,
   flag,
   projects,
+  environments,
   organization,
   createFirstProject,
   profile,

@@ -1,11 +1,10 @@
 import { Box, Button, Heading, Icon, useDisclosure } from '@chakra-ui/react'
 import { IProject } from 'api/ProjectsApi'
+import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import ProjectsContext from 'context/ProjectsContext'
 import { useContext } from 'react'
 import { FiLayers } from 'react-icons/fi'
-import styled from 'styled-components/macro'
-import { applyColorMode } from 'theme/StyledThemeProvider'
 import CreateProjectDialog from './projects/CreateProjectDialog'
 import ProjectsTable from './projects/ProjectsTable'
 
@@ -35,9 +34,3 @@ function ProjectsPage() {
 }
 
 export default ProjectsPage
-
-const TableContainer = styled.div`
-  overflow: hidden;
-  border-radius: ${({ theme }) => theme.radii.lg};
-  border: ${({ theme }) => `1px solid ${applyColorMode(theme.colors.gray[200], theme.colors.whiteAlpha[200])(theme)}`};
-`
