@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { ApiQueryId } from 'api/ApiQueryId'
 import usePropState from 'hooks/common/usePropState'
+import OrganizationPricingPlan from './organization/OrganizationPricingPlan'
 
 function OrganizationPage() {
   const queryClient = useQueryClient()
@@ -82,7 +83,7 @@ function OrganizationPage() {
         </Button>
       </Box>
 
-      <Section>
+      <Section mb={10}>
         <Heading mb={2} as="h5" size="sm">
           Information
         </Heading>
@@ -95,6 +96,18 @@ function OrganizationPage() {
           <Input onKeyDown={onKeyDown} onChange={onNameChange} value={name} variant="filled" placeholder="Name" />
         </FormControl>
       </Section>
+
+      <Heading mb={4} as="h5" size="sm">
+        Pricing Plan
+      </Heading>
+
+      <Box display="grid" gridGap="6" gridTemplateColumns="1fr 1fr">
+        <Section px="12" py="10">
+          <OrganizationPricingPlan />
+        </Section>
+
+        <Section opacity="0.5"></Section>
+      </Box>
     </BoxedPage>
   )
 }
