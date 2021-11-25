@@ -32,6 +32,7 @@ import { useQuery } from 'react-query'
 import { FiFlag } from 'react-icons/fi'
 import TryApi from './flags/TryApi'
 import AccessibleBackground from 'components/styles/AccessibleBackground'
+import TableContainer from 'components/shared/TableContainer'
 
 function SkeletonTable() {
   return (
@@ -143,12 +144,6 @@ function FlagsPage() {
 }
 
 export default FlagsPage
-
-const TableContainer = styled.div`
-  overflow: hidden;
-  border-radius: ${({ theme }) => theme.radii.lg};
-  border: ${({ theme }) => `1px solid ${applyColorMode(theme.colors.gray[200], theme.colors.whiteAlpha[200])(theme)}`};
-`
 
 const TableHead = styled(Thead)`
   background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
