@@ -9,7 +9,8 @@ import { useMutation, useQueryClient } from 'react-query'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { ApiQueryId } from 'api/ApiQueryId'
 import usePropState from 'hooks/common/usePropState'
-import OrganizationPricingPlan from './organization/OrganizationPricingPlan'
+import OrganizationPricingPlan, { PricingPlan } from './organization/OrganizationPricingPlan'
+import styled from 'styled-components/macro'
 
 function OrganizationPage() {
   const queryClient = useQueryClient()
@@ -103,13 +104,31 @@ function OrganizationPage() {
 
       <Box display="grid" gridGap="6" gridTemplateColumns="1fr 1fr">
         <Section px="12" py="10">
-          <OrganizationPricingPlan />
+          <OrganizationPricingPlan pricingPlan={PricingPlan.free} />
         </Section>
 
-        <Section opacity="0.5"></Section>
+        <Section px="12" py="10" position="relative">
+          <Box filter="blur(4px)">
+            <OrganizationPricingPlan pricingPlan={PricingPlan.paid} />
+          </Box>
+
+          <ComingSoonContainer>Coming soon</ComingSoonContainer>
+        </Section>
       </Box>
     </BoxedPage>
   )
 }
 
 export default OrganizationPage
+
+const ComingSoonContainer = styled(Box)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+`

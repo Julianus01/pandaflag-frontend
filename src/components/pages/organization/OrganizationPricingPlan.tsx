@@ -1,23 +1,40 @@
 import { Box, Heading, Text, Tag, TagLabel, Button } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 
-function OrganizationPricingPlan() {
+export enum PricingPlan {
+  free = 'free',
+  paid = 'paid',
+}
+
+interface IProps {
+  pricingPlan: PricingPlan
+}
+
+function OrganizationPricingPlan({ pricingPlan }: IProps) {
+  const isFreePricingPlan: boolean = pricingPlan === PricingPlan.free
+
   return (
     <Container>
       <Header mb={6}>
         <Box flex="1">
           <Heading mb="1" as="h4" size="md">
-            Free
+            {isFreePricingPlan ? 'Free' : 'Business'}
           </Heading>
 
-          <Tag size="sm" borderRadius="md" variant="subtle" colorScheme="green">
+          <Tag
+            visibility={isFreePricingPlan ? 'visible' : 'hidden'}
+            size="sm"
+            borderRadius="md"
+            variant="subtle"
+            colorScheme="green"
+          >
             <TagLabel>active</TagLabel>
           </Tag>
         </Box>
 
         <Box>
           <Heading textAlign="right" as="h4" size="md">
-            0€/
+            {isFreePricingPlan ? '0€/' : 'X€/'}
           </Heading>
 
           <Text fontSize="xs" color="gray.500" textAlign="right">
@@ -34,7 +51,7 @@ function OrganizationPricingPlan() {
 
       <Box mb="2" display="flex">
         <Heading mr="2" as="h4" size="md">
-          1
+          {isFreePricingPlan ? '1' : 'X'}
         </Heading>
 
         <Text fontSize="sm" mt="1" color="gray.500">
@@ -44,7 +61,7 @@ function OrganizationPricingPlan() {
 
       <Box mb="2" display="flex">
         <Heading mr="2" as="h4" size="md">
-          1
+          {isFreePricingPlan ? '1' : 'X'}
         </Heading>
 
         <Text fontSize="sm" mt="1" color="gray.500">
@@ -54,7 +71,7 @@ function OrganizationPricingPlan() {
 
       <Box mb={6} display="flex">
         <Heading mr="2" as="h4" size="md">
-          2
+          {isFreePricingPlan ? '2' : 'X'}
         </Heading>
 
         <Text fontSize="sm" mt="1" color="gray.500">
@@ -62,9 +79,17 @@ function OrganizationPricingPlan() {
         </Text>
       </Box>
 
-      <Button variant="outline" disabled colorScheme="green" size="md" w="100%">
-        Selected
-      </Button>
+      {isFreePricingPlan && (
+        <Button variant="outline" disabled colorScheme="green" size="md" w="100%">
+          Selected
+        </Button>
+      )}
+
+      {!isFreePricingPlan && (
+        <Button disabled colorScheme="green" size="md" w="100%">
+          Upgrade
+        </Button>
+      )}
     </Container>
   )
 }
