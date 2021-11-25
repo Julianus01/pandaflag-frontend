@@ -6,6 +6,9 @@ import { FiLogOut } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
 import { IUser } from 'redux/ducks/authDuck'
 import { IStoreState } from 'redux/store'
+import styled from 'styled-components'
+import { applyColorMode } from 'theme/StyledThemeProvider'
+import ProfileChangePasswordButton from './profile/ProfileChangePasswordButton'
 
 function userDisplayName(user: IUser) {
   if (user.displayName) {
@@ -48,13 +51,38 @@ function ProfilePage() {
       </Box>
 
       <Section mb={4}>
-        <FormControl id="email">
+        <FormControl mb={4} id="email">
           <FormLabel mb={1} fontSize="sm" color="gray.500">
             Email
           </FormLabel>
 
           <Text fontWeight="semibold">{user?.email}</Text>
         </FormControl>
+
+        <Box display="flex" alignItems="center">
+          <Box flex={1}>
+            <FormControl id="password">
+              <FormLabel fontSize="sm" color="gray.500">
+                Password
+              </FormLabel>
+
+              <PasswordContainer>
+                <Dot />
+                <Dot />
+                <Dot />
+                <Dot />
+                <Dot />
+                <Dot />
+                <Dot />
+                <Dot />
+                <Dot />
+                <Dot />
+              </PasswordContainer>
+            </FormControl>
+          </Box>
+
+          <ProfileChangePasswordButton />
+        </Box>
       </Section>
 
       <Section mb={8}>
@@ -77,3 +105,18 @@ function ProfilePage() {
 }
 
 export default ProfilePage
+
+const Dot = styled(Box)`
+  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  background: ${({ theme }) => applyColorMode(theme.colors.gray[800], theme.colors.white)(theme)};
+`
+
+const PasswordContainer = styled.div`
+  display: flex;
+
+  ${Dot}:not(:last-child) {
+    margin-right: ${({ theme }) => theme.space[1.5]};
+  }
+`
