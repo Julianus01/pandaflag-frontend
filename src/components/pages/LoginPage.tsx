@@ -11,6 +11,14 @@ import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import RoutePage from 'components/routes/RoutePage'
 import AuthApi from 'api/AuthApi'
 
+function generateForgotPasswordLink(email: string) {
+  if (!email) {
+    return RoutePage.forgotPassword()
+  }
+
+  return `${RoutePage.forgotPassword()}?email=${email}`
+}
+
 const ValidationSchema = yup.object().shape({
   Password: yup.string().min(6).required(),
   Email: yup.string().email().required(),
@@ -83,13 +91,20 @@ function LoginPage() {
             <InputGroup mb={4}>
               <InputLeftElement pointerEvents="none" children={<Icon as={FiMail} />} />
 
-              <Input onKeyDown={onKeyDown} onChange={onInputChange('email')} variant="filled" placeholder="Email" />
+              <Input
+                disabled={isLoading}
+                onKeyDown={onKeyDown}
+                onChange={onInputChange('email')}
+                variant="filled"
+                placeholder="Email"
+              />
             </InputGroup>
 
             <InputGroup mb={4}>
               <InputLeftElement pointerEvents="none" children={<Icon as={FiKey} />} />
 
               <Input
+                disabled={isLoading}
                 onKeyDown={onKeyDown}
                 onChange={onInputChange('password')}
                 variant="filled"
@@ -98,10 +113,12 @@ function LoginPage() {
               />
             </InputGroup>
 
+            <ForgotPasswordLink to={generateForgotPasswordLink(form.email)}>Forgot Password?</ForgotPasswordLink>
+
             {!!temporaryMessage.message && <Text color="red.500">{temporaryMessage.message}</Text>}
 
             <Button
-              loadingText="Logging in"
+              loadingText="Log in"
               isLoading={isLoading}
               disabled={isLoading}
               mt={6}
@@ -150,6 +167,15 @@ const LoginContainer = styled.div`
 const RegisterLink = styled(NavLink)`
   color: ${({ theme }) => theme.colors.blue[500]};
   font-weight: 500;
+
+  :hover {
+    text-decoration: underline;
+  }
+`
+
+const ForgotPasswordLink = styled(NavLink)`
+  color: ${({ theme }) => theme.colors.blue[500]};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
 
   :hover {
     text-decoration: underline;

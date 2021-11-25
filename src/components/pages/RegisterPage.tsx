@@ -90,6 +90,7 @@ function RegisterPage() {
               <InputLeftElement pointerEvents="none" children={<Icon as={FiGlobe} />} />
 
               <Input
+                disabled={isLoading}
                 onKeyDown={onKeyDown}
                 onChange={onInputChange('organizationName')}
                 variant="filled"
@@ -101,6 +102,7 @@ function RegisterPage() {
               <InputLeftElement pointerEvents="none" children={<Icon as={FiMail} />} />
 
               <Input
+                disabled={isLoading}
                 type="email"
                 onKeyDown={onKeyDown}
                 onChange={onInputChange('email')}
@@ -113,6 +115,7 @@ function RegisterPage() {
               <InputLeftElement pointerEvents="none" children={<Icon as={FiKey} />} />
 
               <Input
+                disabled={isLoading}
                 onKeyDown={onKeyDown}
                 onChange={onInputChange('password')}
                 variant="filled"

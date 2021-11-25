@@ -159,6 +159,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
           <FormControl mb={10} isInvalid={Boolean(error)}>
             <Input
+              disabled={isLoading}
               onBlur={formatNameSnakeCase}
               ref={inputRef as any}
               onKeyDown={onKeyDown}

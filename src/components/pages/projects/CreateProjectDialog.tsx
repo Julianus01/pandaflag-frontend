@@ -97,6 +97,7 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
         <AlertDialogBody>
           <FormControl mb={4} isInvalid={Boolean(error)}>
             <Input
+              disabled={createProjectMutation.isLoading}
               ref={inputRef as any}
               isInvalid={Boolean(error)}
               onKeyDown={onKeyDown}

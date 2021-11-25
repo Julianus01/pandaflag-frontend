@@ -14,6 +14,10 @@ function emailVerification() {
   return `/email-verification`
 }
 
+function forgotPassword() {
+  return `/forgot-password`
+}
+
 function flags() {
   return `/flags`
 }
@@ -39,10 +43,14 @@ function profile() {
 }
 
 const RoutePage = {
+  // Public
   root,
   login,
   register,
   emailVerification,
+  forgotPassword,
+
+  // Authenticated
   flags,
   flag,
   projects,
