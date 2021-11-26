@@ -1,9 +1,10 @@
 import { Heading, HeadingProps } from '@chakra-ui/react'
 
 function getTitle() {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.REACT_APP_STAGE === 'development') {
     return 'pandaflag DEV'
   }
+  
   return 'pandaflag'
 }
 
