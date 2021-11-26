@@ -75,7 +75,7 @@ function OrganizationPricingPlan({ pricingPlan }: IProps) {
         </Heading>
 
         <Text fontSize="sm" mt="1" color="gray.500">
-          Default Environments
+          Environments
         </Text>
       </Box>
 
