@@ -67,7 +67,7 @@ function TryApi({ flags, isOpen }: IProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { hasCopied, onCopy } = useClipboard(
-    `fetch('https://pandaflag-api-dev.ey.r.appspot.com/api/v1/${configuration.project?.apiKey}/${
+    `fetch('${process.env.REACT_APP_PANDAFLAG_API_URL}/${configuration.project?.apiKey}/${
       configuration.environment?.name
     }/${selected !== ALL_FLAGS_SELECTION ? selected : ''}')
     .then(response => response.json())
@@ -161,7 +161,7 @@ function TryApi({ flags, isOpen }: IProps) {
 
           <CodeContainer mt={1} mb={4}>
             <Code display="flex" flexWrap="wrap">
-              https://pandaflag-api-dev.ey.r.appspot.com/api/v1/
+              {process.env.REACT_APP_PANDAFLAG_API_URL}/
               <Box color="orange.500" as="span">
                 API_KEY
               </Box>
@@ -224,7 +224,7 @@ function TryApi({ flags, isOpen }: IProps) {
 
           <CodeContainer mb={4}>
             <Code display="flex" flexWrap="wrap">
-              fetch('https://pandaflag-api-dev.ey.r.appspot.com/api/v1/
+              fetch('{process.env.REACT_APP_PANDAFLAG_API_URL}/
               {
                 <Box color="orange.500" as="span">
                   {configuration.project?.apiKey}
