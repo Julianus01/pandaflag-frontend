@@ -47,11 +47,11 @@ function RegisterPage() {
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
-      onLogin()
+      onRegister()
     }
   }
 
-  async function onLogin() {
+  async function onRegister() {
     try {
       temporaryMessage.hideMessage()
       const validatedForm = await ValidationSchema.validate({
@@ -131,7 +131,7 @@ function RegisterPage() {
               loadingText="Creating Account"
               disabled={isLoading}
               mt={6}
-              onClick={onLogin}
+              onClick={onRegister}
               colorScheme="blue"
               width="100%"
               size="md"
