@@ -4,7 +4,6 @@ function getTitle() {
   if (process.env.NODE_ENV === 'development') {
     return 'pandaflag DEV'
   }
-
   return 'pandaflag'
 }
 
