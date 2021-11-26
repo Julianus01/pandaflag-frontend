@@ -12,6 +12,7 @@ function GlobalStyles() {
         body {
           background: ${bgColor};
           overflow-y: overlay;
+          overflow-x: hidden;
         }
 
         * {

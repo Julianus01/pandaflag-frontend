@@ -1,7 +1,8 @@
-import { Heading, Alert, AlertIcon } from '@chakra-ui/react'
+import { Heading, Alert, AlertIcon, Button, Icon, Box } from '@chakra-ui/react'
 import { IEnvironment } from 'api/ProjectsApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
+import { FiHash } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 import { PricingUtils } from 'utils/PricingUtils'
@@ -16,9 +17,15 @@ function EnvironmentsPage() {
 
   return (
     <BoxedPage>
-      <Heading mb={10} flex={1} as="h3" size="lg">
-        Environments
-      </Heading>
+      <Box display="flex">
+        <Heading mb={10} flex={1} as="h3" size="lg">
+          Environments
+        </Heading>
+
+        <Button disabled leftIcon={<Icon as={FiHash} />} onClick={() => null} colorScheme="blue">
+          Add Environment
+        </Button>
+      </Box>
 
       {isEnvironmentsQuotaReached && (
         <Alert fontSize="sm" borderRadius="md" mb="6" status="info">
