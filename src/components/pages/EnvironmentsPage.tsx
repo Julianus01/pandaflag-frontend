@@ -13,7 +13,7 @@ const Quota = PricingUtils.getQuota()
 function EnvironmentsPage() {
   const environments = useSelector((state: IStoreState) => state.configuration.project?.environments)
 
-  const isEnvironmentsQuotaReached = environments?.length === Quota.environments
+  const isEnvironmentsQuotaReached = (environments?.length as number) >= Quota.environments
 
   return (
     <BoxedPage>
