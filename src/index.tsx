@@ -11,6 +11,9 @@ import store from './redux/store'
 import theme from 'theme/theme'
 import StyledThemeProvider from 'theme/StyledThemeProvider'
 import { ProjectsContextProvider } from 'context/ProjectsContext'
+import ReactGA from 'react-ga'
+
+ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID as string)
 
 let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty('--vh', `${vh}px`)
