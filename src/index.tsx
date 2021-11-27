@@ -13,6 +13,9 @@ import StyledThemeProvider from 'theme/StyledThemeProvider'
 import { ProjectsContextProvider } from 'context/ProjectsContext'
 import ReactGA from 'react-ga'
 
+// For version checking
+console.log('v0.1.0')
+
 ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID as string)
 
 let vh = window.innerHeight * 0.01
