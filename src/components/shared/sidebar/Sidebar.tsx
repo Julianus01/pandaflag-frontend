@@ -18,7 +18,6 @@ const MENU_ITEMS: ISidebarMenuItem[] = [
     name: 'Environments',
     href: RoutePage.environments(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiHash} />,
-    endComponent: () => <SidebarProjectsCount />,
   },
 ]
 
