@@ -4,12 +4,12 @@ import { Heading, Text, Input, InputLeftElement, Icon, InputGroup, Button, Box }
 import { FiMail, FiKey } from 'react-icons/fi'
 import ThemeButton from 'theme/ThemeButton'
 import PandaflagLogo from 'components/shared/PandaflagLogo'
-import { NavLink } from 'react-router-dom'
 import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import * as yup from 'yup'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import RoutePage from 'components/routes/RoutePage'
 import AuthApi from 'api/AuthApi'
+import { NavLink } from 'react-router-dom'
 
 function generateForgotPasswordLink(email: string) {
   if (!email) {
@@ -73,9 +73,15 @@ function LoginPage() {
     }
   }
 
+  console.log(process.env.REACT_APP_PANDAFLAG_WEBSITE as string)
+
   return (
     <Container>
-      <PandaflagLogo mx="auto" mt={6} />
+      <Box display="flex" justifyContent="center">
+        <a href={process.env.REACT_APP_PANDAFLAG_WEBSITE as string}>
+          <PandaflagLogo mx="auto" mt={6} />
+        </a>
+      </Box>
 
       <Content>
         <Section py="12" px="16">
