@@ -32,9 +32,9 @@ import { Link, Redirect, useHistory } from 'react-router-dom'
 import { IStoreState } from 'redux/store'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import CommonUtils from 'utils/CommonUtils'
 import ReactGA from 'react-ga'
 import { GaActionTryApi, GaCategory } from 'utils/GaUtils'
+import BaseApi from 'api/BaseApi'
 
 interface IProps {
   flags: IFlag[]
@@ -104,7 +104,6 @@ function TryApi({ flags, isOpen }: IProps) {
 
   async function runApi() {
     setIsLoading(true)
-    await CommonUtils.wait(1000)
 
     ReactGA.event({
       category: GaCategory.tryApi,
@@ -112,10 +111,11 @@ function TryApi({ flags, isOpen }: IProps) {
     })
 
     if (selected === ALL_FLAGS_SELECTION) {
-      setResponse(flags)
+      const flagsResponse = await BaseApi.getFlags()
+      setResponse(flagsResponse)
     } else {
-      const foundSelected = flags.find((flag: IFlag) => flag.name === selected)
-      setResponse(foundSelected)
+      const flagResponse = await BaseApi.getFlag(selected)
+      setResponse(flagResponse)
     }
 
     setIsLoading(false)
