@@ -19,6 +19,8 @@ import { FiMinus } from 'react-icons/fi'
 import { useMutation, useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
+import ReactGa from 'react-ga'
+import { GaActionProject, GaCategory } from 'utils/GaUtils'
 
 interface IProps {
   project: IProject
@@ -33,6 +35,11 @@ function ProjectRemoveButton({ project }: IProps) {
   const { isFetching: projectsFetching } = useContext(ProjectsContext)
   const deleteMutation = useMutation(ProjectsApi.deleteProject, {
     onSuccess: () => {
+      ReactGa.event({
+        category: GaCategory.editing,
+        action: GaActionProject.delete,
+      })
+      
       queryClient.setQueryData([ApiQueryId.getProjectsByOrganizationId, organizationId], (oldData) => {
         const oldProjects = oldData as IProject[]
         return oldProjects?.filter((oldProject: IProject) => oldProject.id !== project.id)

@@ -17,6 +17,8 @@ import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
+import ReactGa from 'react-ga'
+import { GaActionProject, GaCategory } from 'utils/GaUtils'
 
 interface Props {
   isOpen: boolean
@@ -74,6 +76,11 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
       setError('A project with this name already exists')
       return
     }
+
+    ReactGa.event({
+      category: GaCategory.editing,
+      action: GaActionProject.create,
+    })
 
     createProjectMutation.mutate(name)
   }

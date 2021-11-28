@@ -25,6 +25,8 @@ import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 import { IEnvironment } from 'api/ProjectsApi'
 import styled from 'styled-components/macro'
+import ReactGa from 'react-ga'
+import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 
 interface Props {
   isOpen: boolean
@@ -104,6 +106,11 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
       setError('A flag with this name already exists')
       return
     }
+
+    ReactGa.event({
+      category: GaCategory.editing,
+      action: GaActionFlag.create,
+    })
 
     const params = { name, description: description.trim() }
 

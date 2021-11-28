@@ -5,6 +5,8 @@ import ProjectsApi from 'api/ProjectsApi'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import AuthApi from 'api/AuthApi'
+import ReactGa from 'react-ga'
+import { GaActionProject, GaCategory } from 'utils/GaUtils'
 
 function CreateFirstProjectPage() {
   const queryClient = useQueryClient()
@@ -35,6 +37,11 @@ function CreateFirstProjectPage() {
     setIsLoading(true)
     createProjectMutation.mutate(projectName, {
       onSuccess: () => {
+        ReactGa.event({
+          category: GaCategory.editing,
+          action: GaActionProject.create,
+        })
+
         queryClient.invalidateQueries(ApiQueryId.getProjectsByOrganizationId)
 
         toast({

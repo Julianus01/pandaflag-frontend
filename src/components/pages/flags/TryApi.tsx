@@ -33,6 +33,8 @@ import { IStoreState } from 'redux/store'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import CommonUtils from 'utils/CommonUtils'
+import ReactGA from 'react-ga'
+import { GaActionTryApi, GaCategory } from 'utils/GaUtils'
 
 interface IProps {
   flags: IFlag[]
@@ -91,9 +93,23 @@ function TryApi({ flags, isOpen }: IProps) {
     setResponse(undefined)
   }, [configuration.environment?.name])
 
+  function onCopyCode() {
+    ReactGA.event({
+      category: GaCategory.tryApi,
+      action: GaActionTryApi.copyCode,
+    })
+
+    onCopy()
+  }
+
   async function runApi() {
     setIsLoading(true)
     await CommonUtils.wait(1000)
+
+    ReactGA.event({
+      category: GaCategory.tryApi,
+      action: GaActionTryApi.run,
+    })
 
     if (selected === ALL_FLAGS_SELECTION) {
       setResponse(flags)
@@ -248,7 +264,7 @@ function TryApi({ flags, isOpen }: IProps) {
             <Code>{`  .then(json => console.log(json))`}</Code>
 
             <ClipboardContainer>
-              <Button onClick={onCopy} leftIcon={<Icon as={FiClipboard} />} size="xs">
+              <Button onClick={onCopyCode} leftIcon={<Icon as={FiClipboard} />} size="xs">
                 {hasCopied ? 'Copied' : 'Copy'}
               </Button>
             </ClipboardContainer>

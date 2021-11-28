@@ -9,6 +9,8 @@ import { useQueryClient, useMutation } from 'react-query'
 import { useHistory } from 'react-router'
 import styled, { css } from 'styled-components/macro'
 import FlagRemoveButton from './FlagRemoveButton'
+import ReactGa from 'react-ga'
+import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 
 interface IProps {
   flag: IFlag
@@ -36,6 +38,11 @@ function FlagRow({ flag }: IProps) {
   })
 
   function toggleStatus() {
+    ReactGa.event({
+      category: GaCategory.editing,
+      action: GaActionFlag.toggle,
+    })
+
     setEnabled(!enabled)
     updateFlagMutation.mutate({ id: flag.id, enabled: !flag.enabled })
   }
