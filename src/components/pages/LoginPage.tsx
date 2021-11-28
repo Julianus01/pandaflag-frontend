@@ -73,8 +73,6 @@ function LoginPage() {
     }
   }
 
-  console.log(process.env.REACT_APP_PANDAFLAG_WEBSITE as string)
-
   return (
     <Container>
       <Box display="flex" justifyContent="center">
