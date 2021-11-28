@@ -1,19 +1,17 @@
-import { useHistory } from 'react-router'
+import { useLocation } from 'react-router'
 import ReactGA from 'react-ga'
-import { useEffectOnce } from 'react-use'
+import { useEffect } from 'react'
+import CommonUtils, { NodeEnvironment } from 'utils/CommonUtils'
 
 function GaTracking() {
-  const history = useHistory()
+  const location = useLocation()
 
-  history.listen((location) => {
-    ReactGA.set({ page: location.pathname + location.search })
-    ReactGA.pageview(location.pathname + location.search)
-  })
-
-  useEffectOnce(() => {
-    ReactGA.set({ page: history.location.pathname + history.location.search })
-    ReactGA.pageview(history.location.pathname + history.location.search)
-  })
+  useEffect(() => {
+    if (CommonUtils.isNodeEnvironment(NodeEnvironment.production)) {
+      ReactGA.set({ page: location.pathname + location.search })
+      ReactGA.pageview(location.pathname + location.search)
+    }
+  }, [location])
 
   return null
 }

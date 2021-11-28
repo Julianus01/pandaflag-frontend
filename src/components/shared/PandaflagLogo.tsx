@@ -1,11 +1,17 @@
 import { Heading, HeadingProps } from '@chakra-ui/react'
+import { NodeEnvironment } from 'utils/CommonUtils'
 
 function getTitle() {
-  if (process.env.REACT_APP_STAGE === 'development') {
-    return 'pandaflag DEV'
+  switch (process.env.REACT_APP_STAGE) {
+    case NodeEnvironment.production:
+      return 'pandaflag'
+
+    case NodeEnvironment.development:
+      return 'pandaflag DEV'
+
+    default:
+      return 'pandaflag ENV'
   }
-  
-  return 'pandaflag'
 }
 
 function PandaflagLogo(props: HeadingProps) {
