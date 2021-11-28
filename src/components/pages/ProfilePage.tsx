@@ -58,8 +58,8 @@ function ProfilePage() {
           </Heading>
 
           <Box>
-            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="green">
-              <TagLabel>Free Plan</TagLabel>
+            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="blue">
+              <TagLabel>Admin</TagLabel>
             </Tag>
           </Box>
         </Box>
