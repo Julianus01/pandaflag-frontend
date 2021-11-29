@@ -17,7 +17,9 @@ import usePropState from 'hooks/common/usePropState'
 import useProjectAlreadyExists from 'hooks/project/useProjectAlreadyExists'
 import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { useDispatch } from 'react-redux'
 import { useUpdateEffect } from 'react-use'
+import { configurationActions } from 'redux/ducks/configurationDuck'
 
 interface Props {
   project: IProject
@@ -27,6 +29,7 @@ interface Props {
 
 function EditProjectDialog({ project, isOpen, onClose }: Props) {
   const inputRef = useRef()
+  const dispatch = useDispatch()
   const queryClient = useQueryClient()
   const toast = useToast()
 
@@ -39,6 +42,8 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
       queryClient.invalidateQueries(ApiQueryId.getProjectsByOrganizationId)
       setProjectName('')
       onClose()
+
+      dispatch(configurationActions.setProject({ ...project, name: projectName }))
 
       toast({
         title: `Updated successfully`,
