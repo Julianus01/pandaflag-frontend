@@ -22,7 +22,7 @@ import ProjectsContext from 'context/ProjectsContext'
 import { IProject } from 'api/ProjectsApi'
 
 function getProjectNameSize(projectNameLength: number | undefined): string {
-  if (!projectNameLength || projectNameLength < 20) {
+  if (!projectNameLength || projectNameLength < 11) {
     return 'lg'
   }
 
