@@ -39,13 +39,13 @@ function ProfileChangePasswordButton() {
 
   return (
     <Button
-      loadingText="Request change email"
+      loadingText="Change"
       isLoading={isLoading}
       disabled={isLoading || hasBeenSent}
       onClick={onChangePassword}
     >
-      {!hasBeenSent && 'Request change email'}
-      {hasBeenSent && 'Request email sent'}
+      {!hasBeenSent && 'Change'}
+      {hasBeenSent && 'Request sent'}
     </Button>
   )
 }
