@@ -9,6 +9,10 @@ function EmailVerificationPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [hasBeenSent, setHasBeenSent] = useState<boolean>(false)
 
+  function onRefresh() {
+    window.location.reload()
+  }
+
   async function onSendVerificationEmail() {
     try {
       setIsLoading(true)
@@ -52,10 +56,19 @@ function EmailVerificationPage() {
               disabled={hasBeenSent || isLoading}
               onClick={onSendVerificationEmail}
               ml="auto"
-              colorScheme="blue"
+              variant="ghost"
             >
               {!hasBeenSent && 'Send again'}
               {hasBeenSent && 'Email sent'}
+            </Button>
+
+            <Button
+              isLoading={isLoading}
+              onClick={onRefresh}
+              ml="2"
+              colorScheme="blue"
+            >
+              Refresh
             </Button>
           </Box>
         </Box>
