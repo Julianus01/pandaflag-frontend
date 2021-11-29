@@ -115,8 +115,8 @@ function FlagsPage() {
           colorScheme={environment?.color}
         >
           <TabList>
-            <Tab>production</Tab>
-            <Tab>development</Tab>
+            <Tab># production</Tab>
+            <Tab># development</Tab>
           </TabList>
         </Tabs>
 
