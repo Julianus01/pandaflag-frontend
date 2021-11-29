@@ -184,7 +184,7 @@ function FlagPage() {
       </Box>
 
       <Section mb={4}>
-        <Heading as="h5" size="sm">
+        <Heading mb={1} as="h5" size="sm">
           Status
         </Heading>
 
