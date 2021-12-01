@@ -19,7 +19,7 @@ function ProjectRow({ project }: IProps) {
   const { hasCopied, onCopy } = useClipboard(project.apiKey)
 
   return (
-    <Tr>
+    <Row>
       <Td>
         <Box display="flex" alignItems="center">
           <GreenPulse $show={project.id === activeProject?.id} />
@@ -55,7 +55,7 @@ function ProjectRow({ project }: IProps) {
           </Tooltip>
         </HStack>
       </Td>
-    </Tr>
+    </Row>
   )
 }
 
@@ -98,6 +98,14 @@ const GreenPulse = styled(Box)<{ $show: boolean }>`
     100% {
       -moz-box-shadow: 0 0 0 0 rgba(56, 161, 105, 0);
       box-shadow: 0 0 0 0 rgba(56, 161, 105, 0);
+    }
+  }
+`
+
+const Row = styled(Tr)`
+  :last-child {
+    > td {
+      border: 0;
     }
   }
 `

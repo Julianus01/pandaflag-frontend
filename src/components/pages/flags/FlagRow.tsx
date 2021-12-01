@@ -52,7 +52,7 @@ function FlagRow({ flag }: IProps) {
   }
 
   return (
-    <Tr>
+    <Row>
       <Td>{flag.name}</Td>
 
       <Td position="relative">
@@ -84,7 +84,7 @@ function FlagRow({ flag }: IProps) {
           </Tooltip>
         </HStack>
       </Td>
-    </Tr>
+    </Row>
   )
 }
 
@@ -95,6 +95,14 @@ const AbsoluteSpinner = styled(Spinner)`
   top: 20px;
   transform: translateY(-50%);
   left: 66px;
+`
+
+const Row = styled(Tr)`
+  :last-child {
+    > td {
+      border: 0;
+    }
+  }
 `
 
 const SwitchContainer = styled.div<{ disabled: boolean }>`

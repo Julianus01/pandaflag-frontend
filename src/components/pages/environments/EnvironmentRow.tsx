@@ -1,5 +1,6 @@
 import { Box, Td, Tr } from '@chakra-ui/react'
 import { IEnvironment } from 'api/ProjectsApi'
+import styled from 'styled-components/macro'
 
 interface IProps {
   environment: IEnvironment
@@ -8,7 +9,7 @@ interface IProps {
 function EnvironmentRow({ environment }: IProps) {
 
   return (
-    <Tr>
+    <Row>
       <Td>
         <Box display="flex" alignItems="center">
           {environment.name}
@@ -18,8 +19,16 @@ function EnvironmentRow({ environment }: IProps) {
       <Td isNumeric>
         <Box ml="auto" shadow="md" borderRadius="md" w="7" h="7" background={`${environment.color}.400`} />
       </Td>
-    </Tr>
+    </Row>
   )
 }
 
 export default EnvironmentRow
+
+const Row = styled(Tr)`
+  :last-child {
+    > td {
+      border: 0;
+    }
+  }
+`
