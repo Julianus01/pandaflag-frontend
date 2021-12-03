@@ -38,7 +38,6 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
   const project = useSelector((state: IStoreState) => state.configuration.project)
-  const environment = useSelector((state: IStoreState) => state.configuration.environment)
 
   const [flagName, setFlagName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -144,11 +143,12 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
             Environment
           </Text>
 
-          {!addForAll && (
+          {/* TODO: */}
+          {/* {!addForAll && (
             <Tag mb={4} variant="subtle" colorScheme={environment?.color}>
               {environment?.name}
             </Tag>
-          )}
+          )} */}
 
           {addForAll && (
             <AllTagsContainer>

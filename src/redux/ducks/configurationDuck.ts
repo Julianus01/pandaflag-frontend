@@ -3,25 +3,21 @@ import { PayloadAction } from 'redux/types'
 import { IProject } from 'api/ProjectsApi'
 import LSUtils from 'utils/LSUtils'
 import { IOrganization } from 'api/OrganizationsApi'
-import { IEnvironment } from 'api/EnvironmentsApi'
 
 // Types
 const types = {
   SET_ORGANIZATION: '[configuration] SET_ORGANIZATION',
-  SET_ENVIRONMENT: '[configuration] SET_ENVIRONMENT',
   SET_PROJECT: '[configuration] SET_PROJECT',
 }
 
 export interface IConfigurationState {
   organization: IOrganization | undefined
   project: IProject | undefined
-  environment: IEnvironment | undefined
 }
 
 const initialState: IConfigurationState = {
   organization: undefined,
   project: undefined,
-  environment: undefined,
 }
 
 // Reducer
@@ -35,11 +31,6 @@ export default createReducer(initialState)({
     ...state,
     project,
   }),
-
-  [types.SET_ENVIRONMENT]: (state: IConfigurationState, { payload: environment }: PayloadAction<IEnvironment>) => ({
-    ...state,
-    environment,
-  }),
 })
 
 // Actions
@@ -51,11 +42,6 @@ const actions = {
   setProject: (project: IProject) => {
     LSUtils.saveLastProjectName(project.name)
     return { type: types.SET_PROJECT, payload: project }
-  },
-
-  setEnvironment: (environment: IEnvironment) => {
-    LSUtils.saveLastEnvironmentName(environment.name)
-    return { type: types.SET_ENVIRONMENT, payload: environment }
   },
 }
 

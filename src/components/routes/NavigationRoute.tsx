@@ -10,30 +10,6 @@ import LSUtils from 'utils/LSUtils'
 import { configurationActions, IConfigurationState } from 'redux/ducks/configurationDuck'
 import { useEffect } from 'react'
 import AccessibleBackground from 'components/styles/AccessibleBackground'
-import { IEnvironment } from 'api/EnvironmentsApi'
-
-function useUpdateConfigurationEnvironment() {
-  const dispatch = useDispatch()
-  const project = useSelector((state: IStoreState) => state.configuration.project)
-
-  useEffect(() => {
-    if (!project) {
-      return
-    }
-
-    const lastEnvironmentName: string = LSUtils.lastEnvironmentName()
-    const lastEnvironment = project.environments.find(
-      (environment: IEnvironment) => environment.name === lastEnvironmentName
-    )
-
-    if (lastEnvironment) {
-      dispatch(configurationActions.setEnvironment(lastEnvironment as IEnvironment))
-      return
-    }
-
-    dispatch(configurationActions.setEnvironment(project.environments[0]))
-  }, [project, dispatch])
-}
 
 function useInitConfigurationProject(projects: IProject[] | undefined) {
   const dispatch = useDispatch()
@@ -89,9 +65,8 @@ function NavigationRoute(props: RouteProps) {
   )
 
   useInitConfigurationProject(projects)
-  useUpdateConfigurationEnvironment()
 
-  if (!configuration.project || !configuration.environment) {
+  if (!configuration.project) {
     return null
   }
 

@@ -69,9 +69,10 @@ function TryApi({ flags, isOpen }: IProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { hasCopied, onCopy } = useClipboard(
-    `fetch('${process.env.REACT_APP_PANDAFLAG_API_URL}/${configuration.project?.apiKey}/${
-      configuration.environment?.name
-    }/${selected !== ALL_FLAGS_SELECTION ? selected : ''}')
+    // TODO:
+    `fetch('${process.env.REACT_APP_PANDAFLAG_API_URL}/${configuration.project?.apiKey}/ENVIRONMENT/${
+      selected !== ALL_FLAGS_SELECTION ? selected : ''
+    }')
     .then(response => response.json())
     .then(json => console.log(json))
   `
@@ -88,10 +89,10 @@ function TryApi({ flags, isOpen }: IProps) {
     }
   }, [flags, selected])
 
-  useEffect(() => {
-    setSelected(ALL_FLAGS_SELECTION)
-    setResponse(undefined)
-  }, [configuration.environment?.name])
+  // useEffect(() => {
+  //   setSelected(ALL_FLAGS_SELECTION)
+  //   setResponse(undefined)
+  // }, [configuration.environment?.name])
 
   function onCopyCode() {
     ReactGA.event({
@@ -249,7 +250,8 @@ function TryApi({ flags, isOpen }: IProps) {
               /
               {
                 <Box as="span" color="teal.500">
-                  {configuration.environment?.name}
+                  {/* TODO: */}
+                  ENVIRONMENT
                 </Box>
               }
               /

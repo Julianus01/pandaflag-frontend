@@ -71,23 +71,11 @@ function SkeletonTable() {
 }
 
 function FlagsPage() {
-  const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const project = useSelector((state: IStoreState) => state.configuration.project)
-  const environment = useSelector((state: IStoreState) => state.configuration.environment)
 
-  const {
-    data: flags,
-    isLoading,
-    isFetching,
-  } = useQuery([ApiQueryId.getFlags, project?.id, environment], FlagsApi.getFlags)
-
-  function changeEnvironment(index: number) {
-    dispatch(
-      configurationActions.setEnvironment(index === 0 ? DefaultEnvironment.production : DefaultEnvironment.development)
-    )
-  }
+  const { data: flags, isLoading, isFetching } = useQuery([ApiQueryId.getFlags, project?.id], FlagsApi.getFlags)
 
   function doesFlagAlreadyExist(name: string): boolean {
     const found = flags?.find((flag: IFlag) => flag.name.toLowerCase() === name.toLowerCase())
@@ -107,7 +95,8 @@ function FlagsPage() {
       </Box>
 
       <Box mb={10} display="flex" alignItems="center">
-        <Tabs
+        {/* TODO: */}
+        {/* <Tabs
           onChange={changeEnvironment}
           index={environment?.name === 'production' ? 0 : 1}
           size="sm"
@@ -118,7 +107,7 @@ function FlagsPage() {
             <Tab># production</Tab>
             <Tab># development</Tab>
           </TabList>
-        </Tabs>
+        </Tabs> */}
 
         {isFetching && <Spinner colorScheme="blue" ml={6} size="sm" />}
       </Box>
