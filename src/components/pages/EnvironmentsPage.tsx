@@ -1,16 +1,17 @@
 import { Heading, Alert, AlertIcon, Button, Icon, Box } from '@chakra-ui/react'
-import { IEnvironment } from 'api/EnvironmentsApi'
+import { ApiQueryId } from 'api/ApiQueryId'
+import EnvironmentsApi, { IEnvironment } from 'api/EnvironmentsApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import { FiHash } from 'react-icons/fi'
+import { useQuery } from 'react-query'
 import { PricingUtils } from 'utils/PricingUtils'
 import EnvironmentsTable from './environments/EnvironmentsTable'
 
 const Quota = PricingUtils.getQuota()
 
 function EnvironmentsPage() {
-  // TODO: fix this
-  const environments: IEnvironment[] = []
+  const { data: environments } = useQuery(ApiQueryId.getEnvironments, EnvironmentsApi.getEnvironments)
   const isEnvironmentsQuotaReached = (environments?.length as number) >= Quota.environments
 
   return (
@@ -32,9 +33,12 @@ function EnvironmentsPage() {
         </Alert>
       )}
 
-      <TableContainer>
-        <EnvironmentsTable environments={environments as IEnvironment[]} />
-      </TableContainer>
+      {/* TODO: Make loading look good */}
+      {!!environments?.length && (
+        <TableContainer>
+          <EnvironmentsTable environments={environments as IEnvironment[]} />
+        </TableContainer>
+      )}
     </BoxedPage>
   )
 }

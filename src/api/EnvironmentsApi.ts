@@ -19,6 +19,7 @@ import { FirestoreCollection } from './FirestoreCollection'
 import FlagsApi from './FlagsApi'
 import { v4 as uuidv4 } from 'uuid'
 import { IOrganization } from './OrganizationsApi'
+import { IProject } from './ProjectsApi'
 
 export interface IEnvironment {
   id: string
@@ -34,6 +35,23 @@ export const DefaultEnvironment = {
   development: { name: 'development', color: 'blue' },
 }
 
+// Get
+async function getEnvironments(): Promise<IEnvironment[]> {
+  const project = store.getState().configuration.project as IProject
+
+  const querySnapshot = await getDocs(
+    query(collection(getFirestore(), FirestoreCollection.environments), where('projectId', '==', project.id))
+  )
+
+  const environments = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, id: doc.id }
+  }) as IEnvironment[]
+
+  return environments
+}
+
+// Create
 async function createDefaultEnvironments(organizationId: string, projectId: string): Promise<void> {
   console.log('here')
   const createdAt = Timestamp.now()
@@ -70,6 +88,9 @@ async function deleteProjectEnvironments(projectId: string): Promise<void> {
 }
 
 const EnvironmentsApi = {
+  // Get
+  getEnvironments,
+
   // Create
   createDefaultEnvironments,
 
