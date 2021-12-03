@@ -15,7 +15,7 @@ import ReactGA from 'react-ga'
 import { EnvironmentsContextProvider } from 'context/EnvironmentsContext'
 
 // For version checking
-console.log('v0.1.3')
+console.log('v1.0.0')
 
 ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID as string)
 

@@ -24,7 +24,7 @@ import { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
 import useQueryParam from 'hooks/routing/useQueryParam'
 import { QueryParam, TryApiParam } from 'hooks/routing/useQueryParams'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AiOutlineApi } from 'react-icons/ai'
 import { FiChevronDown, FiClipboard, FiInfo, FiPlay } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
@@ -35,6 +35,8 @@ import { applyColorMode } from 'theme/StyledThemeProvider'
 import ReactGA from 'react-ga'
 import { GaActionTryApi, GaCategory } from 'utils/GaUtils'
 import BaseApi from 'api/BaseApi'
+import EnvironmentsContext from 'context/EnvironmentsContext'
+import { IDbEnvironment } from 'api/EnvironmentsApi'
 
 interface IProps {
   flags: IFlag[]
@@ -58,17 +60,26 @@ function mapFlagsForResponse(flags: IFlag[]) {
   return flags.map(mapFlagForResponse)
 }
 
+function getDefaultSelectedEnvironment(environments: IDbEnvironment[] | undefined): string {
+  if (environments?.length) {
+    return environments[0].name
+  }
+
+  return ''
+}
+
 function TryApi({ flags, isOpen }: IProps) {
   const history = useHistory()
   const configuration = useSelector((state: IStoreState) => state.configuration)
+  const { data: environments } = useContext(EnvironmentsContext)
 
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [response, setResponse] = useState<IFlag[] | IFlag | undefined>(undefined)
   const [selected, setSelected] = useState<string>(ALL_FLAGS_SELECTION)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [selectedEnvironment, setSelectedEnvironment] = useState<string>(getDefaultSelectedEnvironment(environments))
 
   const { hasCopied, onCopy } = useClipboard(
-    // TODO:
-    `fetch('${process.env.REACT_APP_PANDAFLAG_API_URL}/${configuration.project?.apiKey}/ENVIRONMENT/${
+    `fetch('${process.env.REACT_APP_PANDAFLAG_API_URL}/${configuration.project?.apiKey}/${selectedEnvironment}/${
       selected !== ALL_FLAGS_SELECTION ? selected : ''
     }')
     .then(response => response.json())
@@ -110,12 +121,10 @@ function TryApi({ flags, isOpen }: IProps) {
     })
 
     if (selected === ALL_FLAGS_SELECTION) {
-      // TODO:
-      const flagsResponse = await BaseApi.getFlags('production')
+      const flagsResponse = await BaseApi.getFlags(selectedEnvironment)
       setResponse(flagsResponse)
     } else {
-      // TODO:
-      const flagResponse = await BaseApi.getFlag(selected, 'production')
+      const flagResponse = await BaseApi.getFlag(selected, selectedEnvironment)
       setResponse(flagResponse)
     }
 
@@ -198,24 +207,48 @@ function TryApi({ flags, isOpen }: IProps) {
           </Text>
 
           <Box mb={4} display="flex">
+            <Box mr={2}>
+              <Menu autoSelect={false}>
+                <MenuButton disabled={isLoading} as={Button} rightIcon={<Icon strokeWidth={2.4} as={FiChevronDown} />}>
+                  {selected}
+                </MenuButton>
+
+                <MenuList maxHeight="300px" overflowY={`overlay` as any}>
+                  <MenuOptionGroup
+                    fontWeight="semibold"
+                    onChange={(value) => setSelected(value as string)}
+                    value={selected}
+                    type="radio"
+                    title="Flag"
+                  >
+                    <MenuItemOption value={ALL_FLAGS_SELECTION}>{ALL_FLAGS_SELECTION}</MenuItemOption>
+
+                    {flags.map((flag: IFlag) => (
+                      <MenuItemOption key={flag.id} value={flag.name}>
+                        {flag.name}
+                      </MenuItemOption>
+                    ))}
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+            </Box>
+
             <Menu autoSelect={false}>
               <MenuButton disabled={isLoading} as={Button} rightIcon={<Icon strokeWidth={2.4} as={FiChevronDown} />}>
-                {selected}
+                {selectedEnvironment}
               </MenuButton>
 
               <MenuList maxHeight="300px" overflowY={`overlay` as any}>
                 <MenuOptionGroup
                   fontWeight="semibold"
-                  onChange={(value) => setSelected(value as string)}
-                  value={selected}
+                  onChange={(value) => setSelectedEnvironment(value as string)}
+                  value={selectedEnvironment}
                   type="radio"
-                  title="Flags"
+                  title="Environment"
                 >
-                  <MenuItemOption value={ALL_FLAGS_SELECTION}>{ALL_FLAGS_SELECTION}</MenuItemOption>
-
-                  {flags.map((flag: IFlag) => (
-                    <MenuItemOption key={flag.id} value={flag.name}>
-                      {flag.name}
+                  {environments?.map((environment: IDbEnvironment) => (
+                    <MenuItemOption key={environment.id} value={environment.name}>
+                      {environment.name}
                     </MenuItemOption>
                   ))}
                 </MenuOptionGroup>
@@ -250,8 +283,7 @@ function TryApi({ flags, isOpen }: IProps) {
               /
               {
                 <Box as="span" color="teal.500">
-                  {/* TODO: */}
-                  ENVIRONMENT
+                  {selectedEnvironment}
                 </Box>
               }
               /
