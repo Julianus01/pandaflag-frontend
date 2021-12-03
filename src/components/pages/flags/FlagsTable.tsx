@@ -1,4 +1,4 @@
-import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react'
+import { Table, Tbody, Th, Thead, Tr, Tag } from '@chakra-ui/react'
 import { IDbEnvironment } from 'api/EnvironmentsApi'
 import { IFlag } from 'api/FlagsApi'
 import EnvironmentsContext from 'context/EnvironmentsContext'
@@ -24,7 +24,9 @@ function FlagsTable({ flags }: IProps) {
 
           {environments?.map((environment: IDbEnvironment) => (
             <Th key={environment.id} isNumeric textTransform="lowercase">
-              {environment.name}
+              <Tag size="sm" variant="subtle" colorScheme={environment?.color}>
+                #{environment.name}
+              </Tag>
             </Th>
           ))}
 

@@ -201,7 +201,7 @@ function FlagPage() {
         {sortedFlagEnvironments?.map((flagEnvironment: IEnvironment) => (
           <EnvStatusContainer key={flagEnvironment.id}>
             <Tag variant="subtle" colorScheme={flagEnvironment?.color}>
-              # {flagEnvironment.name}
+              #{flagEnvironment.name}
             </Tag>
 
             <FormControl ml="auto" width="auto" display="flex" alignItems="center">
