@@ -9,7 +9,8 @@ function useFlagEnvironment(name: string | undefined): IEnvironment | undefined 
     return undefined
   }
 
-  return project?.environments.find((environment: IEnvironment) => environment.name === name)
+  // TODO:
+  return undefined
 }
 
 export default useFlagEnvironment

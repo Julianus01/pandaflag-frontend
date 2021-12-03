@@ -18,13 +18,12 @@ import { FirestoreCollection } from './FirestoreCollection'
 import FlagsApi from './FlagsApi'
 import { v4 as uuidv4 } from 'uuid'
 import { IOrganization } from './OrganizationsApi'
-import EnvironmentsApi, { DefaultEnvironment, IEnvironment } from './EnvironmentsApi'
+import EnvironmentsApi from './EnvironmentsApi'
 
 export interface IProject {
   id: string
   organizationId: string
   name: string
-  environments: IEnvironment[]
   apiKey: string
   createdAt: Timestamp
 }
@@ -78,7 +77,6 @@ async function createProject(name: string): Promise<IProject> {
   const newProject = {
     name,
     organizationId: organization.id,
-    environments: [DefaultEnvironment.production, DefaultEnvironment.development],
     apiKey: uuidv4(),
     createdAt,
   }
@@ -103,7 +101,7 @@ async function deleteProject(projectId: string): Promise<void> {
   await Promise.all([
     deleteDoc(doc(getFirestore(), FirestoreCollection.projects, projectId)),
     FlagsApi.deleteProjectFlags(projectId),
-    EnvironmentsApi.deleteProjectEnvironments(projectId)
+    EnvironmentsApi.deleteProjectEnvironments(projectId),
   ])
 }
 

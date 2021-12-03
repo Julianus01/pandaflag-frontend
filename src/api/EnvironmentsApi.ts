@@ -21,15 +21,12 @@ import { v4 as uuidv4 } from 'uuid'
 import { IOrganization } from './OrganizationsApi'
 
 export interface IEnvironment {
-  // TODO: Change this to required
-  id?: string
+  id: string
+  projectId: string
+  organizationId: string
   name: string
   color: string
-
-  // TODO: Change this to required
-  createdAt?: Timestamp
-  projectId?: string
-  organizationId?: string
+  createdAt: Timestamp
 }
 
 export const DefaultEnvironment = {

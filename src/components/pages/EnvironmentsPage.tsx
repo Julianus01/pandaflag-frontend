@@ -3,16 +3,14 @@ import { IEnvironment } from 'api/EnvironmentsApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import { FiHash } from 'react-icons/fi'
-import { useSelector } from 'react-redux'
-import { IStoreState } from 'redux/store'
 import { PricingUtils } from 'utils/PricingUtils'
 import EnvironmentsTable from './environments/EnvironmentsTable'
 
 const Quota = PricingUtils.getQuota()
 
 function EnvironmentsPage() {
-  const environments = useSelector((state: IStoreState) => state.configuration.project?.environments)
-
+  // TODO: fix this
+  const environments: IEnvironment[] = []
   const isEnvironmentsQuotaReached = (environments?.length as number) >= Quota.environments
 
   return (
