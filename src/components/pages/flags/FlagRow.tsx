@@ -2,8 +2,6 @@ import { Box, Icon, IconButton, Spinner, Td, Tooltip, Tr, Switch, useToast, HSta
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag, IFlagEnvironment } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
-import usePropState from 'hooks/common/usePropState'
-import moment from 'moment'
 import { FiEdit2 } from 'react-icons/fi'
 import { useQueryClient, useMutation } from 'react-query'
 import { useHistory } from 'react-router'
@@ -11,29 +9,41 @@ import styled, { css } from 'styled-components/macro'
 import FlagRemoveButton from './FlagRemoveButton'
 import ReactGa from 'react-ga'
 import { GaActionFlag, GaCategory } from 'utils/GaUtils'
+import { useEffect, useState } from 'react'
 
-interface IProps {
-  flag: IFlag
+function isFlagEnabled(flag: IFlag, environmentName: string): boolean {
+  const foundEnvironment = flag.environments.find(
+    (environment: IFlagEnvironment) => environment.name === environmentName
+  )
+
+  return foundEnvironment?.enabled as boolean
 }
 
-function FlagRow({ flag }: IProps) {
-  const toast = useToast()
-  const history = useHistory()
-  const queryClient = useQueryClient()
+interface IFlagSwitchProps {
+  flag: IFlag
+  environmentName: string
+}
 
-  // const [enabled, setEnabled] = usePropState(flag.enabled)
+function FlagSwitch({ flag, environmentName }: IFlagSwitchProps) {
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  const [enabled, setEnabled] = useState<boolean>(isFlagEnabled(flag, environmentName))
+
+  useEffect(() => {
+    setEnabled(isFlagEnabled(flag, environmentName))
+  }, [flag, environmentName])
 
   const updateFlagMutation = useMutation(FlagsApi.updateFlag, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
 
-      // toast({
-      //   title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${flag.environmentName}'`,
-      //   position: 'top-right',
-      //   isClosable: true,
-      //   variant: 'subtle',
-      //   status: 'success',
-      // })
+      toast({
+        title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${environmentName}'`,
+        position: 'top-right',
+        isClosable: true,
+        variant: 'subtle',
+        status: 'success',
+      })
     },
   })
 
@@ -43,9 +53,40 @@ function FlagRow({ flag }: IProps) {
       action: GaActionFlag.toggle,
     })
 
-    // setEnabled(!enabled)
-    // updateFlagMutation.mutate({ id: flag.id, enabled: !flag.enabled })
+    setEnabled(!enabled)
+
+    const newEnvironments: IFlagEnvironment[] = flag?.environments.map((environment: IFlagEnvironment) => {
+      if (environment.name === environmentName) {
+        return { ...environment, enabled: !environment.enabled }
+      }
+
+      return environment
+    }) as IFlagEnvironment[]
+
+    updateFlagMutation.mutate({ id: flag.id, environments: newEnvironments })
   }
+
+  return (
+    <Box position="relative" display="flex" alignItems="center" justifyContent="flex-end">
+      {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
+
+      {/* Couldn't use isDisabled from Switch because there is focus bug */}
+      {/* After disabled, focus was stuck on Switch component */}
+      {/* Potential thread to follow */}
+      {/* https://giters.com/chakra-ui/chakra-ui/issues/4596 */}
+      <SwitchContainer disabled={updateFlagMutation.isLoading}>
+        <Switch ml={4} size="md" isChecked={enabled} onChange={toggleStatus} colorScheme="green" shadow="none" />
+      </SwitchContainer>
+    </Box>
+  )
+}
+
+interface IProps {
+  flag: IFlag
+}
+
+function FlagRow({ flag }: IProps) {
+  const history = useHistory()
 
   function onEdit() {
     history.push(RoutePage.flag(flag.name))
@@ -56,16 +97,8 @@ function FlagRow({ flag }: IProps) {
       <Td>{flag.name}</Td>
 
       {flag.environments.map((flagEnvironment: IFlagEnvironment) => (
-        <Td key={flagEnvironment.id} isNumeric>
-          {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
-
-          {/* Couldn't use isDisabled from Switch because there is focus bug */}
-          {/* After disabled, focus was stuck on Switch component */}
-          {/* Potential thread to follow */}
-          {/* https://giters.com/chakra-ui/chakra-ui/issues/4596 */}
-          <SwitchContainer disabled={updateFlagMutation.isLoading}>
-            <Switch ml={4} size="md" isChecked={false} onChange={toggleStatus} colorScheme="green" shadow="none" />
-          </SwitchContainer>
+        <Td key={flagEnvironment.id}>
+          <FlagSwitch flag={flag} environmentName={flagEnvironment.name} />
         </Td>
       ))}
 
@@ -92,9 +125,8 @@ export default FlagRow
 
 const AbsoluteSpinner = styled(Spinner)`
   position: absolute;
-  top: 20px;
-  transform: translateY(-50%);
-  left: 66px;
+  top: 2px;
+  right: 46px;
 `
 
 const Row = styled(Tr)`
