@@ -48,7 +48,7 @@ async function getEnvironments(): Promise<IEnvironment[]> {
     return { ...data, id: doc.id }
   }) as IEnvironment[]
 
-  return environments
+  return environments.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 // Create
