@@ -30,7 +30,6 @@ import AccessibleBackground from 'components/styles/AccessibleBackground'
 import TableContainer from 'components/shared/TableContainer'
 
 function SkeletonTable() {
-
   return (
     <TableContainer>
       <CustomTable variant="simple">

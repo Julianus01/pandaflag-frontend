@@ -110,10 +110,12 @@ function TryApi({ flags, isOpen }: IProps) {
     })
 
     if (selected === ALL_FLAGS_SELECTION) {
-      const flagsResponse = await BaseApi.getFlags()
+      // TODO:
+      const flagsResponse = await BaseApi.getFlags('production')
       setResponse(flagsResponse)
     } else {
-      const flagResponse = await BaseApi.getFlag(selected)
+      // TODO:
+      const flagResponse = await BaseApi.getFlag(selected, 'production')
       setResponse(flagResponse)
     }
 

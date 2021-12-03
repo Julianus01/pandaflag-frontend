@@ -7,18 +7,11 @@ import {
   DocumentData,
   addDoc,
   where,
-  deleteDoc,
-  doc,
   Timestamp,
-  orderBy,
-  setDoc,
   writeBatch,
 } from 'firebase/firestore'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
-import FlagsApi from './FlagsApi'
-import { v4 as uuidv4 } from 'uuid'
-import { IOrganization } from './OrganizationsApi'
 import { IProject } from './ProjectsApi'
 
 export interface IEnvironment {

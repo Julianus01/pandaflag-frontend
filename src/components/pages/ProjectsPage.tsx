@@ -15,9 +15,7 @@ function ProjectsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { data: projects } = useContext(ProjectsContext)
 
-  // TODO: Remove this
-  // const isProjectsQuotaReached = (projects?.length as number) >= Quota.projects
-  const isProjectsQuotaReached = false
+  const isProjectsQuotaReached = (projects?.length as number) >= Quota.projects
 
   return (
     <BoxedPage>

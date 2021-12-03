@@ -11,7 +11,6 @@ import {
   Timestamp,
   deleteDoc,
   doc,
-  DocumentReference,
   writeBatch,
   setDoc,
 } from 'firebase/firestore'
@@ -52,42 +51,36 @@ async function getFlags(): Promise<IFlag[]> {
 }
 
 async function getFlag(id: string): Promise<IFlag | undefined> {
-  // TODO:
-  return undefined
-  // const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.flags, id))
+  const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.flags, id))
 
-  // if (!snapshot.exists()) {
-  //   return undefined
-  // }
+  if (!snapshot.exists()) {
+    return undefined
+  }
 
-  // return { id, ...snapshot.data() } as IFlag
+  return { id, ...snapshot.data() } as IFlag
 }
 
 async function getFlagByName(name: string): Promise<IFlag | undefined> {
-  // TODO:
-  return undefined
-  // const project = store.getState().configuration.project as IProject
-  // const environment = store.getState().configuration.environment as IEnvironment
+  const project = store.getState().configuration.project as IProject
 
-  // const querySnapshot = await getDocs(
-  //   query(
-  //     collection(getFirestore(), FirestoreCollection.flags),
-  //     where('projectId', '==', project.id),
-  //     where('environmentName', '==', environment.name),
-  //     where('name', '==', name)
-  //   )
-  // )
+  const querySnapshot = await getDocs(
+    query(
+      collection(getFirestore(), FirestoreCollection.flags),
+      where('projectId', '==', project.id),
+      where('name', '==', name)
+    )
+  )
 
-  // const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
-  //   const data = doc.data()
-  //   return { ...data, id: doc.id }
-  // }) as IFlag[]
+  const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, id: doc.id }
+  }) as IFlag[]
 
-  // if (!flags.length) {
-  //   return undefined
-  // }
+  if (!flags.length) {
+    return undefined
+  }
 
-  // return flags[0]
+  return flags[0]
 }
 
 // Create Flag

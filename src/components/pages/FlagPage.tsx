@@ -3,7 +3,6 @@ import {
   Heading,
   Icon,
   Spinner,
-  Text,
   Switch,
   FormControl,
   FormLabel,
@@ -14,12 +13,12 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import FlagsApi, { IFlag } from 'api/FlagsApi'
+import FlagsApi, { IFlag, IFlagEnvironment } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
 import AutoTextArea from 'components/styles/AutoTextarea'
 import BoxedPage from 'components/styles/BoxedPage'
 import usePropState from 'hooks/common/usePropState'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useMemo, useState } from 'react'
 import { FiChevronLeft } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Link, NavLink, useHistory, useParams } from 'react-router-dom'
@@ -39,6 +38,10 @@ function FlagPage() {
 
   const [flag, setFlag] = usePropState<IFlag | undefined>(undefined)
   const [isDirty, setIsDirty] = useState<boolean>(false)
+
+  const sortedFlagEnvironments = useMemo(() => {
+    return flag?.environments.sort((a, b) => b.name.localeCompare(a.name))
+  }, [flag])
 
   const { data, isFetching } = useQuery(
     [ApiQueryId.getFlagByName, params.name],
@@ -71,8 +74,16 @@ function FlagPage() {
     }
   }
 
-  function toggleStatus() {
-    // setFlag({ ...flag, enabled: !flag?.enabled } as IFlag)
+  function toggleStatus(environmentId: string) {
+    const newEnvironments: IFlagEnvironment[] = flag?.environments.map((environment: IFlagEnvironment) => {
+      if (environment.id === environmentId) {
+        return { ...environment, enabled: !environment.enabled }
+      }
+
+      return environment
+    }) as IFlagEnvironment[]
+
+    setFlag({ ...flag, environments: newEnvironments } as IFlag)
     onDirty()
   }
 
@@ -182,29 +193,38 @@ function FlagPage() {
       </Box>
 
       <Section mb={4}>
-        <Heading mb={1} as="h5" size="sm">
+        <Heading mb={4} as="h5" size="sm">
           Status
         </Heading>
 
-        <Text color="gray.500" mb={2}>
-          You can toggle the status below but takes effect
-          <br />
-          after you complete the update.
-        </Text>
+        {sortedFlagEnvironments?.map((flagEnvironment: IFlagEnvironment) => (
+          <EnvStatusContainer key={flagEnvironment.id}>
+            <Tag variant="subtle" colorScheme={flagEnvironment?.color}>
+              # {flagEnvironment.name}
+            </Tag>
 
-        {/* <FormControl display="flex" alignItems="center">
-          <Switch id="status" mr={2} size="md" isChecked={flag.enabled} onChange={toggleStatus} colorScheme="green" />
+            <FormControl ml="auto" width="auto" display="flex" alignItems="center">
+              <FormLabel
+                color={flagEnvironment.enabled ? '' : 'gray.500'}
+                fontSize="sm"
+                cursor="pointer"
+                htmlFor={`status-${flagEnvironment.name}`}
+                mb="0"
+              >
+                {flagEnvironment.enabled ? 'Enabled' : 'Disabled'}
+              </FormLabel>
 
-          <FormLabel cursor="pointer" fontWeight="normal" htmlFor="status" mb="0">
-            {flag.enabled ? 'Enabled' : 'Disabled'}
-          </FormLabel>
-        </FormControl> */}
-      </Section>
-
-      <Section mb={4}>
-        <Heading mb={2} as="h5" size="sm">
-          Environment
-        </Heading>
+              <Switch
+                id={`status-${flagEnvironment.name}`}
+                mr={2}
+                size="md"
+                isChecked={flagEnvironment.enabled}
+                onChange={() => toggleStatus(flagEnvironment.id)}
+                colorScheme="green"
+              />
+            </FormControl>
+          </EnvStatusContainer>
+        ))}
       </Section>
 
       <Section>
@@ -258,5 +278,14 @@ const BackLink = styled(Link)`
 const FlagsLink = styled(NavLink)`
   :hover {
     text-decoration: underline;
+  }
+`
+
+const EnvStatusContainer = styled(Box)`
+  display: flex;
+  align-items: center;
+
+  :not(:last-child) {
+    margin-bottom: ${({ theme }) => theme.space[4]};
   }
 `
