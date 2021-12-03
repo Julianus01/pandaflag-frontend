@@ -1,6 +1,6 @@
 import { Box, Icon, IconButton, Spinner, Td, Tooltip, Tr, Switch, useToast, HStack } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import FlagsApi, { IFlag, IFlagEnvironment } from 'api/FlagsApi'
+import FlagsApi, { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
 import { FiEdit2 } from 'react-icons/fi'
 import { useQueryClient, useMutation } from 'react-query'
@@ -10,11 +10,10 @@ import FlagRemoveButton from './FlagRemoveButton'
 import ReactGa from 'react-ga'
 import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 import { useEffect, useState } from 'react'
+import { IEnvironment } from 'api/EnvironmentsApi'
 
 function isFlagEnabled(flag: IFlag, environmentName: string): boolean {
-  const foundEnvironment = flag.environments.find(
-    (environment: IFlagEnvironment) => environment.name === environmentName
-  )
+  const foundEnvironment = flag.environments.find((environment: IEnvironment) => environment.name === environmentName)
 
   return foundEnvironment?.enabled as boolean
 }
@@ -55,13 +54,13 @@ function FlagSwitch({ flag, environmentName }: IFlagSwitchProps) {
 
     setEnabled(!enabled)
 
-    const newEnvironments: IFlagEnvironment[] = flag?.environments.map((environment: IFlagEnvironment) => {
+    const newEnvironments: IEnvironment[] = flag?.environments.map((environment: IEnvironment) => {
       if (environment.name === environmentName) {
         return { ...environment, enabled: !environment.enabled }
       }
 
       return environment
-    }) as IFlagEnvironment[]
+    }) as IEnvironment[]
 
     updateFlagMutation.mutate({ id: flag.id, environments: newEnvironments })
   }
@@ -96,7 +95,7 @@ function FlagRow({ flag }: IProps) {
     <Row>
       <Td>{flag.name}</Td>
 
-      {flag.environments.map((flagEnvironment: IFlagEnvironment) => (
+      {flag.environments.map((flagEnvironment: IEnvironment) => (
         <Td key={flagEnvironment.id}>
           <FlagSwitch flag={flag} environmentName={flagEnvironment.name} />
         </Td>

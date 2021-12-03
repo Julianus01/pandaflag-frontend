@@ -18,9 +18,17 @@ export interface IEnvironment {
   id: string
   projectId: string
   organizationId: string
-  name: string 
+  name: string
   color: string
+  enabled: boolean
   createdAt: Timestamp
+}
+
+export type IDbEnvironment = Omit<IEnvironment, 'enabled'>
+
+export interface IFlagEnvironment {
+  id: string
+  enabled: boolean
 }
 
 export const DefaultEnvironment = {
@@ -29,7 +37,7 @@ export const DefaultEnvironment = {
 }
 
 // Get
-async function getEnvironments(): Promise<IEnvironment[]> {
+async function getEnvironments(): Promise<IDbEnvironment[]> {
   const project = store.getState().configuration.project as IProject
 
   const querySnapshot = await getDocs(
@@ -39,7 +47,7 @@ async function getEnvironments(): Promise<IEnvironment[]> {
   const environments = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
     return { ...data, id: doc.id }
-  }) as IEnvironment[]
+  }) as IDbEnvironment[]
 
   return environments.sort((a, b) => b.name.localeCompare(a.name))
 }

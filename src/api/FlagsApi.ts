@@ -15,7 +15,7 @@ import {
   setDoc,
 } from 'firebase/firestore'
 import store from 'redux/store'
-import EnvironmentsApi, { IEnvironment } from './EnvironmentsApi'
+import EnvironmentsApi, { IDbEnvironment, IEnvironment, IFlagEnvironment } from './EnvironmentsApi'
 import { FirestoreCollection } from './FirestoreCollection'
 import { IOrganization } from './OrganizationsApi'
 import { IProject } from './ProjectsApi'
@@ -26,17 +26,8 @@ export interface IFlag {
   projectId: string
   name: string
   description?: string
-  environments: IFlagEnvironment[]
+  environments: IEnvironment[]
   createdAt: Timestamp
-}
-
-export interface IFlagEnvironment extends IEnvironment {
-  enabled: boolean
-}
-
-interface DbFlagEnvironment {
-  id: string
-  enabled: boolean
 }
 
 // Get Flags
@@ -51,10 +42,10 @@ async function getFlags(): Promise<IFlag[]> {
   const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data() as IFlag
 
-    const flagEnvironments: IFlagEnvironment[] = data.environments.map((flagEnvironment: DbFlagEnvironment) => {
-      const found = environments.find((environment: IEnvironment) => environment.id === flagEnvironment.id)
+    const flagEnvironments: IEnvironment[] = data.environments.map((flagEnvironment: IFlagEnvironment) => {
+      const found = environments.find((environment: IDbEnvironment) => environment.id === flagEnvironment.id)
       return { ...found, enabled: flagEnvironment.enabled }
-    }) as IFlagEnvironment[]
+    }) as IEnvironment[]
 
     return { ...data, id: doc.id, environments: flagEnvironments }
   }) as IFlag[]
@@ -108,8 +99,8 @@ async function createFlag({ name, description = '' }: ICreateFlagRequestParams):
   const createdAt = Timestamp.now()
 
   const environments = await EnvironmentsApi.getEnvironments()
-  const defaultEnvironments = environments.map((environment: IEnvironment) => ({ ...environment, enabled: false }))
-  const dbEnvironments = environments.map((environment: IEnvironment) => ({ id: environment.id, enabled: false }))
+  const defaultEnvironments = environments.map((environment: IDbEnvironment) => ({ ...environment, enabled: false }))
+  const dbEnvironments = environments.map((environment: IDbEnvironment) => ({ id: environment.id, enabled: false }))
 
   const newFlag = {
     name,

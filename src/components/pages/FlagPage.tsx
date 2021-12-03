@@ -13,7 +13,7 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import FlagsApi, { IFlag, IFlagEnvironment } from 'api/FlagsApi'
+import FlagsApi, { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
 import AutoTextArea from 'components/styles/AutoTextarea'
 import BoxedPage from 'components/styles/BoxedPage'
@@ -25,6 +25,7 @@ import { Link, NavLink, useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import _ from 'lodash/fp'
 import Section from 'components/styles/Section'
+import { IEnvironment } from 'api/EnvironmentsApi'
 
 interface IParams {
   name: string
@@ -75,13 +76,13 @@ function FlagPage() {
   }
 
   function toggleStatus(environmentId: string) {
-    const newEnvironments: IFlagEnvironment[] = flag?.environments.map((environment: IFlagEnvironment) => {
+    const newEnvironments: IEnvironment[] = flag?.environments.map((environment: IEnvironment) => {
       if (environment.id === environmentId) {
         return { ...environment, enabled: !environment.enabled }
       }
 
       return environment
-    }) as IFlagEnvironment[]
+    }) as IEnvironment[]
 
     setFlag({ ...flag, environments: newEnvironments } as IFlag)
     onDirty()
@@ -197,7 +198,7 @@ function FlagPage() {
           Status
         </Heading>
 
-        {sortedFlagEnvironments?.map((flagEnvironment: IFlagEnvironment) => (
+        {sortedFlagEnvironments?.map((flagEnvironment: IEnvironment) => (
           <EnvStatusContainer key={flagEnvironment.id}>
             <Tag variant="subtle" colorScheme={flagEnvironment?.color}>
               # {flagEnvironment.name}

@@ -1,5 +1,5 @@
 import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react'
-import { IEnvironment } from 'api/EnvironmentsApi'
+import { IDbEnvironment } from 'api/EnvironmentsApi'
 import { IFlag } from 'api/FlagsApi'
 import EnvironmentsContext from 'context/EnvironmentsContext'
 import { useContext } from 'react'
@@ -18,10 +18,12 @@ function FlagsTable({ flags }: IProps) {
     <CustomTable size="md" variant="simple">
       <TableHead>
         <Tr>
-          <Th width="100%" textTransform="capitalize">Name</Th>
+          <Th width="100%" textTransform="capitalize">
+            Name
+          </Th>
 
-          {environments?.map((environment: IEnvironment) => (
-            <Th key={environment.id} isNumeric textTransform="lowercase" >
+          {environments?.map((environment: IDbEnvironment) => (
+            <Th key={environment.id} isNumeric textTransform="lowercase">
               {environment.name}
             </Th>
           ))}

@@ -1,11 +1,11 @@
 import { ApiQueryId } from 'api/ApiQueryId'
-import EnvironmentsApi, { IEnvironment } from 'api/EnvironmentsApi'
+import EnvironmentsApi, { IDbEnvironment } from 'api/EnvironmentsApi'
 import { createContext, ReactNode } from 'react'
 import { useQuery, UseQueryResult } from 'react-query'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 
-export type IEnvironmentsContext = UseQueryResult<IEnvironment[], unknown>
+export type IEnvironmentsContext = UseQueryResult<IDbEnvironment[], unknown>
 
 const EnvironmentsContext = createContext<IEnvironmentsContext>(null as any)
 
