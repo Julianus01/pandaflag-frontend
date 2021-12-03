@@ -1,5 +1,5 @@
 import { Heading, Alert, AlertIcon, Button, Icon, Box } from '@chakra-ui/react'
-import { IEnvironment } from 'api/ProjectsApi'
+import { IEnvironment } from 'api/EnvironmentsApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import { FiHash } from 'react-icons/fi'

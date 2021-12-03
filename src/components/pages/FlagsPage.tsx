@@ -25,7 +25,6 @@ import CreateFlagDialog from './flags/CreateFlagDialog'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import { EmptyEnvironment } from 'api/ProjectsApi'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
@@ -33,6 +32,7 @@ import { FiFlag } from 'react-icons/fi'
 import TryApi from './flags/TryApi'
 import AccessibleBackground from 'components/styles/AccessibleBackground'
 import TableContainer from 'components/shared/TableContainer'
+import { DefaultEnvironment } from 'api/EnvironmentsApi'
 
 function SkeletonTable() {
   return (
@@ -85,7 +85,7 @@ function FlagsPage() {
 
   function changeEnvironment(index: number) {
     dispatch(
-      configurationActions.setEnvironment(index === 0 ? EmptyEnvironment.production : EmptyEnvironment.development)
+      configurationActions.setEnvironment(index === 0 ? DefaultEnvironment.production : DefaultEnvironment.development)
     )
   }
 

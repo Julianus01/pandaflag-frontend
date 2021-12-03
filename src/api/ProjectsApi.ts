@@ -18,16 +18,7 @@ import { FirestoreCollection } from './FirestoreCollection'
 import FlagsApi from './FlagsApi'
 import { v4 as uuidv4 } from 'uuid'
 import { IOrganization } from './OrganizationsApi'
-
-export interface IEnvironment {
-  name: string
-  color: string
-}
-
-export const EmptyEnvironment = {
-  production: { name: 'production', color: 'orange' },
-  development: { name: 'development', color: 'blue' },
-}
+import EnvironmentsApi, { DefaultEnvironment, IEnvironment } from './EnvironmentsApi'
 
 export interface IProject {
   id: string
@@ -87,31 +78,13 @@ async function createProject(name: string): Promise<IProject> {
   const newProject = {
     name,
     organizationId: organization.id,
-    environments: [EmptyEnvironment.production, EmptyEnvironment.development],
+    environments: [DefaultEnvironment.production, DefaultEnvironment.development],
     apiKey: uuidv4(),
     createdAt,
   }
+
   const newProjectDoc = await addDoc(collection(getFirestore(), FirestoreCollection.projects), newProject)
-
-  return { ...newProject, id: newProjectDoc.id }
-}
-
-interface ICreateFirstProjectParams {
-  name: string
-  organizationId: string
-}
-
-async function createFirstProject({ name, organizationId }: ICreateFirstProjectParams): Promise<IProject> {
-  const createdAt = Timestamp.now()
-
-  const newProject = {
-    name,
-    organizationId: organizationId,
-    environments: [EmptyEnvironment.production, EmptyEnvironment.development],
-    apiKey: uuidv4(),
-    createdAt,
-  }
-  const newProjectDoc = await addDoc(collection(getFirestore(), FirestoreCollection.projects), newProject)
+  await EnvironmentsApi.createDefaultEnvironments(organization.id, newProjectDoc.id)
 
   return { ...newProject, id: newProjectDoc.id }
 }
@@ -140,7 +113,6 @@ const ProjectsApi = {
 
   // Create
   createProject,
-  createFirstProject,
 
   // Update
   updateProject,

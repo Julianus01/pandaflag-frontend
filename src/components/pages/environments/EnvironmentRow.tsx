@@ -1,5 +1,5 @@
 import { Box, Td, Tr } from '@chakra-ui/react'
-import { IEnvironment } from 'api/ProjectsApi'
+import { IEnvironment } from 'api/EnvironmentsApi'
 import styled from 'styled-components/macro'
 
 interface IProps {

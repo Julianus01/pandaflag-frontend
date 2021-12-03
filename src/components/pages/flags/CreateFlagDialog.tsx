@@ -23,10 +23,10 @@ import _ from 'lodash/fp'
 import AutoTextArea from 'components/styles/AutoTextarea'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
-import { IEnvironment } from 'api/ProjectsApi'
 import styled from 'styled-components/macro'
 import ReactGa from 'react-ga'
 import { GaActionFlag, GaCategory } from 'utils/GaUtils'
+import { IEnvironment } from 'api/EnvironmentsApi'
 
 interface Props {
   isOpen: boolean

@@ -16,9 +16,10 @@ import {
   setDoc,
 } from 'firebase/firestore'
 import store from 'redux/store'
+import { IEnvironment } from './EnvironmentsApi'
 import { FirestoreCollection } from './FirestoreCollection'
 import { IOrganization } from './OrganizationsApi'
-import { IEnvironment, IProject } from './ProjectsApi'
+import { IProject } from './ProjectsApi'
 
 export interface IFlag {
   id: string

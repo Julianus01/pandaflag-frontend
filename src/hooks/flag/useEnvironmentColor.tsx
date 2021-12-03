@@ -1,4 +1,4 @@
-import { IEnvironment } from 'api/ProjectsApi'
+import { IEnvironment } from 'api/EnvironmentsApi'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 

@@ -6,7 +6,7 @@ import {
   Tr,
   Box,
 } from '@chakra-ui/react'
-import { IEnvironment } from 'api/ProjectsApi'
+import { IEnvironment } from 'api/EnvironmentsApi'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import EnvironmentRow from './EnvironmentRow'

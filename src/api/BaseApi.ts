@@ -1,6 +1,7 @@
 import store from 'redux/store'
+import { IEnvironment } from './EnvironmentsApi'
 import { IFlag } from './FlagsApi'
-import { IEnvironment, IProject } from './ProjectsApi'
+import { IProject } from './ProjectsApi'
 
 async function getFlags(): Promise<IFlag[]> {
   const project = store.getState().configuration.project as IProject

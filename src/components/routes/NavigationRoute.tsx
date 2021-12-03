@@ -5,11 +5,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import store, { IStoreState } from 'redux/store'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
-import ProjectsApi, { IEnvironment, IProject } from 'api/ProjectsApi'
+import ProjectsApi, { IProject } from 'api/ProjectsApi'
 import LSUtils from 'utils/LSUtils'
 import { configurationActions, IConfigurationState } from 'redux/ducks/configurationDuck'
 import { useEffect } from 'react'
 import AccessibleBackground from 'components/styles/AccessibleBackground'
+import { IEnvironment } from 'api/EnvironmentsApi'
 
 function useUpdateConfigurationEnvironment() {
   const dispatch = useDispatch()
