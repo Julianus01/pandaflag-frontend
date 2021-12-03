@@ -34,17 +34,29 @@ export interface IFlagEnvironment extends IEnvironment {
   enabled: boolean
 }
 
+interface DbFlagEnvironment {
+  id: string
+  enabled: boolean
+}
+
 // Get Flags
 async function getFlags(): Promise<IFlag[]> {
   const project = store.getState().configuration.project as IProject
+  const environments = await EnvironmentsApi.getEnvironments()
 
   const querySnapshot = await getDocs(
     query(collection(getFirestore(), FirestoreCollection.flags), where('projectId', '==', project.id))
   )
 
   const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
-    const data = doc.data()
-    return { ...data, id: doc.id }
+    const data = doc.data() as IFlag
+
+    const flagEnvironments: IFlagEnvironment[] = data.environments.map((flagEnvironment: DbFlagEnvironment) => {
+      const found = environments.find((environment: IEnvironment) => environment.id === flagEnvironment.id)
+      return { ...found, enabled: flagEnvironment.enabled }
+    }) as IFlagEnvironment[]
+
+    return { ...data, id: doc.id, environments: flagEnvironments }
   }) as IFlag[]
 
   return flags.sort((a, b) => a.name.localeCompare(b.name))
@@ -97,19 +109,20 @@ async function createFlag({ name, description = '' }: ICreateFlagRequestParams):
 
   const environments = await EnvironmentsApi.getEnvironments()
   const defaultEnvironments = environments.map((environment: IEnvironment) => ({ ...environment, enabled: false }))
+  const dbEnvironments = environments.map((environment: IEnvironment) => ({ id: environment.id, enabled: false }))
 
   const newFlag = {
     name,
     organizationId: organization.id,
     projectId: project.id,
     description,
-    environments: defaultEnvironments,
+    environments: dbEnvironments,
     createdAt,
   }
 
   const newFlagDoc = await addDoc(collection(getFirestore(), FirestoreCollection.flags), newFlag)
 
-  return { ...newFlag, id: newFlagDoc.id }
+  return { ...newFlag, environments: defaultEnvironments, id: newFlagDoc.id }
 }
 
 // Update

@@ -55,7 +55,6 @@ function SkeletonTable() {
 
 function FlagsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-
   const project = useSelector((state: IStoreState) => state.configuration.project)
 
   const { data: flags, isLoading, isFetching } = useQuery([ApiQueryId.getFlags, project?.id], FlagsApi.getFlags)
@@ -64,6 +63,8 @@ function FlagsPage() {
     const found = flags?.find((flag: IFlag) => flag.name.toLowerCase() === name.toLowerCase())
     return Boolean(found)
   }
+
+  console.log(flags)
 
   return (
     <BoxedPage>
