@@ -19,7 +19,6 @@ import RoutePage from 'components/routes/RoutePage'
 import AutoTextArea from 'components/styles/AutoTextarea'
 import BoxedPage from 'components/styles/BoxedPage'
 import usePropState from 'hooks/common/usePropState'
-import useFlagEnvironment from 'hooks/flag/useEnvironmentColor'
 import { ChangeEvent, useState } from 'react'
 import { FiChevronLeft } from 'react-icons/fi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -40,7 +39,6 @@ function FlagPage() {
 
   const [flag, setFlag] = usePropState<IFlag | undefined>(undefined)
   const [isDirty, setIsDirty] = useState<boolean>(false)
-  const environment = useFlagEnvironment(flag?.environmentName)
 
   const { data, isFetching } = useQuery(
     [ApiQueryId.getFlagByName, params.name],
@@ -74,7 +72,7 @@ function FlagPage() {
   }
 
   function toggleStatus() {
-    setFlag({ ...flag, enabled: !flag?.enabled } as IFlag)
+    // setFlag({ ...flag, enabled: !flag?.enabled } as IFlag)
     onDirty()
   }
 
@@ -194,23 +192,19 @@ function FlagPage() {
           after you complete the update.
         </Text>
 
-        <FormControl display="flex" alignItems="center">
+        {/* <FormControl display="flex" alignItems="center">
           <Switch id="status" mr={2} size="md" isChecked={flag.enabled} onChange={toggleStatus} colorScheme="green" />
 
           <FormLabel cursor="pointer" fontWeight="normal" htmlFor="status" mb="0">
             {flag.enabled ? 'Enabled' : 'Disabled'}
           </FormLabel>
-        </FormControl>
+        </FormControl> */}
       </Section>
 
       <Section mb={4}>
         <Heading mb={2} as="h5" size="sm">
           Environment
         </Heading>
-
-        <Tag variant="subtle" colorScheme={environment?.color}>
-          {flag.environmentName}
-        </Tag>
       </Section>
 
       <Section>

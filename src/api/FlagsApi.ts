@@ -27,32 +27,24 @@ export interface IFlag {
   projectId: string
   name: string
   description?: string
-  enabled: boolean
-  environmentName: string
+  environments: IEnvironment[]
   createdAt: Timestamp
 }
 
 // Get Flags
 async function getFlags(): Promise<IFlag[]> {
-  // TODO:
-  return []
-  // const project = store.getState().configuration.project as IProject
-  // const environment = store.getState().configuration.environment as IEnvironment
+  const project = store.getState().configuration.project as IProject
 
-  // const querySnapshot = await getDocs(
-  //   query(
-  //     collection(getFirestore(), FirestoreCollection.flags),
-  //     where('projectId', '==', project.id),
-  //     where('environmentName', '==', environment.name)
-  //   )
-  // )
+  const querySnapshot = await getDocs(
+    query(collection(getFirestore(), FirestoreCollection.flags), where('projectId', '==', project.id))
+  )
 
-  // const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
-  //   const data = doc.data()
-  //   return { ...data, id: doc.id }
-  // }) as IFlag[]
+  const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, id: doc.id }
+  }) as IFlag[]
 
-  // return flags.sort((a, b) => a.name.localeCompare(b.name))
+  return flags.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 async function getFlag(id: string): Promise<IFlag | undefined> {

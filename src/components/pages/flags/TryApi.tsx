@@ -51,8 +51,6 @@ function mapFlagForResponse(flag: IFlag | undefined) {
   return {
     name: flag.name,
     description: flag.description,
-    enabled: flag.enabled,
-    environmentName: flag.environmentName,
   }
 }
 

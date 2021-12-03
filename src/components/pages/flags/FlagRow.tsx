@@ -21,19 +21,19 @@ function FlagRow({ flag }: IProps) {
   const history = useHistory()
   const queryClient = useQueryClient()
 
-  const [enabled, setEnabled] = usePropState(flag.enabled)
+  // const [enabled, setEnabled] = usePropState(flag.enabled)
 
   const updateFlagMutation = useMutation(FlagsApi.updateFlag, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
 
-      toast({
-        title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${flag.environmentName}'`,
-        position: 'top-right',
-        isClosable: true,
-        variant: 'subtle',
-        status: 'success',
-      })
+      // toast({
+      //   title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${flag.environmentName}'`,
+      //   position: 'top-right',
+      //   isClosable: true,
+      //   variant: 'subtle',
+      //   status: 'success',
+      // })
     },
   })
 
@@ -43,8 +43,8 @@ function FlagRow({ flag }: IProps) {
       action: GaActionFlag.toggle,
     })
 
-    setEnabled(!enabled)
-    updateFlagMutation.mutate({ id: flag.id, enabled: !flag.enabled })
+    // setEnabled(!enabled)
+    // updateFlagMutation.mutate({ id: flag.id, enabled: !flag.enabled })
   }
 
   function onEdit() {
@@ -61,7 +61,7 @@ function FlagRow({ flag }: IProps) {
         {/* Potential thread to follow */}
         {/* https://giters.com/chakra-ui/chakra-ui/issues/4596 */}
         <SwitchContainer disabled={updateFlagMutation.isLoading}>
-          <Switch mr={4} size="md" isChecked={enabled} onChange={toggleStatus} colorScheme="green" shadow="none" />
+          <Switch mr={4} size="md" isChecked={false} onChange={toggleStatus} colorScheme="green" shadow="none" />
         </SwitchContainer>
 
         {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}

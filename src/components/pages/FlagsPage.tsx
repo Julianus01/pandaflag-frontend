@@ -10,9 +10,6 @@ import {
   Thead,
   Tr,
   useDisclosure,
-  Tabs,
-  TabList,
-  Tab,
   Spinner,
   Icon,
   Text,
@@ -22,17 +19,15 @@ import FlagsApi, { IFlag } from 'api/FlagsApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import { IStoreState } from 'redux/store'
 import CreateFlagDialog from './flags/CreateFlagDialog'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import { configurationActions } from 'redux/ducks/configurationDuck'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
 import { FiFlag } from 'react-icons/fi'
 import TryApi from './flags/TryApi'
 import AccessibleBackground from 'components/styles/AccessibleBackground'
 import TableContainer from 'components/shared/TableContainer'
-import { DefaultEnvironment } from 'api/EnvironmentsApi'
 
 function SkeletonTable() {
   return (
@@ -87,29 +82,12 @@ function FlagsPage() {
       <Box display="flex">
         <Heading flex={1} mb={10} as="h3" size="lg">
           Flags
+          {isFetching && <Spinner colorScheme="blue" ml={6} size="sm" />}
         </Heading>
 
         <Button leftIcon={<Icon as={FiFlag} />} onClick={onOpen} colorScheme="blue">
           Add Flag
         </Button>
-      </Box>
-
-      <Box mb={10} display="flex" alignItems="center">
-        {/* TODO: */}
-        {/* <Tabs
-          onChange={changeEnvironment}
-          index={environment?.name === 'production' ? 0 : 1}
-          size="sm"
-          variant="soft-rounded"
-          colorScheme={environment?.color}
-        >
-          <TabList>
-            <Tab># production</Tab>
-            <Tab># development</Tab>
-          </TabList>
-        </Tabs> */}
-
-        {isFetching && <Spinner colorScheme="blue" ml={6} size="sm" />}
       </Box>
 
       {isLoading && <SkeletonTable />}
