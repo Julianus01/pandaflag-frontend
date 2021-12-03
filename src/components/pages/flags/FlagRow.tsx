@@ -1,6 +1,6 @@
 import { Box, Icon, IconButton, Spinner, Td, Tooltip, Tr, Switch, useToast, HStack } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
-import FlagsApi, { IFlag } from 'api/FlagsApi'
+import FlagsApi, { IFlag, IFlagEnvironment } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
 import usePropState from 'hooks/common/usePropState'
 import moment from 'moment'
@@ -55,19 +55,19 @@ function FlagRow({ flag }: IProps) {
     <Row>
       <Td>{flag.name}</Td>
 
-      <Td position="relative">
-        {/* Couldn't use isDisabled from Switch because there is focus bug */}
-        {/* After disabled, focus was stuck on Switch component */}
-        {/* Potential thread to follow */}
-        {/* https://giters.com/chakra-ui/chakra-ui/issues/4596 */}
-        <SwitchContainer disabled={updateFlagMutation.isLoading}>
-          <Switch mr={4} size="md" isChecked={false} onChange={toggleStatus} colorScheme="green" shadow="none" />
-        </SwitchContainer>
+      {flag.environments.map((flagEnvironment: IFlagEnvironment) => (
+        <Td key={flagEnvironment.id} isNumeric>
+          {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
 
-        {updateFlagMutation.isLoading && <AbsoluteSpinner size="sm" />}
-      </Td>
-
-      <Td isNumeric>{moment.unix(flag.createdAt.seconds).format('MMM Do')}</Td>
+          {/* Couldn't use isDisabled from Switch because there is focus bug */}
+          {/* After disabled, focus was stuck on Switch component */}
+          {/* Potential thread to follow */}
+          {/* https://giters.com/chakra-ui/chakra-ui/issues/4596 */}
+          <SwitchContainer disabled={updateFlagMutation.isLoading}>
+            <Switch ml={4} size="md" isChecked={false} onChange={toggleStatus} colorScheme="green" shadow="none" />
+          </SwitchContainer>
+        </Td>
+      ))}
 
       <Td>
         <HStack spacing="2" display="flex" justifyContent="flex-end">

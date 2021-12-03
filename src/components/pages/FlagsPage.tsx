@@ -30,35 +30,24 @@ import AccessibleBackground from 'components/styles/AccessibleBackground'
 import TableContainer from 'components/shared/TableContainer'
 
 function SkeletonTable() {
+
   return (
     <TableContainer>
       <CustomTable variant="simple">
         <TableHead>
-          <Tr>
-            <Th textTransform="capitalize">Name</Th>
-            <Th textTransform="capitalize">Active</Th>
-            <Th textTransform="capitalize" isNumeric>
-              Created at
+          <Row>
+            <Th width="100%" textTransform="capitalize">
+              Name
             </Th>
-
-            <Th />
-          </Tr>
+          </Row>
         </TableHead>
 
         <Tbody>
-          <Tr>
+          <Row>
             <Td>
               <Skeleton height="24px" />
             </Td>
-
-            <Td>
-              <Skeleton height="24px" />
-            </Td>
-
-            <Td>
-              <Skeleton height="24px" />
-            </Td>
-          </Tr>
+          </Row>
         </Tbody>
       </CustomTable>
     </TableContainer>
@@ -123,4 +112,12 @@ const CustomTable = styled(Table)`
 const CodeContainer = styled(AccessibleBackground)`
   border-radius: ${({ theme }) => theme.radii.md};
   padding: ${({ theme }) => theme.space[2]};
+`
+
+const Row = styled(Tr)`
+  :last-child {
+    > td {
+      border: 0;
+    }
+  }
 `
