@@ -12,6 +12,7 @@ import {
   Timestamp,
   orderBy,
   setDoc,
+  writeBatch,
 } from 'firebase/firestore'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
@@ -36,7 +37,7 @@ export const DefaultEnvironment = {
   development: { name: 'development', color: 'blue' },
 }
 
-async function createDefaultEnvironments(organizationId: string, projectId: string) {
+async function createDefaultEnvironments(organizationId: string, projectId: string): Promise<void> {
   console.log('here')
   const createdAt = Timestamp.now()
 
@@ -57,9 +58,26 @@ async function createDefaultEnvironments(organizationId: string, projectId: stri
   ])
 }
 
+// Delete Project Environments
+async function deleteProjectEnvironments(projectId: string): Promise<void> {
+  const querySnapshot = await getDocs(
+    query(collection(getFirestore(), FirestoreCollection.environments), where('projectId', '==', projectId))
+  )
+
+  const batch = writeBatch(getFirestore())
+  querySnapshot.docs.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+    batch.delete(doc.ref)
+  })
+
+  return batch.commit()
+}
+
 const EnvironmentsApi = {
   // Create
   createDefaultEnvironments,
+
+  //   Delete
+  deleteProjectEnvironments,
 }
 
 export default EnvironmentsApi

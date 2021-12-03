@@ -103,6 +103,7 @@ async function deleteProject(projectId: string): Promise<void> {
   await Promise.all([
     deleteDoc(doc(getFirestore(), FirestoreCollection.projects, projectId)),
     FlagsApi.deleteProjectFlags(projectId),
+    EnvironmentsApi.deleteProjectEnvironments(projectId)
   ])
 }
 
