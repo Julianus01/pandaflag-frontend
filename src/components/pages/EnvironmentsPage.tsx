@@ -1,24 +1,17 @@
 import { Heading, Alert, AlertIcon, Button, Icon, Box, Spinner } from '@chakra-ui/react'
-import { ApiQueryId } from 'api/ApiQueryId'
-import EnvironmentsApi, { IEnvironment } from 'api/EnvironmentsApi'
+import { IEnvironment } from 'api/EnvironmentsApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
+import EnvironmentsContext from 'context/EnvironmentsContext'
+import { useContext } from 'react'
 import { FiHash } from 'react-icons/fi'
-import { useQuery } from 'react-query'
-import { useSelector } from 'react-redux'
-import { IStoreState } from 'redux/store'
 import { PricingUtils } from 'utils/PricingUtils'
 import EnvironmentsTable from './environments/EnvironmentsTable'
 
 const Quota = PricingUtils.getQuota()
 
 function EnvironmentsPage() {
-  const project = useSelector((state: IStoreState) => state.configuration.project)
-
-  const { data: environments, isFetching } = useQuery(
-    [ApiQueryId.getEnvironments, project?.id],
-    EnvironmentsApi.getEnvironments
-  )
+  const { data: environments, isFetching } = useContext(EnvironmentsContext)
 
   const isEnvironmentsQuotaReached = (environments?.length as number) >= Quota.environments
 

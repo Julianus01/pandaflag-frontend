@@ -12,6 +12,7 @@ import theme from 'theme/theme'
 import StyledThemeProvider from 'theme/StyledThemeProvider'
 import { ProjectsContextProvider } from 'context/ProjectsContext'
 import ReactGA from 'react-ga'
+import { EnvironmentsContextProvider } from 'context/EnvironmentsContext'
 
 // For version checking
 console.log('v0.1.3')
@@ -37,12 +38,14 @@ function RootHTML() {
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
           <ProjectsContextProvider>
-            <GlobalStyles />
-            <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+            <EnvironmentsContextProvider>
+              <GlobalStyles />
+              <ColorModeScript initialColorMode={theme.config.initialColorMode} />
 
-            <StyledThemeProvider>
-              <App />
-            </StyledThemeProvider>
+              <StyledThemeProvider>
+                <App />
+              </StyledThemeProvider>
+            </EnvironmentsContextProvider>
           </ProjectsContextProvider>
         </ChakraProvider>
       </QueryClientProvider>
