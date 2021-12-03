@@ -64,8 +64,6 @@ function FlagsPage() {
     return Boolean(found)
   }
 
-  console.log(flags)
-
   return (
     <BoxedPage>
       <Box display="flex">

@@ -54,7 +54,6 @@ async function getEnvironments(): Promise<IDbEnvironment[]> {
 
 // Create
 async function createDefaultEnvironments(organizationId: string, projectId: string): Promise<void> {
-  console.log('here')
   const createdAt = Timestamp.now()
 
   await Promise.all([
