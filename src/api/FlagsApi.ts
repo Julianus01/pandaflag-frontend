@@ -122,7 +122,18 @@ export interface IUpdateFlagRequestParams extends Partial<IFlag> {
 }
 
 async function updateFlag({ id, ...updates }: IUpdateFlagRequestParams): Promise<void> {
-  return setDoc(doc(getFirestore(), FirestoreCollection.flags, id), updates, { merge: true })
+  let newUpdates = { ...updates }
+  if (newUpdates?.environments) {
+    newUpdates = {
+      ...newUpdates,
+      environments: newUpdates.environments.map((environment: IEnvironment) => ({
+        id: environment.id,
+        enabled: environment.enabled,
+      })) as any,
+    }
+  }
+
+  return setDoc(doc(getFirestore(), FirestoreCollection.flags, id), newUpdates, { merge: true })
 }
 
 // Delete Flag
