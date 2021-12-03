@@ -33,17 +33,16 @@ export interface IFlag {
 // Get Flags
 async function getFlags(): Promise<IFlag[]> {
   const project = store.getState().configuration.project as IProject
-  const environments = await EnvironmentsApi.getEnvironments()
-
-  const querySnapshot = await getDocs(
-    query(collection(getFirestore(), FirestoreCollection.flags), where('projectId', '==', project.id))
-  )
+  const [dbEnvironments, querySnapshot] = await Promise.all([
+    EnvironmentsApi.getEnvironments(),
+    getDocs(query(collection(getFirestore(), FirestoreCollection.flags), where('projectId', '==', project.id))),
+  ])
 
   const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data() as IFlag
 
     const flagEnvironments: IEnvironment[] = data.environments.map((flagEnvironment: IFlagEnvironment) => {
-      const found = environments.find((environment: IDbEnvironment) => environment.id === flagEnvironment.id)
+      const found = dbEnvironments.find((environment: IDbEnvironment) => environment.id === flagEnvironment.id)
       return { ...found, enabled: flagEnvironment.enabled }
     }) as IEnvironment[]
 
@@ -66,13 +65,16 @@ async function getFlag(id: string): Promise<IFlag | undefined> {
 async function getFlagByName(name: string): Promise<IFlag | undefined> {
   const project = store.getState().configuration.project as IProject
 
-  const querySnapshot = await getDocs(
-    query(
-      collection(getFirestore(), FirestoreCollection.flags),
-      where('projectId', '==', project.id),
-      where('name', '==', name)
-    )
-  )
+  const [dbEnvironments, querySnapshot] = await Promise.all([
+    EnvironmentsApi.getEnvironments(),
+    getDocs(
+      query(
+        collection(getFirestore(), FirestoreCollection.flags),
+        where('projectId', '==', project.id),
+        where('name', '==', name)
+      )
+    ),
+  ])
 
   const flags = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
@@ -83,7 +85,13 @@ async function getFlagByName(name: string): Promise<IFlag | undefined> {
     return undefined
   }
 
-  return flags[0]
+  const flag = flags[0]
+  const flagEnvironments = flag.environments.map((flagEnvironment: IFlagEnvironment) => {
+    const found = dbEnvironments.find((dbEnvironment: IDbEnvironment) => dbEnvironment.id === flagEnvironment.id)
+    return { ...found, enabled: flagEnvironment.enabled }
+  }) as IEnvironment[]
+
+  return { ...flag, environments: flagEnvironments }
 }
 
 // Create Flag

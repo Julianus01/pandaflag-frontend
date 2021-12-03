@@ -45,7 +45,7 @@ interface IProps {
 
 const ALL_FLAGS_SELECTION = 'All Flags'
 
-function mapFlagForResponse(flag: IFlag | undefined) {
+function mapFlagForResponse(flag: any) {
   if (!flag) {
     return {}
   }
@@ -53,6 +53,7 @@ function mapFlagForResponse(flag: IFlag | undefined) {
   return {
     name: flag.name,
     description: flag.description,
+    enabled: flag.enabled,
   }
 }
 
@@ -210,22 +211,20 @@ function TryApi({ flags, isOpen }: IProps) {
             <Box mr={2}>
               <Menu autoSelect={false}>
                 <MenuButton disabled={isLoading} as={Button} rightIcon={<Icon strokeWidth={2.4} as={FiChevronDown} />}>
-                  {selected}
+                  {selectedEnvironment}
                 </MenuButton>
 
                 <MenuList maxHeight="300px" overflowY={`overlay` as any}>
                   <MenuOptionGroup
                     fontWeight="semibold"
-                    onChange={(value) => setSelected(value as string)}
-                    value={selected}
+                    onChange={(value) => setSelectedEnvironment(value as string)}
+                    value={selectedEnvironment}
                     type="radio"
-                    title="Flag"
+                    title="Environment"
                   >
-                    <MenuItemOption value={ALL_FLAGS_SELECTION}>{ALL_FLAGS_SELECTION}</MenuItemOption>
-
-                    {flags.map((flag: IFlag) => (
-                      <MenuItemOption key={flag.id} value={flag.name}>
-                        {flag.name}
+                    {environments?.map((environment: IDbEnvironment) => (
+                      <MenuItemOption key={environment.id} value={environment.name}>
+                        {environment.name}
                       </MenuItemOption>
                     ))}
                   </MenuOptionGroup>
@@ -235,20 +234,22 @@ function TryApi({ flags, isOpen }: IProps) {
 
             <Menu autoSelect={false}>
               <MenuButton disabled={isLoading} as={Button} rightIcon={<Icon strokeWidth={2.4} as={FiChevronDown} />}>
-                {selectedEnvironment}
+                {selected}
               </MenuButton>
 
               <MenuList maxHeight="300px" overflowY={`overlay` as any}>
                 <MenuOptionGroup
                   fontWeight="semibold"
-                  onChange={(value) => setSelectedEnvironment(value as string)}
-                  value={selectedEnvironment}
+                  onChange={(value) => setSelected(value as string)}
+                  value={selected}
                   type="radio"
-                  title="Environment"
+                  title="Flag"
                 >
-                  {environments?.map((environment: IDbEnvironment) => (
-                    <MenuItemOption key={environment.id} value={environment.name}>
-                      {environment.name}
+                  <MenuItemOption value={ALL_FLAGS_SELECTION}>{ALL_FLAGS_SELECTION}</MenuItemOption>
+
+                  {flags.map((flag: IFlag) => (
+                    <MenuItemOption key={flag.id} value={flag.name}>
+                      {flag.name}
                     </MenuItemOption>
                   ))}
                 </MenuOptionGroup>
@@ -312,7 +313,9 @@ function TryApi({ flags, isOpen }: IProps) {
 
               <CodeContainer>
                 {Array.isArray(response) && (
-                  <JsonCode $loading={isLoading}>{JSON.stringify(mapFlagsForResponse(flags), null, 2)}</JsonCode>
+                  <JsonCode $loading={isLoading}>
+                    {JSON.stringify(mapFlagsForResponse(response as IFlag[]), null, 2)}
+                  </JsonCode>
                 )}
 
                 {!Array.isArray(response) && (
