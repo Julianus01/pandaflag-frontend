@@ -25,7 +25,7 @@ export interface IEnvironment {
   id: string
   projectId: string
   organizationId: string
-  name: string
+  name: string 
   color: string
   createdAt: Timestamp
 }

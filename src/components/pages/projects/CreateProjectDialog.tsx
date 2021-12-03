@@ -120,14 +120,13 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
 
         <AlertDialogFooter>
           <Button
-            minWidth="120px"
             onClick={createProject}
-            loadingText="Adding"
+            loadingText="Adding Project"
             disabled={projectName.length < 3 || createProjectMutation.isLoading}
             colorScheme="blue"
             isLoading={createProjectMutation.isLoading}
           >
-            Add
+            Add Project
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

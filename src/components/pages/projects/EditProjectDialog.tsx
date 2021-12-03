@@ -139,7 +139,6 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
 
         <AlertDialogFooter>
           <Button
-            minWidth="120px"
             onClick={updateProject}
             loadingText="Updating"
             disabled={

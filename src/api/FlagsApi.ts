@@ -16,7 +16,7 @@ import {
   setDoc,
 } from 'firebase/firestore'
 import store from 'redux/store'
-import { IEnvironment } from './EnvironmentsApi'
+import EnvironmentsApi, { IEnvironment } from './EnvironmentsApi'
 import { FirestoreCollection } from './FirestoreCollection'
 import { IOrganization } from './OrganizationsApi'
 import { IProject } from './ProjectsApi'
@@ -27,8 +27,12 @@ export interface IFlag {
   projectId: string
   name: string
   description?: string
-  environments: IEnvironment[]
+  environments: IFlagEnvironment[]
   createdAt: Timestamp
+}
+
+export interface IFlagEnvironment extends IEnvironment {
+  enabled: boolean
 }
 
 // Get Flags
@@ -93,56 +97,26 @@ interface ICreateFlagRequestParams {
 }
 
 async function createFlag({ name, description = '' }: ICreateFlagRequestParams): Promise<IFlag> {
-  // TODO:
-  return {} as any
-  // const organization = store.getState().configuration.organization as IOrganization
-  // const project = store.getState().configuration.project as IProject
-  // const environment = store.getState().configuration.environment as IEnvironment
-  // const createdAt = Timestamp.now()
-
-  // const newFlag = {
-  //   name,
-  //   organizationId: organization.id,
-  //   projectId: project.id,
-  //   description,
-  //   enabled: false,
-  //   environmentName: environment.name,
-  //   createdAt,
-  // }
-
-  // const newFlagDoc = await addDoc(collection(getFirestore(), FirestoreCollection.flags), newFlag)
-
-  // return { ...newFlag, id: newFlagDoc.id }
-}
-
-interface ICreateFlagForAllEnvironmentsRequestParams {
-  name: string
-  description?: string
-}
-
-async function createFlagForAllEnvironments({
-  name,
-  description = '',
-}: ICreateFlagForAllEnvironmentsRequestParams): Promise<
-  [DocumentReference<DocumentData>, DocumentReference<DocumentData>]
-> {
   const organization = store.getState().configuration.organization as IOrganization
   const project = store.getState().configuration.project as IProject
+
   const createdAt = Timestamp.now()
+
+  const environments = await EnvironmentsApi.getEnvironments()
+  const defaultEnvironments = environments.map((environment: IEnvironment) => ({ ...environment, enabled: false }))
 
   const newFlag = {
     name,
     organizationId: organization.id,
     projectId: project.id,
     description,
-    enabled: false,
+    environments: defaultEnvironments,
     createdAt,
   }
 
-  return Promise.all([
-    addDoc(collection(getFirestore(), FirestoreCollection.flags), { ...newFlag, environmentName: 'production' }),
-    addDoc(collection(getFirestore(), FirestoreCollection.flags), { ...newFlag, environmentName: 'development' }),
-  ])
+  const newFlagDoc = await addDoc(collection(getFirestore(), FirestoreCollection.flags), newFlag)
+
+  return { ...newFlag, id: newFlagDoc.id }
 }
 
 // Update
@@ -180,7 +154,6 @@ const FlagsApi = {
 
   // Create
   createFlag,
-  createFlagForAllEnvironments,
 
   // Update
   updateFlag,

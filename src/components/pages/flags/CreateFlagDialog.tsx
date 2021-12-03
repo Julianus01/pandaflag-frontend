@@ -9,10 +9,7 @@ import {
   FormControl,
   FormErrorMessage,
   Input,
-  Switch,
   Text,
-  FormLabel,
-  Box,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi from 'api/FlagsApi'
@@ -20,7 +17,6 @@ import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import _ from 'lodash/fp'
 import AutoTextArea from 'components/styles/AutoTextarea'
-import styled from 'styled-components/macro'
 import ReactGa from 'react-ga'
 import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 
@@ -36,11 +32,9 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
   const [flagName, setFlagName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
-  const [addForAll, setAddForAll] = useState<boolean>(false)
   const [error, setError] = useState<string | undefined>(undefined)
 
   const createFlagMutation = useMutation(FlagsApi.createFlag, { onSuccess })
-  const createFlagForAllMutation = useMutation(FlagsApi.createFlagForAllEnvironments, { onSuccess })
 
   function onSuccess() {
     queryClient.invalidateQueries(ApiQueryId.getFlags)
@@ -56,7 +50,6 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   function resetState() {
     setFlagName('')
     setDescription('')
-    setAddForAll(false)
     setError(undefined)
   }
 
@@ -82,10 +75,6 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
     setDescription(event.target.value)
   }
 
-  function toggleAddForAll() {
-    setAddForAll(!addForAll)
-  }
-
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter' && flagName.length >= 3) {
       formatNameSnakeCase()
@@ -108,14 +97,8 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
     const params = { name, description: description.trim() }
 
-    if (addForAll) {
-      createFlagForAllMutation.mutate(params)
-    } else {
-      createFlagMutation.mutate(params)
-    }
+    createFlagMutation.mutate(params)
   }
-
-  const isLoading = createFlagMutation.isLoading || createFlagForAllMutation.isLoading
 
   return (
     <AlertDialog
@@ -125,7 +108,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
       isOpen={isOpen}
       isCentered
       autoFocus={false}
-      closeOnOverlayClick={!isLoading}
+      closeOnOverlayClick={!createFlagMutation.isLoading}
       closeOnEsc
     >
       <AlertDialogOverlay />
@@ -135,16 +118,12 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
         <AlertDialogBody>
           <Text color="gray.500" mb={2} fontSize="sm">
-            Environment
-          </Text>
-
-          <Text color="gray.500" mb={2} fontSize="sm">
             Flag will be transformed into <i>snake_case</i> for easy api access
           </Text>
 
-          <FormControl mb={10} isInvalid={Boolean(error)}>
+          <FormControl isInvalid={Boolean(error)}>
             <Input
-              disabled={isLoading}
+              disabled={createFlagMutation.isLoading}
               onBlur={formatNameSnakeCase}
               ref={inputRef as any}
               onKeyDown={onKeyDown}
@@ -167,26 +146,17 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
               value={description}
             />
           </FormControl>
-
-          <FormControl display="flex" alignItems="center">
-            <Switch id="add-for-all" mr={2} isChecked={addForAll} onChange={toggleAddForAll} colorScheme="blue" />
-
-            <FormLabel cursor="pointer" fontWeight="normal" htmlFor="add-for-all" mb="0">
-              Add flag for all environments
-            </FormLabel>
-          </FormControl>
         </AlertDialogBody>
 
         <AlertDialogFooter>
           <Button
-            minWidth="120px"
             onClick={createFlag}
-            loadingText="Adding"
-            disabled={flagName.length < 3 || isLoading}
+            loadingText="Adding Flag"
+            disabled={flagName.length < 3 || createFlagMutation.isLoading}
             colorScheme="blue"
-            isLoading={isLoading}
+            isLoading={createFlagMutation.isLoading}
           >
-            Add
+            Add Flag
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -195,14 +165,3 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 }
 
 export default CreateFlagDialog
-
-const AllTagsContainer = styled(Box)`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: ${({ theme }) => theme.space[3]};
-
-  > span {
-    margin-right: ${({ theme }) => theme.space[1]};
-    margin-bottom: ${({ theme }) => theme.space[1]};
-  }
-`
