@@ -99,11 +99,6 @@ function TryApi({ flags, isOpen }: IProps) {
     }
   }, [flags, selected])
 
-  // useEffect(() => {
-  //   setSelected(ALL_FLAGS_SELECTION)
-  //   setResponse(undefined)
-  // }, [configuration.environment?.name])
-
   function onCopyCode() {
     ReactGA.event({
       category: GaCategory.tryApi,
