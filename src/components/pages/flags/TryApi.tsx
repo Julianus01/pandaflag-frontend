@@ -19,6 +19,7 @@ import {
   MenuOptionGroup,
   MenuItemOption,
   useClipboard,
+  useToast,
 } from '@chakra-ui/react'
 import { IFlag } from 'api/FlagsApi'
 import RoutePage from 'components/routes/RoutePage'
@@ -70,6 +71,7 @@ function getDefaultSelectedEnvironment(environments: IDbEnvironment[] | undefine
 }
 
 function TryApi({ flags, isOpen }: IProps) {
+  const toast = useToast()
   const history = useHistory()
   const configuration = useSelector((state: IStoreState) => state.configuration)
   const { data: environments } = useContext(EnvironmentsContext)
@@ -109,22 +111,34 @@ function TryApi({ flags, isOpen }: IProps) {
   }
 
   async function runApi() {
-    setIsLoading(true)
+    try {
+      setIsLoading(true)
 
-    ReactGA.event({
-      category: GaCategory.tryApi,
-      action: GaActionTryApi.run,
-    })
+      ReactGA.event({
+        category: GaCategory.tryApi,
+        action: GaActionTryApi.run,
+      })
 
-    if (selected === ALL_FLAGS_SELECTION) {
-      const flagsResponse = await BaseApi.getFlags(selectedEnvironment)
-      setResponse(flagsResponse)
-    } else {
-      const flagResponse = await BaseApi.getFlag(selected, selectedEnvironment)
-      setResponse(flagResponse)
+      if (selected === ALL_FLAGS_SELECTION) {
+        const flagsResponse = await BaseApi.getFlags(selectedEnvironment)
+        setResponse(flagsResponse)
+      } else {
+        const flagResponse = await BaseApi.getFlag(selected, selectedEnvironment)
+        setResponse(flagResponse)
+      }
+
+      setIsLoading(false)
+    } catch {
+      toast({
+        title: `An error has occured`,
+        position: 'top-right',
+        isClosable: true,
+        variant: 'subtle',
+        status: 'error',
+      })
+
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
   }
 
   function onAccordionChange(index: number) {
