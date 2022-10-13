@@ -11,6 +11,7 @@ import ReactGa from 'react-ga'
 import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 import { useEffect, useState } from 'react'
 import { IEnvironment } from 'api/EnvironmentsApi'
+import { Link } from 'react-router-dom'
 
 function isFlagEnabled(flag: IFlag, environmentName: string): boolean {
   const foundEnvironment = flag.environments.find((environment: IEnvironment) => environment.name === environmentName)
@@ -93,7 +94,9 @@ function FlagRow({ flag }: IProps) {
 
   return (
     <Row>
-      <Td>{flag.name}</Td>
+      <Td>
+        <FlagLink to={RoutePage.flag(flag.name)}>{flag.name}</FlagLink>
+      </Td>
 
       {flag.environments.map((flagEnvironment: IEnvironment) => (
         <Td key={flagEnvironment.id}>
@@ -144,4 +147,10 @@ const SwitchContainer = styled.div<{ disabled: boolean }>`
       cursor: not-allowed;
       pointer-events: none;
     `};
+`
+
+const FlagLink = styled(Link)`
+  :hover {
+    text-decoration: underline;
+  }
 `

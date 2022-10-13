@@ -28,6 +28,7 @@ import { FiFlag } from 'react-icons/fi'
 import TryApi from './flags/TryApi'
 import AccessibleBackground from 'components/styles/AccessibleBackground'
 import TableContainer from 'components/shared/TableContainer'
+import DocumentationSDKs from './flags/DocumentationSDKs'
 
 function SkeletonTable() {
   return (
@@ -57,7 +58,7 @@ function FlagsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const project = useSelector((state: IStoreState) => state.configuration.project)
 
-  const { data: flags, isLoading, isFetching } = useQuery([ApiQueryId.getFlags, project?.id], FlagsApi.getFlags)
+  const { data: flags, isLoading } = useQuery([ApiQueryId.getFlags, project?.id], FlagsApi.getFlags)
 
   function doesFlagAlreadyExist(name: string): boolean {
     const found = flags?.find((flag: IFlag) => flag.name.toLowerCase() === name.toLowerCase())
@@ -69,7 +70,7 @@ function FlagsPage() {
       <Box display="flex">
         <Heading flex={1} mb={10} as="h3" size="lg">
           Flags
-          {isFetching && <Spinner colorScheme="blue" ml={6} size="sm" />}
+          {isLoading && <Spinner colorScheme="blue" ml={6} size="sm" />}
         </Heading>
 
         <Button leftIcon={<Icon as={FiFlag} />} onClick={onOpen} colorScheme="blue">
@@ -78,16 +79,21 @@ function FlagsPage() {
       </Box>
 
       {isLoading && <SkeletonTable />}
-      {!isLoading && Boolean(flags?.length) && (
-        <TableContainer>
-          <FlagsTable flags={flags as IFlag[]} />
-        </TableContainer>
-      )}
 
       {!isLoading && Boolean(flags?.length) && (
-        <CodeContainer shadow="xs" mt={4}>
-          <TryApi flags={flags as IFlag[]} />
-        </CodeContainer>
+        <>
+          <TableContainer>
+            <FlagsTable flags={flags as IFlag[]} />
+          </TableContainer>
+
+          <Box mt={4}>
+            <DocumentationSDKs />
+          </Box>
+
+          <CodeContainer shadow="xs" mt={4}>
+            <TryApi flags={flags as IFlag[]} />
+          </CodeContainer>
+        </>
       )}
 
       {!isLoading && !Boolean(flags?.length) && <Text>No flags. Go ahead and add your first flag</Text>}
