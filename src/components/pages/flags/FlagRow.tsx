@@ -152,5 +152,6 @@ const SwitchContainer = styled.div<{ disabled: boolean }>`
 const FlagLink = styled(Link)`
   :hover {
     text-decoration: underline;
+    color: ${({ theme }) => theme.colors.blue[400]};
   }
 `
