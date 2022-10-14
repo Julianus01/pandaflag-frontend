@@ -13,6 +13,7 @@ import AuthApi from 'api/AuthApi'
 import OrganizationsApi from 'api/OrganizationsApi'
 import ReactGa from 'react-ga'
 import { GaActionUser, GaCategory } from 'utils/GaUtils'
+import { FaGoogle } from 'react-icons/fa'
 
 const ValidationSchema = yup.object().shape({
   Password: yup.string().min(6).required(),
@@ -78,6 +79,16 @@ function RegisterPage() {
     }
   }
 
+  async function onLoginWithGoogleCredential() {
+    try {
+      temporaryMessage.hideMessage()
+      await AuthApi.loginWithGoogleCredential()
+    } catch (err) {
+      const error = err as IError
+      temporaryMessage.showMessage(error.message)
+    }
+  }
+
   return (
     <Container>
       <Box display="flex" justifyContent="center">
@@ -88,8 +99,8 @@ function RegisterPage() {
 
       <Content>
         <Section py="12" px="16">
-          <LoginContainer>
-            <Heading mb={4} as="h3" size="lg">
+          <RegisterContainer>
+            <Heading mb={2} as="h3" size="lg">
               Create new account
             </Heading>
 
@@ -149,7 +160,15 @@ function RegisterPage() {
             >
               Create Account
             </Button>
-          </LoginContainer>
+
+            <Text textAlign="center" mt={4}>
+              or
+            </Text>
+
+            <Button leftIcon={<FaGoogle />} mt={4} width="100%" size="md" onClick={onLoginWithGoogleCredential}>
+              continue with Google
+            </Button>
+          </RegisterContainer>
         </Section>
 
         <Text mt={10} mx="auto" color="gray.500">
@@ -180,7 +199,7 @@ const Content = styled.div`
   justify-content: center;
 `
 
-const LoginContainer = styled.div`
+const RegisterContainer = styled.div`
   width: 300px;
 `
 

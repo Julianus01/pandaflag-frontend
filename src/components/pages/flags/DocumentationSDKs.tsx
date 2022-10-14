@@ -21,9 +21,7 @@ const DocumentationSDKs = () => {
 
         <Box ml={2}>
           <Box display="flex" alignItems="center">
-            <Text mr={1} fontWeight="semibold">
-              React SDK
-            </Text>
+            <Title mr={1}>React SDK</Title>
 
             <FiExternalLink />
           </Box>
@@ -47,9 +45,7 @@ const DocumentationSDKs = () => {
 
         <Box ml={2}>
           <Box display="flex" alignItems="center">
-            <Text mr={1} fontWeight="semibold">
-              Node.js SDK
-            </Text>
+            <Title mr={1}>Node.js SDK</Title>
 
             <FiExternalLink />
           </Box>
@@ -65,7 +61,17 @@ const DocumentationSDKs = () => {
 
 export default DocumentationSDKs
 
+const Title = styled(Text)`
+  font-weight: semibold;
+`
+
 const SDKContainer = styled(AccessibleBackground)`
   border-radius: ${({ theme }) => theme.radii.md};
   padding: ${({ theme }) => theme.space[3]};
+
+  :hover {
+    ${Title}, svg {
+      color: ${({ theme }) => theme.colors.blue[500]};
+    }
+  }
 `

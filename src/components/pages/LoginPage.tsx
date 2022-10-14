@@ -95,7 +95,7 @@ function LoginPage() {
       <Content>
         <Section py="12" px="16">
           <LoginContainer>
-            <Heading mb={4} as="h3" size="lg">
+            <Heading mb={2} as="h3" size="lg">
               Log in
             </Heading>
 
@@ -136,7 +136,7 @@ function LoginPage() {
               loadingText="Log in"
               isLoading={isLoading}
               disabled={isLoading}
-              mt={6}
+              mt={4}
               onClick={onLogin}
               colorScheme="blue"
               width="100%"
@@ -145,11 +145,11 @@ function LoginPage() {
               Log in
             </Button>
 
-            <Text textAlign="center" mt={6}>
+            <Text textAlign="center" mt={4}>
               or
             </Text>
 
-            <Button leftIcon={<FaGoogle />} mt={6} width="100%" size="md" onClick={onLoginWithGoogleCredential}>
+            <Button leftIcon={<FaGoogle />} mt={4} width="100%" size="md" onClick={onLoginWithGoogleCredential}>
               continue with Google
             </Button>
           </LoginContainer>
