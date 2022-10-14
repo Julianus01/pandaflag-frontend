@@ -1,6 +1,5 @@
 import { Box, Button, Icon, IconButton, Td, Tr, Tooltip, HStack, useDisclosure } from '@chakra-ui/react'
 import { IProject } from 'api/ProjectsApi'
-import moment from 'moment'
 import { FiKey, FiEdit2 } from 'react-icons/fi'
 import { useClipboard } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
@@ -8,6 +7,7 @@ import { IStoreState } from 'redux/store'
 import styled from 'styled-components/macro'
 import ProjectRemoveButton from './ProjectRemoveButton'
 import EditProjectDialog from './EditProjectDialog'
+import { format, fromUnixTime } from 'date-fns'
 
 interface IProps {
   project: IProject
@@ -17,6 +17,9 @@ function ProjectRow({ project }: IProps) {
   const activeProject = useSelector((state: IStoreState) => state.configuration.project)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { hasCopied, onCopy } = useClipboard(project.apiKey)
+
+  const createdAt = fromUnixTime(project.createdAt.seconds)
+  const showYear = new Date().getFullYear() > createdAt.getFullYear()
 
   return (
     <Row>
@@ -35,7 +38,7 @@ function ProjectRow({ project }: IProps) {
       </Td>
 
       <Td whiteSpace="nowrap" isNumeric>
-        {moment.unix(project.createdAt.seconds).format('MMM Do')}
+        {format(fromUnixTime(project.createdAt.seconds), `MMM do ${showYear ? 'uu' : ''}`)}
       </Td>
 
       <Td>
