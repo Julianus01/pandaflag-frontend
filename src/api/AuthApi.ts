@@ -6,6 +6,8 @@ import {
   sendEmailVerification,
   signOut,
   sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from '@firebase/auth'
 import { IUser } from 'redux/ducks/authDuck'
 
@@ -61,6 +63,18 @@ async function createAccountWithEmailAndPassword(email: string, password: string
   }
 }
 
+async function loginWithGoogleCredential() {
+  try {
+    const auth = getAuth()
+    const provider = new GoogleAuthProvider()
+
+    await signInWithPopup(auth, provider)
+  } catch (err) {
+    const error: AuthError = err as AuthError
+    throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))
+  }
+}
+
 async function sendVerificationEmail() {
   try {
     const auth = getAuth()
@@ -93,6 +107,7 @@ async function logout() {
 
 const AuthApi = {
   loginInWithEmailAndPassword,
+  loginWithGoogleCredential,
   createAccountWithEmailAndPassword,
   sendVerificationEmail,
   sendPasswordReset,

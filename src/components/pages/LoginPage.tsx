@@ -2,6 +2,7 @@ import Section from 'components/styles/Section'
 import styled from 'styled-components/macro'
 import { Heading, Text, Input, InputLeftElement, Icon, InputGroup, Button, Box } from '@chakra-ui/react'
 import { FiMail, FiKey } from 'react-icons/fi'
+import { FaGoogle } from 'react-icons/fa'
 import ThemeButton from 'theme/ThemeButton'
 import PandaflagLogo from 'components/shared/PandaflagLogo'
 import { ChangeEvent, useState, KeyboardEvent } from 'react'
@@ -73,6 +74,16 @@ function LoginPage() {
     }
   }
 
+  async function onLoginWithGoogleCredential() {
+    try {
+      temporaryMessage.hideMessage()
+      await AuthApi.loginWithGoogleCredential()
+    } catch (err) {
+      const error = err as IError
+      temporaryMessage.showMessage(error.message)
+    }
+  }
+
   return (
     <Container>
       <Box display="flex" justifyContent="center">
@@ -132,6 +143,14 @@ function LoginPage() {
               size="md"
             >
               Log in
+            </Button>
+
+            <Text textAlign="center" mt={6}>
+              or
+            </Text>
+
+            <Button leftIcon={<FaGoogle />} mt={6} width="100%" size="md" onClick={onLoginWithGoogleCredential}>
+              continue with Google
             </Button>
           </LoginContainer>
         </Section>
