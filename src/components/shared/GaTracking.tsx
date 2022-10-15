@@ -1,14 +1,14 @@
 import { useLocation } from 'react-router'
-import ReactGA from 'react-ga'
 import { useEffect } from 'react'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 
 function GaTracking() {
   const location = useLocation()
+  const analytics = getAnalytics()
 
   useEffect(() => {
-    ReactGA.set({ page: location.pathname + location.search })
-    ReactGA.pageview(location.pathname + location.search)
-  }, [location])
+    logEvent(analytics, 'page_view', { page_location: location.pathname + location.search })
+  }, [location, analytics])
 
   return null
 }
