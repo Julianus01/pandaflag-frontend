@@ -15,8 +15,6 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import { FiMinus } from 'react-icons/fi'
 import { useQueryClient, useMutation, useQuery } from 'react-query'
-import ReactGa from 'react-ga'
-import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 
 interface IProps {
   flag: IFlag
@@ -43,11 +41,6 @@ function FlagRemoveButton({ flag }: IProps) {
   })
 
   function deleteFlag() {
-    ReactGa.event({
-      category: GaCategory.editing,
-      action: GaActionFlag.delete,
-    })
-
     onClose()
     deleteMutation.mutate(flag.id)
   }

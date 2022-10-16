@@ -19,6 +19,8 @@ import FlagsApi from './FlagsApi'
 import { v4 as uuidv4 } from 'uuid'
 import { IOrganization } from './OrganizationsApi'
 import EnvironmentsApi from './EnvironmentsApi'
+import ReactGa from 'react-ga'
+import { GaActionProject, GaCategory } from 'utils/GaUtils'
 
 export interface IProject {
   id: string
@@ -84,6 +86,11 @@ async function createProject(name: string): Promise<IProject> {
   const newProjectDoc = await addDoc(collection(getFirestore(), FirestoreCollection.projects), newProject)
   await EnvironmentsApi.createDefaultEnvironments(organization.id, newProjectDoc.id)
 
+  ReactGa.event({
+    category: GaCategory.editing,
+    action: GaActionProject.create,
+  })
+
   return { ...newProject, id: newProjectDoc.id }
 }
 
@@ -103,6 +110,11 @@ async function deleteProject(projectId: string): Promise<void> {
     FlagsApi.deleteProjectFlags(projectId),
     EnvironmentsApi.deleteProjectEnvironments(projectId),
   ])
+
+  ReactGa.event({
+    category: GaCategory.editing,
+    action: GaActionProject.delete,
+  })
 }
 
 const ProjectsApi = {

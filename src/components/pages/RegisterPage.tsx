@@ -11,8 +11,6 @@ import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import RoutePage from 'components/routes/RoutePage'
 import AuthApi from 'api/AuthApi'
 import OrganizationsApi from 'api/OrganizationsApi'
-import ReactGa from 'react-ga'
-import { GaActionUser, GaCategory } from 'utils/GaUtils'
 import { FaGoogle } from 'react-icons/fa'
 
 const ValidationSchema = yup.object().shape({
@@ -61,11 +59,6 @@ function RegisterPage() {
         Email: form.email,
         Password: form.password,
         Organization: form.organizationName,
-      })
-
-      ReactGa.event({
-        category: GaCategory.user,
-        action: GaActionUser.createAccount,
       })
 
       setIsLoading(true)

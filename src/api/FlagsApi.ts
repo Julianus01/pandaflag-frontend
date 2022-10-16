@@ -19,6 +19,8 @@ import EnvironmentsApi, { IDbEnvironment, IEnvironment, IFlagEnvironment } from 
 import { FirestoreCollection } from './FirestoreCollection'
 import { IOrganization } from './OrganizationsApi'
 import { IProject } from './ProjectsApi'
+import ReactGa from 'react-ga'
+import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 
 export interface IFlag {
   id: string
@@ -121,6 +123,11 @@ async function createFlag({ name, description = '' }: ICreateFlagRequestParams):
 
   const newFlagDoc = await addDoc(collection(getFirestore(), FirestoreCollection.flags), newFlag)
 
+  ReactGa.event({
+    category: GaCategory.editing,
+    action: GaActionFlag.create,
+  })
+
   return { ...newFlag, environments: defaultEnvironments, id: newFlagDoc.id }
 }
 
@@ -146,7 +153,12 @@ async function updateFlag({ id, ...updates }: IUpdateFlagRequestParams): Promise
 
 // Delete Flag
 async function deleteFlag(flagId: string): Promise<void> {
-  return deleteDoc(doc(getFirestore(), FirestoreCollection.flags, flagId))
+  await deleteDoc(doc(getFirestore(), FirestoreCollection.flags, flagId))
+
+  ReactGa.event({
+    category: GaCategory.editing,
+    action: GaActionFlag.delete,
+  })
 }
 
 async function deleteProjectFlags(projectId: string): Promise<void> {

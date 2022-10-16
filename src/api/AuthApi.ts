@@ -10,6 +10,8 @@ import {
   signInWithPopup,
 } from '@firebase/auth'
 import { IUser } from 'redux/ducks/authDuck'
+import ReactGa from 'react-ga'
+import { GaActionUser, GaCategory } from 'utils/GaUtils'
 
 enum FirebaseAuthErrorCode {
   emailAlreadyExists = 'auth/email-already-exists',
@@ -46,6 +48,11 @@ async function loginInWithEmailAndPassword(email: string, password: string) {
     const auth = getAuth()
 
     await signInWithEmailAndPassword(auth, email, password)
+
+    ReactGa.event({
+      category: GaCategory.user,
+      action: GaActionUser.login,
+    })
   } catch (err) {
     const error: AuthError = err as AuthError
     throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))
@@ -57,6 +64,11 @@ async function createAccountWithEmailAndPassword(email: string, password: string
     const auth = getAuth()
 
     await createUserWithEmailAndPassword(auth, email, password)
+
+    ReactGa.event({
+      category: GaCategory.user,
+      action: GaActionUser.createAccount,
+    })
   } catch (err) {
     const error: AuthError = err as AuthError
     throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))
@@ -69,6 +81,11 @@ async function loginWithGoogleCredential() {
     const provider = new GoogleAuthProvider()
 
     await signInWithPopup(auth, provider)
+
+    ReactGa.event({
+      category: GaCategory.user,
+      action: GaActionUser.login,
+    })
   } catch (err) {
     const error: AuthError = err as AuthError
     throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))

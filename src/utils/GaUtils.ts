@@ -2,10 +2,12 @@ export enum GaCategory {
   user = 'User',
   tryApi = 'Try Api',
   editing = 'Editing',
+  forms = 'Forms',
 }
 
 export enum GaActionUser {
   createAccount = 'Created an account',
+  login = 'Login',
 }
 
 export enum GaActionTryApi {
@@ -22,4 +24,8 @@ export enum GaActionFlag {
 export enum GaActionProject {
   create = 'Created Project',
   delete = 'Deleted Project',
+}
+
+export enum GaActionFeedback {
+  sendFeedback = 'Send Feedback',
 }

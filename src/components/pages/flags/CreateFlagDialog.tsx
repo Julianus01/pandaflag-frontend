@@ -17,8 +17,6 @@ import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import _ from 'lodash/fp'
 import AutoTextArea from 'components/styles/AutoTextarea'
-import ReactGa from 'react-ga'
-import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 
 interface Props {
   isOpen: boolean
@@ -89,11 +87,6 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
       setError('A flag with this name already exists')
       return
     }
-
-    ReactGa.event({
-      category: GaCategory.editing,
-      action: GaActionFlag.create,
-    })
 
     const params = { name, description: description.trim() }
 
