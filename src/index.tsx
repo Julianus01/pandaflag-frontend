@@ -3,7 +3,7 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
-import { initFirebase } from './firebase_init'
+import './firebase_init'
 import GlobalStyles from 'components/styles/GlobalStyles'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -21,8 +21,6 @@ ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID as string)
 
 let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty('--vh', `${vh}px`)
-
-initFirebase()
 
 const queryClient = new QueryClient({
   defaultOptions: {
