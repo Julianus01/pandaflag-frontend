@@ -20,6 +20,7 @@ import RegisterPage from 'components/pages/RegisterPage'
 import ForgotPasswordPage from 'components/pages/ForgotPasswordPage'
 import EnvironmentsPage from 'components/pages/EnvironmentsPage'
 import GaTracking from 'components/shared/GaTracking'
+import FeedbackPage from 'components/pages/FeedbackPage'
 
 function Routes() {
   return (
@@ -42,6 +43,7 @@ function Routes() {
         <AuthenticatedRoute component={EnvironmentsPage} exact path={RoutePage.environments()} />
         <AuthenticatedRoute component={OrganizationPage} exact path={RoutePage.organization()} />
         <AuthenticatedRoute component={ProfilePage} exact path={RoutePage.profile()} />
+        <AuthenticatedRoute component={FeedbackPage} exact path={RoutePage.feedback()} />
 
         {/* Use case routes */}
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />

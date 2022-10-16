@@ -1,7 +1,7 @@
 import { Box, Icon, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
-import { FiLayers, FiFlag, FiGlobe, FiHash } from 'react-icons/fi'
+import { FiLayers, FiFlag, FiGlobe, FiHash, FiMessageSquare } from 'react-icons/fi'
 import RoutePage from 'components/routes/RoutePage'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
@@ -34,6 +34,12 @@ const CONFIGURATION_MENU_ITEMS: ISidebarMenuItem[] = [
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiGlobe} />,
   },
 ]
+
+const FEEDBACK_MENU_ITEM = {
+  name: 'Feedback',
+  href: RoutePage.feedback(),
+  icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiMessageSquare} />,
+}
 
 function Sidebar() {
   return (
@@ -70,6 +76,14 @@ function Sidebar() {
         ))}
       </Content>
 
+      <Box marginTop="auto">
+        <SidebarMenuItem
+          menuItem={FEEDBACK_MENU_ITEM}
+          active={window.location.pathname.includes(FEEDBACK_MENU_ITEM.href)}
+        >
+          {FEEDBACK_MENU_ITEM.name}
+        </SidebarMenuItem>
+      </Box>
       <SidebarFooter />
     </Container>
   )

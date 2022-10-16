@@ -46,6 +46,10 @@ function profile() {
   return `/profile`
 }
 
+function feedback() {
+  return `/feedback`
+}
+
 const RoutePage = {
   // Public
   root,
@@ -62,6 +66,7 @@ const RoutePage = {
   organization,
   createFirstProject,
   profile,
+  feedback
 }
 
 export default RoutePage
