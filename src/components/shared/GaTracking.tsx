@@ -7,7 +7,6 @@ function GaTracking() {
   const location = useLocation()
 
   useEffect(() => {
-    console.log(analytics)
     logEvent(analytics, 'page_view', { page_location: location.pathname + location.search })
   }, [location])
 
