@@ -21,6 +21,8 @@ import ForgotPasswordPage from 'components/pages/ForgotPasswordPage'
 import EnvironmentsPage from 'components/pages/EnvironmentsPage'
 import GaTracking from 'components/shared/GaTracking'
 import FeedbackPage from 'components/pages/FeedbackPage'
+import CreateOrganizationRoute from './CreateOrganizationRoute'
+import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
 
 function Routes() {
   return (
@@ -49,6 +51,7 @@ function Routes() {
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
 
         <CreateFirstProjectRoute component={CreateFirstProjectPage} exact path={RoutePage.createFirstProject()} />
+        <CreateOrganizationRoute component={CreateOrganizationPage} exact path={RoutePage.createOrganization()} />
 
         {/* Redirect to root */}
         <Route component={() => <Redirect to={RoutePage.root()} />} exact path="/*" />

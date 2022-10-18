@@ -28,7 +28,7 @@ function OrganizationRoute(props: RouteProps) {
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
 
   if (!organization) {
-    return null
+    return <Redirect to={RoutePage.createOrganization()} />
   }
 
   return <ProjectRoute organizationId={organization.id} {...props} />

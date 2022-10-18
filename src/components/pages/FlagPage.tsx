@@ -44,9 +44,6 @@ function FlagPage() {
     return flag?.environments.sort((a, b) => b.name.localeCompare(a.name))
   }, [flag])
 
-  console.log('Flag')
-  console.log(flag)
-
   const { data, isFetching } = useQuery(
     [ApiQueryId.getFlagByName, params.name],
     () => FlagsApi.getFlagByName(params.name),
