@@ -32,13 +32,13 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
   const [description, setDescription] = useState<string>('')
   const [error, setError] = useState<string | undefined>(undefined)
 
-  const createFlagMutation = useMutation(FlagsApi.createFlag, { onSuccess })
-
-  function onSuccess() {
-    queryClient.invalidateQueries(ApiQueryId.getFlags)
-    onClose()
-    resetState()
-  }
+  const createFlagMutation = useMutation(FlagsApi.createFlag, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(ApiQueryId.getFlags)
+      onClose()
+      resetState()
+    },
+  })
 
   function _onClose() {
     onClose()
@@ -127,18 +127,18 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
             />
 
             <FormErrorMessage>{error}</FormErrorMessage>
-
-            <AutoTextArea
-              mt={2}
-              borderRadius="md"
-              variant="filled"
-              placeholder="Optional: Description"
-              size="sm"
-              resize="none"
-              onChange={onDescriptionChange}
-              value={description}
-            />
           </FormControl>
+
+          <AutoTextArea
+            mt={2}
+            borderRadius="md"
+            variant="filled"
+            placeholder="Optional: Description"
+            size="sm"
+            resize="none"
+            onChange={onDescriptionChange}
+            value={description}
+          />
         </AlertDialogBody>
 
         <AlertDialogFooter>

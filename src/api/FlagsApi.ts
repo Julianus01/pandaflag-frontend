@@ -137,6 +137,12 @@ export interface IUpdateFlagRequestParams extends Partial<IFlag> {
 }
 
 async function updateFlag({ id, ...updates }: IUpdateFlagRequestParams): Promise<void> {
+  const flag = await getFlag(id)
+
+  if (!flag) {
+    throw new Error(`Flag with the given id doesn't exist`)
+  }
+
   let newUpdates = { ...updates }
   if (newUpdates?.environments) {
     newUpdates = {

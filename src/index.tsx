@@ -5,7 +5,6 @@ import reportWebVitals from './reportWebVitals'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import './firebase_init'
 import GlobalStyles from 'components/styles/GlobalStyles'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider as ReduxProvider } from 'react-redux'
 import store from './redux/store'
 import theme from 'theme/theme'
@@ -13,6 +12,7 @@ import StyledThemeProvider from 'theme/StyledThemeProvider'
 import { ProjectsContextProvider } from 'context/ProjectsContext'
 import ReactGA from 'react-ga'
 import { EnvironmentsContextProvider } from 'context/EnvironmentsContext'
+import ReactQueryProvider from 'provider/ReactQueryProvider'
 
 // For version checking
 console.log('v1.0.0')
@@ -22,19 +22,11 @@ ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID as string)
 let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty('--vh', `${vh}px`)
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
-})
-
 function RootHTML() {
   return (
     <ReduxProvider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
+      <ChakraProvider theme={theme}>
+        <ReactQueryProvider>
           <ProjectsContextProvider>
             <EnvironmentsContextProvider>
               <GlobalStyles />
@@ -45,8 +37,8 @@ function RootHTML() {
               </StyledThemeProvider>
             </EnvironmentsContextProvider>
           </ProjectsContextProvider>
-        </ChakraProvider>
-      </QueryClientProvider>
+        </ReactQueryProvider>
+      </ChakraProvider>
     </ReduxProvider>
   )
 }
