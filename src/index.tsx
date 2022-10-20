@@ -12,7 +12,7 @@ import StyledThemeProvider from 'theme/StyledThemeProvider'
 import { ProjectsContextProvider } from 'context/ProjectsContext'
 import ReactGA from 'react-ga'
 import { EnvironmentsContextProvider } from 'context/EnvironmentsContext'
-import ReactQueryProvider from 'provider/ReactQueryProvider'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 // For version checking
 console.log('v1.0.0')
@@ -22,11 +22,19 @@ ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID as string)
 let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty('--vh', `${vh}px`)
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
 function RootHTML() {
   return (
     <ReduxProvider store={store}>
-      <ChakraProvider theme={theme}>
-        <ReactQueryProvider>
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
           <ProjectsContextProvider>
             <EnvironmentsContextProvider>
               <GlobalStyles />
@@ -37,8 +45,8 @@ function RootHTML() {
               </StyledThemeProvider>
             </EnvironmentsContextProvider>
           </ProjectsContextProvider>
-        </ReactQueryProvider>
-      </ChakraProvider>
+        </ChakraProvider>
+      </QueryClientProvider>
     </ReduxProvider>
   )
 }
