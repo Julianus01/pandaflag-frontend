@@ -33,11 +33,10 @@ import { Link, Redirect, useHistory } from 'react-router-dom'
 import { IStoreState } from 'redux/store'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import ReactGA from 'react-ga'
-import { GaActionTryApi, GaCategory } from 'utils/GaUtils'
 import BaseApi from 'api/BaseApi'
 import EnvironmentsContext from 'context/EnvironmentsContext'
 import { IDbEnvironment } from 'api/EnvironmentsApi'
+import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 interface IProps {
   flags: IFlag[]
@@ -101,23 +100,9 @@ function TryApi({ flags, isOpen }: IProps) {
     }
   }, [flags, selected])
 
-  function onCopyCode() {
-    ReactGA.event({
-      category: GaCategory.tryApi,
-      action: GaActionTryApi.copyCode,
-    })
-
-    onCopy()
-  }
-
   async function runApi() {
     try {
       setIsLoading(true)
-
-      ReactGA.event({
-        category: GaCategory.tryApi,
-        action: GaActionTryApi.run,
-      })
 
       if (selected === ALL_FLAGS_SELECTION) {
         const flagsResponse = await BaseApi.getFlags(selectedEnvironment)
@@ -266,6 +251,7 @@ function TryApi({ flags, isOpen }: IProps) {
             </Menu>
 
             <Button
+              data-splitbee-event={SplitbeeEvent.RunTryApi}
               colorScheme="blue"
               onClick={runApi}
               isLoading={isLoading}
@@ -308,7 +294,12 @@ function TryApi({ flags, isOpen }: IProps) {
             <Code>{`  .then(json => console.log(json))`}</Code>
 
             <ClipboardContainer>
-              <Button onClick={onCopyCode} leftIcon={<Icon as={FiClipboard} />} size="xs">
+              <Button
+                data-splitbee-event={SplitbeeEvent.CopyTryApiCode}
+                onClick={onCopy}
+                leftIcon={<Icon as={FiClipboard} />}
+                size="xs"
+              >
                 {hasCopied ? 'Copied' : 'Copy'}
               </Button>
             </ClipboardContainer>

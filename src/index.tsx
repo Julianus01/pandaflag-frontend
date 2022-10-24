@@ -10,14 +10,12 @@ import store from './redux/store'
 import theme from 'theme/theme'
 import StyledThemeProvider from 'theme/StyledThemeProvider'
 import { ProjectsContextProvider } from 'context/ProjectsContext'
-import ReactGA from 'react-ga'
 import { EnvironmentsContextProvider } from 'context/EnvironmentsContext'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import splitbee from '@splitbee/web'
 
 // For version checking
 console.log('v1.0.0')
-
-ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID as string)
 
 let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty('--vh', `${vh}px`)
@@ -29,6 +27,9 @@ const queryClient = new QueryClient({
     },
   },
 })
+
+// Init splitbee Analytics
+splitbee.init()
 
 function RootHTML() {
   return (

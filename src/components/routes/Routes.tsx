@@ -19,7 +19,6 @@ import OrganizationPage from 'components/pages/OrganizationPage'
 import RegisterPage from 'components/pages/RegisterPage'
 import ForgotPasswordPage from 'components/pages/ForgotPasswordPage'
 import EnvironmentsPage from 'components/pages/EnvironmentsPage'
-import GaTracking from 'components/shared/GaTracking'
 import FeedbackPage from 'components/pages/FeedbackPage'
 import CreateOrganizationRoute from './CreateOrganizationRoute'
 import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
@@ -27,9 +26,6 @@ import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
 function Routes() {
   return (
     <Router>
-      {/* Google Analytics */}
-      <GaTracking />
-
       <Switch>
         {/* Redirect to App if Authenticated */}
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.root()} />

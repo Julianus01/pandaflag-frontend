@@ -15,6 +15,7 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import { FiMinus } from 'react-icons/fi'
 import { useQueryClient, useMutation, useQuery } from 'react-query'
+import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 interface IProps {
   flag: IFlag
@@ -63,7 +64,13 @@ function FlagRemoveButton({ flag }: IProps) {
             Are you sure you want to delete this flag?
           </Text>
 
-          <Button isDisabled={flagsFetching} onClick={deleteFlag} colorScheme="red" variant="ghost">
+          <Button
+            data-splitbee-event={SplitbeeEvent.DeleteFlag}
+            isDisabled={flagsFetching}
+            onClick={deleteFlag}
+            colorScheme="red"
+            variant="ghost"
+          >
             Delete
           </Button>
         </PopoverBody>

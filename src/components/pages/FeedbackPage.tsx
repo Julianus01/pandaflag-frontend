@@ -7,6 +7,7 @@ import { FiSend } from 'react-icons/fi'
 import { KeyboardEvent } from 'react'
 import FeedbackApi from 'api/FeedbackApi'
 import { useMutation } from 'react-query'
+import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 function FeedbackPage() {
   const toast = useToast()
@@ -83,6 +84,7 @@ function FeedbackPage() {
 
       <Box display="flex" justifyContent="center">
         <Button
+          data-splitbee-event={SplitbeeEvent.SendFeedback}
           onClick={sendFeedback}
           isLoading={sendFeedbackMutation.isLoading}
           disabled={sendFeedbackMutation.isLoading || sendDisabled}

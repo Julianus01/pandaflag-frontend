@@ -7,11 +7,10 @@ import { useQueryClient, useMutation } from 'react-query'
 import { useHistory } from 'react-router'
 import styled, { css } from 'styled-components/macro'
 import FlagRemoveButton from './FlagRemoveButton'
-import ReactGa from 'react-ga'
-import { GaActionFlag, GaCategory } from 'utils/GaUtils'
 import { useEffect, useState } from 'react'
 import { IEnvironment } from 'api/EnvironmentsApi'
 import { Link } from 'react-router-dom'
+import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 function isFlagEnabled(flag: IFlag, environmentName: string): boolean {
   const foundEnvironment = flag.environments.find((environment: IEnvironment) => environment.name === environmentName)
@@ -48,11 +47,6 @@ function FlagSwitch({ flag, environmentName }: IFlagSwitchProps) {
   })
 
   function toggleStatus() {
-    ReactGa.event({
-      category: GaCategory.editing,
-      action: GaActionFlag.toggle,
-    })
-
     setEnabled(!enabled)
 
     const newEnvironments: IEnvironment[] = flag?.environments.map((environment: IEnvironment) => {
@@ -75,7 +69,15 @@ function FlagSwitch({ flag, environmentName }: IFlagSwitchProps) {
       {/* Potential thread to follow */}
       {/* https://giters.com/chakra-ui/chakra-ui/issues/4596 */}
       <SwitchContainer disabled={updateFlagMutation.isLoading}>
-        <Switch ml={4} size="md" isChecked={enabled} onChange={toggleStatus} colorScheme="green" shadow="none" />
+        <Switch
+          data-splitbee-event={SplitbeeEvent.ToggleFlagStatus}
+          ml={4}
+          size="md"
+          isChecked={enabled}
+          onChange={toggleStatus}
+          colorScheme="green"
+          shadow="none"
+        />
       </SwitchContainer>
     </Box>
   )

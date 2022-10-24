@@ -11,6 +11,7 @@ import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import RoutePage from 'components/routes/RoutePage'
 import AuthApi from 'api/AuthApi'
 import { NavLink } from 'react-router-dom'
+import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 function generateForgotPasswordLink(email: string) {
   if (!email) {
@@ -133,6 +134,7 @@ function LoginPage() {
             {!!temporaryMessage.message && <Text color="red.500">{temporaryMessage.message}</Text>}
 
             <Button
+              data-splitbee-event={SplitbeeEvent.Login}
               loadingText="Log in"
               isLoading={isLoading}
               disabled={isLoading}
@@ -149,7 +151,14 @@ function LoginPage() {
               or
             </Text>
 
-            <Button leftIcon={<FaGoogle />} mt={4} width="100%" size="md" onClick={onLoginWithGoogleCredential}>
+            <Button
+              data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
+              leftIcon={<FaGoogle />}
+              mt={4}
+              width="100%"
+              size="md"
+              onClick={onLoginWithGoogleCredential}
+            >
               continue with Google
             </Button>
           </LoginContainer>

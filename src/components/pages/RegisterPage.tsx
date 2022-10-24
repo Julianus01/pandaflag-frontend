@@ -12,6 +12,7 @@ import RoutePage from 'components/routes/RoutePage'
 import AuthApi from 'api/AuthApi'
 import OrganizationsApi from 'api/OrganizationsApi'
 import { FaGoogle } from 'react-icons/fa'
+import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 const ValidationSchema = yup.object().shape({
   Password: yup.string().min(6).required(),
@@ -142,6 +143,7 @@ function RegisterPage() {
             {!!temporaryMessage.message && <Text color="red.500">{temporaryMessage.message}</Text>}
 
             <Button
+              data-splitbee-event={SplitbeeEvent.Register}
               isLoading={isLoading}
               loadingText="Creating Account"
               disabled={isLoading}
@@ -158,7 +160,14 @@ function RegisterPage() {
               or
             </Text>
 
-            <Button leftIcon={<FaGoogle />} mt={4} width="100%" size="md" onClick={onLoginWithGoogleCredential}>
+            <Button
+              data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
+              leftIcon={<FaGoogle />}
+              mt={4}
+              width="100%"
+              size="md"
+              onClick={onLoginWithGoogleCredential}
+            >
               continue with Google
             </Button>
           </RegisterContainer>

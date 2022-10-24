@@ -17,6 +17,7 @@ import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import _ from 'lodash/fp'
 import AutoTextArea from 'components/styles/AutoTextarea'
+import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 interface Props {
   isOpen: boolean
@@ -143,6 +144,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
 
         <AlertDialogFooter>
           <Button
+            data-splitbee-event={SplitbeeEvent.CreateFlag}
             onClick={createFlag}
             loadingText="Adding Flag"
             disabled={flagName.length < 3 || createFlagMutation.isLoading}
