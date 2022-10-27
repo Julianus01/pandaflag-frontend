@@ -58,8 +58,12 @@ function acceptInvitation(invitationId: string) {
   return `/accept-invitation/${invitationId}`
 }
 
-function members() {
+function membersRoot() {
   return `/members`
+}
+
+function members(tab: string) {
+  return `/members/${tab}`
 }
 
 const RoutePage = {
@@ -81,7 +85,8 @@ const RoutePage = {
   createFirstProject,
   profile,
   feedback,
-  members
+  membersRoot,
+  members,
 }
 
 export default RoutePage

@@ -19,7 +19,7 @@ import { FiLogOut } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
 import { IUser } from 'redux/ducks/authDuck'
 import { IStoreState } from 'redux/store'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import ThemeButton from 'theme/ThemeButton'
 import ProfileChangePasswordButton from './profile/ProfileChangePasswordButton'
@@ -58,7 +58,7 @@ function ProfilePage() {
           </Heading>
 
           <Box>
-            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="green">
+            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="blue">
               <TagLabel>Admin</TagLabel>
             </Tag>
           </Box>

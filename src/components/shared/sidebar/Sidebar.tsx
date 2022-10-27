@@ -32,7 +32,7 @@ const CONFIGURATION_MENU_ITEMS: ISidebarMenuItem[] = [
   },
   {
     name: 'Members',
-    href: RoutePage.members(),
+    href: RoutePage.membersRoot(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiUsers} />,
   },
   {

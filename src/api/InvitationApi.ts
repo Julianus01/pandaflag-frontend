@@ -28,7 +28,7 @@ export interface IInvitation {
   createdAt: Timestamp
 }
 
-async function getInvitations(): Promise<IInvitation[]> {
+async function getPendingInvitations(): Promise<IInvitation[]> {
   const organization = store.getState().configuration.organization as IOrganization
 
   const querySnapshot = await getDocs(
@@ -66,7 +66,7 @@ async function createInvitation(params: ICreateInvitationParams): Promise<IInvit
 }
 
 const InvitationApi = {
-  getInvitations,
+  getPendingInvitations,
   createInvitation,
 }
 

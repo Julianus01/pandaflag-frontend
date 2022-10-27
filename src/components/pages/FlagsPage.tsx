@@ -1,19 +1,4 @@
-import {
-  Box,
-  Button,
-  Heading,
-  Skeleton,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  useDisclosure,
-  Spinner,
-  Icon,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Button, Heading, useDisclosure, Spinner, Icon, Text } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import BoxedPage from 'components/styles/BoxedPage'
@@ -21,7 +6,6 @@ import { IStoreState } from 'redux/store'
 import CreateFlagDialog from './flags/CreateFlagDialog'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
-import { applyColorMode } from 'theme/StyledThemeProvider'
 import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
 import { FiFlag } from 'react-icons/fi'
@@ -29,30 +13,7 @@ import TryApi from './flags/TryApi'
 import AccessibleBackground from 'components/styles/AccessibleBackground'
 import TableContainer from 'components/shared/TableContainer'
 import DocumentationSDKs from './flags/DocumentationSDKs'
-
-function SkeletonTable() {
-  return (
-    <TableContainer>
-      <CustomTable variant="simple">
-        <TableHead>
-          <Row>
-            <Th width="100%" textTransform="capitalize">
-              Name
-            </Th>
-          </Row>
-        </TableHead>
-
-        <Tbody>
-          <Row>
-            <Td>
-              <Skeleton height="24px" />
-            </Td>
-          </Row>
-        </Tbody>
-      </CustomTable>
-    </TableContainer>
-  )
-}
+import SkeletonTable from 'components/styles/SkeletonTable'
 
 function FlagsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -105,23 +66,7 @@ function FlagsPage() {
 
 export default FlagsPage
 
-const TableHead = styled(Thead)`
-  background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
-`
-
-const CustomTable = styled(Table)`
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
-`
-
 const CodeContainer = styled(AccessibleBackground)`
   border-radius: ${({ theme }) => theme.radii.md};
   padding: ${({ theme }) => theme.space[2]};
-`
-
-const Row = styled(Tr)`
-  :last-child {
-    > td {
-      border: 0;
-    }
-  }
 `

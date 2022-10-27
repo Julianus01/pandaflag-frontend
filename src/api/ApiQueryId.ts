@@ -18,5 +18,5 @@ export enum ApiQueryId {
   getMembers = 'getMembers',
 
   // Invitations
-  getInvitations = 'getInvitations'
+  getPendingInvitations = 'getPendingInvitations'
 }

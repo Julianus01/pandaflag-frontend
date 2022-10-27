@@ -88,8 +88,10 @@ async function inviteMember(params: IInviteMemberParams) {
     throw new Error('A user with this email already exists within your organization')
   }
 
-  const invitations = await InvitationApi.getInvitations()
-  const invitationAlreadyPending = invitations.find((invitation: IInvitation) => invitation.email === params.email)
+  const pendingInvitations = await InvitationApi.getPendingInvitations()
+  const invitationAlreadyPending = pendingInvitations.find(
+    (invitation: IInvitation) => invitation.email === params.email
+  )
 
   if (invitationAlreadyPending) {
     throw new Error(
