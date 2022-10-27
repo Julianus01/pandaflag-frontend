@@ -9,11 +9,13 @@ import {
   Input,
   Select,
   Text,
+  useToast,
 } from '@chakra-ui/react'
+import { ApiQueryId } from 'api/ApiQueryId'
 import UsersApi, { MemberType } from 'api/UsersApi'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import { useState, KeyboardEvent, useRef } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 const isEmailValid = (email: string) => {
@@ -32,9 +34,11 @@ interface IProps {
 function InviteMemberDialog({ isOpen, onClose }: IProps) {
   const inputRef = useRef()
   const temporaryMessage = useTemporaryMessage()
+  const queryClient = useQueryClient()
+  const toast = useToast()
 
-  const [email, setEmail] = useState<string>('iuliancrisan01+1@gmail.com')
-  const [type, setType] = useState<MemberType>(MemberType.admin)
+  const [email, setEmail] = useState<string>('')
+  const [type, setType] = useState<MemberType>(MemberType.member)
 
   const isValidForm = isEmailValid(email)
 
@@ -42,7 +46,12 @@ function InviteMemberDialog({ isOpen, onClose }: IProps) {
 
   function _onClose() {
     onClose()
+    resetState()
+  }
+
+  function resetState() {
     setEmail('')
+    setType(MemberType.member)
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -54,12 +63,26 @@ function InviteMemberDialog({ isOpen, onClose }: IProps) {
   async function sendInvitation() {
     temporaryMessage.hideMessage()
 
-    sendInvitationMutation.mutate(email, {
-      onError: (err: unknown) => {
-        const error = err as Error
-        temporaryMessage.showMessage(error?.message)
-      },
-    })
+    sendInvitationMutation.mutate(
+      { email, memberType: type },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(ApiQueryId.getInvitations)
+          toast({
+            title: `Invitation sent 👍`,
+            isClosable: true,
+            variant: 'subtle',
+          })
+
+          onClose()
+          resetState()
+        },
+        onError: (err: unknown) => {
+          const error = err as Error
+          temporaryMessage.showMessage(error?.message)
+        },
+      }
+    )
   }
 
   return (
@@ -92,10 +115,14 @@ function InviteMemberDialog({ isOpen, onClose }: IProps) {
           />
 
           <Select onChange={(event) => setType(event.target.value as MemberType)} value={type} variant="filled">
-            <option value="admin">Admin</option>
+            <option value={MemberType.member}>Member</option>
           </Select>
 
-          {!!temporaryMessage.message && <Text mt={4} ml={2} color="red.500">{temporaryMessage.message}</Text>}
+          {!!temporaryMessage.message && (
+            <Text mt={4} ml={2} color="red.500">
+              {temporaryMessage.message}
+            </Text>
+          )}
         </AlertDialogBody>
 
         <AlertDialogFooter>

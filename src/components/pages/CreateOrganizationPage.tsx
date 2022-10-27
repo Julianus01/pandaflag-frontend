@@ -42,7 +42,6 @@ function CreateOrganizationPage() {
 
         toast({
           title: `Created organization '${organizationName}'`,
-          position: 'top-right',
           isClosable: true,
           variant: 'subtle',
         })

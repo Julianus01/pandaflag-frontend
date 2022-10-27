@@ -1,4 +1,4 @@
-import { Box, Td, Tr, Avatar, TagLabel, Tag } from '@chakra-ui/react'
+import { Box, Td, Tr, Avatar, TagLabel, Tag, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { format, fromUnixTime } from 'date-fns'
 import { useSelector } from 'react-redux'
@@ -24,7 +24,13 @@ function MemberRow({ member }: IProps) {
         <Box display="flex" alignItems="center">
           <GreenPulse $show={member.uid === currentUser?.uid} />
 
-          {displayName}
+          <Box>
+            <Text>{displayName}</Text>
+
+            <Text fontSize="sm" color="gray.500">
+              {member.email}
+            </Text>
+          </Box>
         </Box>
       </Td>
 

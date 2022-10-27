@@ -30,6 +30,7 @@ export interface IMember extends IUser {
 
 export enum MemberType {
   admin = 'admin',
+  member = 'member',
 }
 
 async function addUserIfDoesntExist(user: IUser): Promise<void> {
@@ -74,23 +75,30 @@ async function getOrganizationMembers() {
   return users
 }
 
-async function inviteMember(email: string) {
+export interface IInviteMemberParams {
+  email: string
+  memberType: MemberType
+}
+
+async function inviteMember(params: IInviteMemberParams) {
   const users = await getOrganizationMembers()
-  const alreadyPartOfTeam = users.find((user: IMember) => user.email === email)
+  const alreadyPartOfTeam = users.find((user: IMember) => user.email === params.email)
 
   if (alreadyPartOfTeam) {
     throw new Error('A user with this email already exists within your organization')
   }
 
   const invitations = await InvitationApi.getInvitations()
-  const invitationAlreadyPending = invitations.find((invitation: IInvitation) => invitation.email === email)
+  const invitationAlreadyPending = invitations.find((invitation: IInvitation) => invitation.email === params.email)
 
   if (invitationAlreadyPending) {
-    throw new Error(`An invitation is already pending for ${email}. You can resend the invitation from the table`)
+    throw new Error(
+      `An invitation is already pending for ${params.email}. You can resend the invitation from the table`
+    )
   }
 
-  const invitation = await InvitationApi.createInvitation(email)
-  await EmailApi.sendMemberInvitation(email, invitation.id)
+  const invitation = await InvitationApi.createInvitation({ email: params.email, memberType: params.memberType })
+  await EmailApi.sendMemberInvitation(params.email, invitation.id)
 }
 
 const UsersApi = {

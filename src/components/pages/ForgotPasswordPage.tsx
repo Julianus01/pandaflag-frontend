@@ -45,7 +45,6 @@ function ForgotPasswordPage() {
 
       toast({
         title: `Reset password email sent`,
-        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
       })

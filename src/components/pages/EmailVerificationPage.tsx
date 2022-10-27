@@ -22,7 +22,6 @@ function EmailVerificationPage() {
 
       toast({
         title: `Verification email sent`,
-        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
       })
@@ -62,12 +61,7 @@ function EmailVerificationPage() {
               {hasBeenSent && 'Email sent'}
             </Button>
 
-            <Button
-              isLoading={isLoading}
-              onClick={onRefresh}
-              ml="2"
-              colorScheme="blue"
-            >
+            <Button isLoading={isLoading} onClick={onRefresh} ml="2" colorScheme="blue">
               Refresh
             </Button>
           </Box>

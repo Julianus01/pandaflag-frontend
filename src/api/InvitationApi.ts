@@ -12,6 +12,7 @@ import {
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
 import { IOrganization } from './OrganizationsApi'
+import { MemberType } from './UsersApi'
 
 export enum InvitationStatus {
   pending = 'pending',
@@ -21,6 +22,7 @@ export enum InvitationStatus {
 export interface IInvitation {
   id: string
   email: string
+  memberType: MemberType
   organizationId: string
   status: InvitationStatus
   createdAt: Timestamp
@@ -41,14 +43,20 @@ async function getInvitations(): Promise<IInvitation[]> {
   return invitations
 }
 
-async function createInvitation(email: string): Promise<IInvitation> {
+export interface ICreateInvitationParams {
+  email: string
+  memberType: MemberType
+}
+
+async function createInvitation(params: ICreateInvitationParams): Promise<IInvitation> {
   const organization = store.getState().configuration.organization as IOrganization
   const createdAt = Timestamp.now()
 
   const newInvitation = {
-    email,
+    email: params.email,
     organizationId: organization.id,
     status: InvitationStatus.pending,
+    memberType: params.memberType,
     createdAt,
   }
 

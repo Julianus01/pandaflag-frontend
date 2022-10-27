@@ -38,7 +38,6 @@ function FlagSwitch({ flag, environmentName }: IFlagSwitchProps) {
 
       toast({
         title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${environmentName}'`,
-        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
         status: 'success',

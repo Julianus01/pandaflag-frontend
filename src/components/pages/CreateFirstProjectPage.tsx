@@ -39,7 +39,6 @@ function CreateFirstProjectPage() {
 
         toast({
           title: `Created project '${projectName}'`,
-          position: 'top-right',
           isClosable: true,
           variant: 'subtle',
         })

@@ -19,7 +19,6 @@ function FeedbackPage() {
     onSuccess: () => {
       toast({
         title: `Feedback sent!`,
-        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
       })
