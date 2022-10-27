@@ -54,6 +54,14 @@ function feedback() {
   return `/feedback`
 }
 
+function acceptInvitation(invitationId: string) {
+  return `/accept-invitation/${invitationId}`
+}
+
+function members() {
+  return `/members`
+}
+
 const RoutePage = {
   // Public
   root,
@@ -61,6 +69,7 @@ const RoutePage = {
   register,
   emailVerification,
   forgotPassword,
+  acceptInvitation,
 
   // Authenticated
   flags,
@@ -71,7 +80,8 @@ const RoutePage = {
   createOrganization,
   createFirstProject,
   profile,
-  feedback
+  feedback,
+  members
 }
 
 export default RoutePage

@@ -1,6 +1,30 @@
-import { getFirestore, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore'
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  Timestamp,
+  getDocs,
+  query,
+  collection,
+  where,
+  QueryDocumentSnapshot,
+  DocumentData,
+} from 'firebase/firestore'
 import { FirestoreCollection } from './FirestoreCollection'
 import { IUser } from 'redux/ducks/authDuck'
+import store from 'redux/store'
+
+export interface IMemberRelation {
+  id: string
+  type: MemberType
+}
+
+export type IMember = IUser
+
+export enum MemberType {
+  admin = 'admin',
+}
 
 async function addUserIfDoesntExist(user: IUser): Promise<void> {
   const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.users, user.uid))
@@ -26,12 +50,31 @@ async function upsertUser(user: IUser): Promise<void> {
   await setDoc(doc(getFirestore(), FirestoreCollection.users, user.uid), user, { merge: true })
 }
 
+async function getOrganizationMembers() {
+  const relations = store.getState().configuration.organization?.members
+  const relationIds = relations?.map((relation) => relation.id)
+
+  const usersQuerySnapshot = await getDocs(
+    query(collection(getFirestore(), FirestoreCollection.users), where('uid', 'in', relationIds))
+  )
+
+  const users = usersQuerySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, id: doc.id }
+  })
+
+  console.log(users)
+}
+
 const UsersApi = {
   // Create
   addUserIfDoesntExist,
 
   // Upsert
   upsertUser,
+
+  // Members
+  getOrganizationMembers,
 }
 
 export default UsersApi

@@ -22,6 +22,8 @@ import EnvironmentsPage from 'components/pages/EnvironmentsPage'
 import FeedbackPage from 'components/pages/FeedbackPage'
 import CreateOrganizationRoute from './CreateOrganizationRoute'
 import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
+import AcceptInvitationPage from 'components/pages/AcceptInvitationPage'
+import MembersPage from 'components/pages/MembersPage'
 
 function Routes() {
   return (
@@ -32,6 +34,7 @@ function Routes() {
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.login()} />
         <RedirectAuthenticatedRoute component={RegisterPage} exact path={RoutePage.register()} />
         <RedirectAuthenticatedRoute component={ForgotPasswordPage} exact path={RoutePage.forgotPassword()} />
+        <RedirectAuthenticatedRoute component={AcceptInvitationPage} exact path={RoutePage.acceptInvitation(':invitationId')} />
 
         {/* Authenticated routes */}
         <AuthenticatedRoute component={FlagsPage} exact path={RoutePage.flags()} />
@@ -42,6 +45,7 @@ function Routes() {
         <AuthenticatedRoute component={OrganizationPage} exact path={RoutePage.organization()} />
         <AuthenticatedRoute component={ProfilePage} exact path={RoutePage.profile()} />
         <AuthenticatedRoute component={FeedbackPage} exact path={RoutePage.feedback()} />
+        <AuthenticatedRoute component={MembersPage} exact path={RoutePage.members()} />
 
         {/* Use case routes */}
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />

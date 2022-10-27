@@ -14,20 +14,12 @@ import {
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
-
-export interface IMember {
-  id: string
-  type: MemberType
-}
-
-export enum MemberType {
-  admin = 'admin',
-}
+import { IMemberRelation, MemberType } from './UsersApi'
 
 export interface IOrganization {
   id: string
   name: string
-  members: IMember[]
+  members: IMemberRelation[]
   createdAt: Timestamp
 }
 
