@@ -50,9 +50,9 @@ function FeedbackPage() {
       </Text>
 
       <Section mb={4}>
-        <FormControl id="name">
+        <FormControl id="Title">
           <FormLabel fontSize="sm" color="gray.500">
-            Name
+            Title
           </FormLabel>
 
           <Input

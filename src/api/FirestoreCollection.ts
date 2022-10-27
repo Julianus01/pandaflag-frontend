@@ -5,4 +5,5 @@ export enum FirestoreCollection {
   environments = 'environments',
   users = 'users',
   feedback = 'feedback',
+  invitations = 'invitations'
 }

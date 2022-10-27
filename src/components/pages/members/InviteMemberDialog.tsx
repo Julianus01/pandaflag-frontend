@@ -33,7 +33,7 @@ function InviteMemberDialog({ isOpen, onClose }: IProps) {
   const inputRef = useRef()
   const temporaryMessage = useTemporaryMessage()
 
-  const [email, setEmail] = useState<string>('')
+  const [email, setEmail] = useState<string>('iuliancrisan01+1@gmail.com')
   const [type, setType] = useState<MemberType>(MemberType.admin)
 
   const isValidForm = isEmailValid(email)

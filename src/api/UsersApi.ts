@@ -14,6 +14,8 @@ import {
 import { FirestoreCollection } from './FirestoreCollection'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
+import InvitationApi, { IInvitation } from './InvitationApi'
+import EmailApi from './EmailApi'
 
 export interface IMemberRelation {
   id: string
@@ -74,13 +76,21 @@ async function getOrganizationMembers() {
 
 async function inviteMember(email: string) {
   const users = await getOrganizationMembers()
-  const alreadyExists = users.find((user: IMember) => user.email === email)
+  const alreadyPartOfTeam = users.find((user: IMember) => user.email === email)
 
-  if (alreadyExists) {
+  if (alreadyPartOfTeam) {
     throw new Error('A user with this email already exists within your organization')
   }
 
-  // TODO: Implemented this
+  const invitations = await InvitationApi.getInvitations()
+  const invitationAlreadyPending = invitations.find((invitation: IInvitation) => invitation.email === email)
+
+  if (invitationAlreadyPending) {
+    throw new Error(`An invitation is already pending for ${email}. You can resend the invitation from the table`)
+  }
+
+  const invitation = await InvitationApi.createInvitation(email)
+  await EmailApi.sendMemberInvitation(email, invitation.id)
 }
 
 const UsersApi = {
@@ -92,7 +102,7 @@ const UsersApi = {
 
   // Members
   getOrganizationMembers,
-  inviteMember
+  inviteMember,
 }
 
 export default UsersApi
