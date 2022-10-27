@@ -38,7 +38,7 @@ function CreateFirstProjectPage() {
         queryClient.invalidateQueries(ApiQueryId.getProjectsByOrganizationId)
 
         toast({
-          title: `Created project '${projectName}'`,
+          title: `Created project '${projectName}' 📦`,
           isClosable: true,
           variant: 'subtle',
         })

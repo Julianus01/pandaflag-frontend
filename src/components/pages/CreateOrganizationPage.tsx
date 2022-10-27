@@ -41,7 +41,7 @@ function CreateOrganizationPage() {
         dispatch(configurationActions.setOrganization(organization))
 
         toast({
-          title: `Created organization '${organizationName}'`,
+          title: `Created organization '${organizationName}' 🏢`,
           isClosable: true,
           variant: 'subtle',
         })

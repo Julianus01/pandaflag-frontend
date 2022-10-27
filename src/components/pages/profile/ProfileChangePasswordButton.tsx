@@ -19,7 +19,7 @@ function ProfileChangePasswordButton() {
       setHasBeenSent(true)
 
       toast({
-        title: `Reset password email sent`,
+        title: `Reset password email sent 📬`,
         isClosable: true,
         variant: 'subtle',
       })

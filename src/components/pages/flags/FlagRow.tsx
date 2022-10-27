@@ -37,7 +37,7 @@ function FlagSwitch({ flag, environmentName }: IFlagSwitchProps) {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
 
       toast({
-        title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${environmentName}'`,
+        title: `Flag '${flag.name}' is now ${!enabled ? 'Enabled' : 'Disabled'} for '${environmentName}' 🚩`,
         isClosable: true,
         variant: 'subtle',
         status: 'success',

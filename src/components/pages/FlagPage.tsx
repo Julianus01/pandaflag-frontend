@@ -60,7 +60,7 @@ function FlagPage() {
       history.push(RoutePage.flags())
 
       toast({
-        title: `Updated successfully`,
+        title: `Updated successfully 👍`,
         isClosable: true,
         variant: 'subtle',
         status: 'success',

@@ -56,7 +56,7 @@ function SidebarProjectSelector() {
       setIsOpen(false)
 
       toast({
-        title: `Changed project to '${project.name}'`,
+        title: `Changed project to '${project.name}' 📦`,
         isClosable: true,
         variant: 'subtle',
       })

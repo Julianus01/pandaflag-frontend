@@ -143,7 +143,7 @@ function MembersPage() {
             )}
 
             {!invitationsQuery.isLoading && !Boolean(invitationsQuery.data?.length) && (
-              <Section>No invitations</Section>
+              <Section>Invite your coworkers and deploy safer together 👨‍🦰</Section>
             )}
           </TabPanel>
         </TabPanels>

@@ -50,7 +50,7 @@ function OrganizationPage() {
         })
 
         toast({
-          title: `Updated successfully`,
+          title: `Updated successfully 👍`,
           isClosable: true,
           variant: 'subtle',
           status: 'success',

@@ -69,7 +69,7 @@ function InviteMemberDialog({ isOpen, onClose }: IProps) {
         onSuccess: () => {
           queryClient.invalidateQueries(ApiQueryId.getPendingInvitations)
           toast({
-            title: `Invitation sent 👍`,
+            title: `Invitation sent 📬`,
             isClosable: true,
             variant: 'subtle',
           })

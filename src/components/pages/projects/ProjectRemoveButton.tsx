@@ -39,7 +39,7 @@ function ProjectRemoveButton({ project }: IProps) {
       })
 
       toast({
-        title: `Removed project '${project.name}'`,
+        title: `Removed project '${project.name}' 📦`,
         isClosable: true,
         variant: 'subtle',
         status: 'success',

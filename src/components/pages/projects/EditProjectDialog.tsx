@@ -46,7 +46,7 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
       dispatch(configurationActions.setProject({ ...project, name: projectName }))
 
       toast({
-        title: `Updated successfully`,
+        title: `Updated successfully 👍`,
         isClosable: true,
         variant: 'subtle',
         status: 'success',

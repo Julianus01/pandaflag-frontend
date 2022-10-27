@@ -21,7 +21,7 @@ function EmailVerificationPage() {
       setHasBeenSent(true)
 
       toast({
-        title: `Verification email sent`,
+        title: `Verification email sent 📬`,
         isClosable: true,
         variant: 'subtle',
       })

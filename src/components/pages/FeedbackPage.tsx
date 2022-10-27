@@ -18,7 +18,7 @@ function FeedbackPage() {
   const sendFeedbackMutation = useMutation(FeedbackApi.sendFeedback, {
     onSuccess: () => {
       toast({
-        title: `Feedback sent!`,
+        title: `Feedback sent! 📬`,
         isClosable: true,
         variant: 'subtle',
       })
