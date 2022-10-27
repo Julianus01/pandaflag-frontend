@@ -1,44 +1,42 @@
-import { Table, Tbody, Th, Thead, Tr, Box } from '@chakra-ui/react'
-import { IMember } from 'api/UsersApi'
+import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react'
+import { IInvitation } from 'api/InvitationApi'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
-import MemberRow from './MemberRow'
+import InvitationRow from './InvitationRow'
 
 interface IProps {
-  members: IMember[]
+  invitations: IInvitation[]
 }
 
-function MembersTable({ members }: IProps) {
+function InvitationsTable({ invitations }: IProps) {
   return (
     <CustomTable variant="simple">
       <TableHead>
         <Tr>
-          <Th textTransform="capitalize">
-            <Box ml="26px">Name</Box>
-          </Th>
-
-          <Th textTransform="capitalize">Photo</Th>
+          <Th textTransform="capitalize">Email</Th>
 
           <Th textTransform="capitalize" isNumeric>
-            Type
+            Member Type
           </Th>
 
           <Th textTransform="capitalize" isNumeric>
             Created at
           </Th>
+
+          <Th textTransform="capitalize" />
         </Tr>
       </TableHead>
 
       <Tbody>
-        {members.map((member: IMember) => (
-          <MemberRow key={member.uid} member={member} />
+        {invitations.map((invitation: IInvitation) => (
+          <InvitationRow key={invitation.id} invitation={invitation} />
         ))}
       </Tbody>
     </CustomTable>
   )
 }
 
-export default MembersTable
+export default InvitationsTable
 
 const TableHead = styled(Thead)`
   background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};

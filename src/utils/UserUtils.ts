@@ -10,10 +10,13 @@ function userDisplayName(user: IMember | IUser) {
   return email.substr(0, email.indexOf('@'))
 }
 
-function getMemberTypeColorSchema(member: IMember) {
-  switch (member.type) {
+function getMemberTypeColorSchema(memberType: MemberType) {
+  switch (memberType) {
     case MemberType.admin:
       return 'green'
+
+    case MemberType.member:
+      return 'blue'
 
     default:
       break

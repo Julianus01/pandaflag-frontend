@@ -5,14 +5,16 @@ import { FiLayers, FiFlag, FiGlobe, FiHash, FiMessageSquare, FiUsers } from 'rea
 import RoutePage from 'components/routes/RoutePage'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
-import SidebarProjectsCount from './SidebarProjectsCounts'
+import SidebarProjectsCount from './SidebarProjectsCount'
 import PandaflagLogo from '../PandaflagLogo'
+import SidebarFlagsCount from './SidebarFlagsCount'
 
 const MENU_ITEMS: ISidebarMenuItem[] = [
   {
     name: 'Flags',
     href: RoutePage.flags(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiFlag} />,
+    endComponent: () => <SidebarFlagsCount />,
   },
   {
     name: 'Environments',

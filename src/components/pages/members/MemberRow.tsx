@@ -39,7 +39,7 @@ function MemberRow({ member }: IProps) {
       </Td>
 
       <Td whiteSpace="nowrap" isNumeric>
-        <Tag size="md" borderRadius="md" variant="subtle" colorScheme={UserUtils.getMemberTypeColorSchema(member)}>
+        <Tag size="md" borderRadius="md" variant="subtle" colorScheme={UserUtils.getMemberTypeColorSchema(member.type)}>
           <TagLabel textTransform="capitalize">{member.type}</TagLabel>
         </Tag>
       </Td>

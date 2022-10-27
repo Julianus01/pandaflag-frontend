@@ -1,5 +1,6 @@
 import { Heading, Thead, Skeleton, Td, Tbody, Table, Th, Tr, Box, Button, Icon, useDisclosure } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
+import InvitationApi, { IInvitation } from 'api/InvitationApi'
 import UsersApi, { IMember } from 'api/UsersApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
@@ -7,6 +8,7 @@ import { FiUser } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
+import InvitationsTable from './invitations/InvitationsTable'
 import InviteMemberDialog from './members/InviteMemberDialog'
 import MembersTable from './members/MembersTable'
 
@@ -37,6 +39,7 @@ function SkeletonTable() {
 function MembersPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const membersQuery = useQuery([ApiQueryId.getMembers], UsersApi.getOrganizationMembers)
+  const invitationsQuery = useQuery([ApiQueryId.getInvitations], InvitationApi.getInvitations)
 
   return (
     <BoxedPage>
@@ -56,6 +59,18 @@ function MembersPage() {
         <TableContainer>
           <MembersTable members={membersQuery.data as IMember[]} />
         </TableContainer>
+      )}
+
+      {Boolean(invitationsQuery.data?.length) && (
+        <Box mt={10}>
+          <Heading flex={1} mb={10} as="h3" size="md">
+            Invitations
+          </Heading>
+
+          <TableContainer>
+            <InvitationsTable invitations={invitationsQuery.data as IInvitation[]} />
+          </TableContainer>
+        </Box>
       )}
 
       <InviteMemberDialog isOpen={isOpen} onClose={onClose} />
