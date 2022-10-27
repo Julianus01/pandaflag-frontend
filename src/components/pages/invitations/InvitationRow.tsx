@@ -1,17 +1,38 @@
-import { Td, Tr, TagLabel, Tag, IconButton, Icon } from '@chakra-ui/react'
+import { Td, Tr, TagLabel, Tag, IconButton, Icon, Tooltip, Spinner, useToast } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { format, fromUnixTime } from 'date-fns'
 import { UserUtils } from 'utils/UserUtils'
 import { IInvitation } from 'api/InvitationApi'
-import { FiMail } from 'react-icons/fi'
+import { FiSend } from 'react-icons/fi'
+import { useMutation } from 'react-query'
+import EmailApi from 'api/EmailApi'
 
 interface IProps {
   invitation: IInvitation
 }
 
 function InvitationRow({ invitation }: IProps) {
+  const toast = useToast()
+
   const createdAt = fromUnixTime(invitation.createdAt.seconds)
   const showYear = new Date().getFullYear() > createdAt.getFullYear()
+
+  const resendInvitationMutation = useMutation(EmailApi.sendMemberInvitation)
+
+  function resendInvitation() {
+    resendInvitationMutation.mutate(
+      { email: invitation.email, invitationId: invitation.id },
+      {
+        onSuccess: () => {
+          toast({
+            title: `Invitation sent 📬`,
+            isClosable: true,
+            variant: 'subtle',
+          })
+        },
+      }
+    )
+  }
 
   return (
     <Row>
@@ -33,7 +54,15 @@ function InvitationRow({ invitation }: IProps) {
       </Td>
 
       <Td whiteSpace="nowrap" isNumeric>
-        <IconButton size="xs" aria-label="resend-invitation" icon={<Icon as={FiMail} />} />
+        <Tooltip placement="top" label="Resend invitation">
+          <IconButton
+            disabled={resendInvitationMutation.isLoading || resendInvitationMutation.isSuccess}
+            onClick={resendInvitation}
+            size="xs"
+            aria-label="resend-invitation"
+            icon={resendInvitationMutation.isLoading ? <Spinner size="xs" /> : <Icon as={FiSend} />}
+          />
+        </Tooltip>
       </Td>
     </Row>
   )

@@ -100,7 +100,7 @@ async function inviteMember(params: IInviteMemberParams) {
   }
 
   const invitation = await InvitationApi.createInvitation({ email: params.email, memberType: params.memberType })
-  await EmailApi.sendMemberInvitation(params.email, invitation.id)
+  await EmailApi.sendMemberInvitation({ email: params.email, invitationId: invitation.id })
 }
 
 const UsersApi = {

@@ -32,7 +32,12 @@ async function sendFeedbackEmail(params: ISendFeedbackEmailParams) {
   )
 }
 
-async function sendMemberInvitation(email: string, invitationId: string) {
+interface ISendMemberInvitationParams {
+  email: string
+  invitationId: string
+}
+
+async function sendMemberInvitation(params: ISendMemberInvitationParams) {
   const organization = store.getState().configuration.organization
 
   return emailjs.send(
@@ -40,8 +45,8 @@ async function sendMemberInvitation(email: string, invitationId: string) {
     EmailTemplateId.MemberInvitation,
     {
       organization: organization?.name,
-      toEmail: email,
-      invitationLink: generateInvitationLink(invitationId),
+      toEmail: params.email,
+      invitationLink: generateInvitationLink(params.invitationId),
     },
     process.env.REACT_APP_EMAIL_JS_PUBLIC_KEY
   )
