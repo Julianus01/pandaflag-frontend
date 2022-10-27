@@ -15,8 +15,23 @@ const components = {
     defaultProps: {
       size: 'sm',
     },
-  }
+  },
 }
 
-const theme = extendTheme({ config, fonts, components })
+const colors = {
+  blackAndWhite: {
+    // 50: '#f2f2f2',
+    // 100: '#d9d9d9',
+    200: '#ffffff',
+    300: '#ffffff',
+    // 400: '#8c8c8c',
+    500: '#0d0d0d',
+    600: '#0d0d0d',
+    700: '#404040',
+    // 800: '#262626',
+    // 900: '#0d0d0d',
+  },
+}
+
+const theme = extendTheme({ config, fonts, components, colors })
 export default theme

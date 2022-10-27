@@ -12,7 +12,6 @@ interface IProps {
 }
 
 function MemberRow({ member }: IProps) {
-  console.log(member)
   const currentUser = useSelector((state: IStoreState) => state.auth.user)
   const displayName = UserUtils.userDisplayName(member)
 

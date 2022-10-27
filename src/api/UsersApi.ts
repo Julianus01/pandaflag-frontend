@@ -72,6 +72,17 @@ async function getOrganizationMembers() {
   return users
 }
 
+async function inviteMember(email: string) {
+  const users = await getOrganizationMembers()
+  const alreadyExists = users.find((user: IMember) => user.email === email)
+
+  if (alreadyExists) {
+    throw new Error('A user with this email already exists within your organization')
+  }
+
+  // TODO: Implemented this
+}
+
 const UsersApi = {
   // Create
   addUserIfDoesntExist,
@@ -81,6 +92,7 @@ const UsersApi = {
 
   // Members
   getOrganizationMembers,
+  inviteMember
 }
 
 export default UsersApi

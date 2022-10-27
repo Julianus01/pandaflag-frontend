@@ -1,11 +1,13 @@
-import { Heading, Thead, Skeleton, Td, Tbody, Table, Th, Tr } from '@chakra-ui/react'
+import { Heading, Thead, Skeleton, Td, Tbody, Table, Th, Tr, Box, Button, Icon, useDisclosure } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import UsersApi, { IMember } from 'api/UsersApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
+import { FiUser } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
+import InviteMemberDialog from './members/InviteMemberDialog'
 import MembersTable from './members/MembersTable'
 
 function SkeletonTable() {
@@ -33,13 +35,20 @@ function SkeletonTable() {
 }
 
 function MembersPage() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const membersQuery = useQuery([ApiQueryId.getMembers], UsersApi.getOrganizationMembers)
 
   return (
     <BoxedPage>
-      <Heading flex={1} mb={10} as="h3" size="lg">
-        Members
-      </Heading>
+      <Box display="flex">
+        <Heading flex={1} mb={10} as="h3" size="lg">
+          Members
+        </Heading>
+
+        <Button leftIcon={<Icon as={FiUser} />} onClick={onOpen} colorScheme="blue">
+          Invite member
+        </Button>
+      </Box>
 
       {membersQuery.isLoading && <SkeletonTable />}
 
@@ -48,6 +57,8 @@ function MembersPage() {
           <MembersTable members={membersQuery.data as IMember[]} />
         </TableContainer>
       )}
+
+      <InviteMemberDialog isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
   )
 }
