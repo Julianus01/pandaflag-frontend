@@ -1,19 +1,8 @@
-import {
-  Table,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-  Box,
-  Icon,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  Text,
-} from '@chakra-ui/react'
+import { Tbody, Th, Tr, Box, Icon, Popover, PopoverTrigger, PopoverContent, PopoverBody, Text } from '@chakra-ui/react'
 import { IProject } from 'api/ProjectsApi'
 import RoutePage from 'components/routes/RoutePage'
+import Table from 'components/styles/Table'
+import Thead from 'components/styles/Thead'
 import { QueryParam, TryApiParam } from 'hooks/routing/useQueryParams'
 import { FiInfo } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
@@ -27,8 +16,8 @@ interface IProps {
 
 function ProjectsTable({ projects }: IProps) {
   return (
-    <CustomTable variant="simple">
-      <TableHead>
+    <Table variant="simple">
+      <Thead>
         <Tr>
           <Th textTransform="capitalize">
             <Box ml="26px">Name</Box>
@@ -75,26 +64,18 @@ function ProjectsTable({ projects }: IProps) {
 
           <Th textTransform="capitalize" />
         </Tr>
-      </TableHead>
+      </Thead>
 
       <Tbody>
         {projects.map((project: IProject) => (
           <ProjectRow key={project.id} project={project} />
         ))}
       </Tbody>
-    </CustomTable>
+    </Table>
   )
 }
 
 export default ProjectsTable
-
-const TableHead = styled(Thead)`
-  background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
-`
-
-const CustomTable = styled(Table)`
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
-`
 
 const RouteLink = styled(Link)`
   color: ${({ theme }) => theme.colors.blue[500]};

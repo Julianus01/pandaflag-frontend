@@ -1,7 +1,7 @@
-import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react'
+import { Tbody, Th, Tr } from '@chakra-ui/react'
 import { IInvitation } from 'api/InvitationApi'
-import styled from 'styled-components/macro'
-import { applyColorMode } from 'theme/StyledThemeProvider'
+import Table from 'components/styles/Table'
+import Thead from 'components/styles/Thead'
 import InvitationRow from './InvitationRow'
 
 interface IProps {
@@ -10,8 +10,8 @@ interface IProps {
 
 function InvitationsTable({ invitations }: IProps) {
   return (
-    <CustomTable variant="simple">
-      <TableHead>
+    <Table variant="simple">
+      <Thead>
         <Tr>
           <Th textTransform="capitalize">Email</Th>
 
@@ -25,23 +25,15 @@ function InvitationsTable({ invitations }: IProps) {
 
           <Th textTransform="capitalize" />
         </Tr>
-      </TableHead>
+      </Thead>
 
       <Tbody>
         {invitations.map((invitation: IInvitation) => (
           <InvitationRow key={invitation.id} invitation={invitation} />
         ))}
       </Tbody>
-    </CustomTable>
+    </Table>
   )
 }
 
 export default InvitationsTable
-
-const TableHead = styled(Thead)`
-  background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
-`
-
-const CustomTable = styled(Table)`
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
-`
