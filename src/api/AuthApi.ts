@@ -56,7 +56,8 @@ async function createAccountWithEmailAndPassword(email: string, password: string
   try {
     const auth = getAuth()
 
-    await createUserWithEmailAndPassword(auth, email, password)
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+    return userCredential
   } catch (err) {
     const error: AuthError = err as AuthError
     throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))

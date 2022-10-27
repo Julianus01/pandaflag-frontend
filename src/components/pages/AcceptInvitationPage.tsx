@@ -1,40 +1,170 @@
-import { Button, Heading, Input, Text, Box } from '@chakra-ui/react'
+import {
+  Button,
+  Heading,
+  Input,
+  Text,
+  Box,
+  Spinner,
+  Skeleton,
+  Tag,
+  TagLabel,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+} from '@chakra-ui/react'
 import styled from 'styled-components/macro'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
-import useQueryParam from 'hooks/routing/useQueryParam'
-import { QueryParam } from 'hooks/routing/useQueryParams'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
+import InvitationApi, { IInvitation } from 'api/InvitationApi'
+import { useParams } from 'react-router-dom'
+import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
+import { FiMail, FiKey } from 'react-icons/fi'
+import { ICredentials } from './LoginPage'
+import * as yup from 'yup'
+import AuthApi from 'api/AuthApi'
+import { IMemberRelation, MemberType } from 'api/UsersApi'
+
+function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
+  return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
+}
+
+const DefaultCredentials: ICredentials = {
+  email: '',
+  password: '',
+}
+
+const ValidationSchema = yup.object().shape({
+  Password: yup.string().min(6).required(),
+  Email: yup.string().email().required(),
+})
+
+interface IParams {
+  invitationId: string
+}
 
 function AcceptInvitationPage() {
-  // TODO: To be developed
+  const params = useParams<IParams>()
   const temporaryMessage = useTemporaryMessage()
-  const [email, setEmail] = useState<string>(useQueryParam(QueryParam.email) as string)
+  const [form, setForm] = useState<ICredentials>(DefaultCredentials)
+  const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false)
 
-  const invitationQuery = useQuery(ApiQueryId.getInvitation)
+  const invitationQuery = useQuery(ApiQueryId.getInvitation, () => InvitationApi.getInvitation(params.invitationId), {
+    onSuccess: (data: IInvitation) => {
+      setForm({ ...form, email: data.email as string })
+    },
+  })
 
-  function onEmailChange(event: ChangeEvent<HTMLInputElement>) {
-    setEmail(event.target.value)
+  const organizationQuery = useQuery(
+    ApiQueryId.getOrganization,
+    () => OrganizationsApi.getOrganizationById(invitationQuery.data?.organizationId as string),
+    {
+      enabled: Boolean(invitationQuery.data),
+    }
+  )
+
+  const invitation = invitationQuery.data
+  const organization = organizationQuery.data
+  const isLoading = invitationQuery.isLoading || organizationQuery.isLoading
+
+  function onInputChange(inputName: string) {
+    return function (event: ChangeEvent<HTMLInputElement>) {
+      setForm({ ...form, [inputName]: event.target.value })
+    }
   }
 
-  async function sendPasswordReset() {
-    // TODO:
+  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      onRegister()
+    }
+  }
+
+  async function onRegister() {
+    try {
+      temporaryMessage.hideMessage()
+      const validatedForm = await ValidationSchema.validate({
+        Email: form.email,
+        Password: form.password,
+      })
+
+      setIsRegisterLoading(true)
+      const userCredential = await AuthApi.createAccountWithEmailAndPassword(
+        validatedForm.Email,
+        validatedForm.Password
+      )
+
+      const organizationWithNewMember = addMemberToOrganization(organization as IOrganization, {
+        id: userCredential.user.uid,
+        type: invitation?.memberType as MemberType,
+      })
+
+      await OrganizationsApi.updateOrganization(organizationWithNewMember)
+      await AuthApi.sendVerificationEmail()
+    } catch (err) {
+      const error = err as Error
+      temporaryMessage.showMessage(error.message)
+      setIsRegisterLoading(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Container>
+        <Content>
+          <EmptyContent>
+            <Spinner />
+
+            <Skeleton mt={2} height="24px" />
+            <Skeleton mt={2} height="24px" />
+            <Skeleton mt={2} height="24px" />
+          </EmptyContent>
+        </Content>
+      </Container>
+    )
   }
 
   return (
     <Container>
       <Content>
         <CreateBox>
-          <Heading mb={2} as="h4" size="md">
-            XXX invited you in organization HERE
+          <Heading mb={2} as="h2" size="lg">
+            {organization?.name}
           </Heading>
 
           <Text color="gray.500" mb={4}>
-            We got you covered. Let us know of your account email below, and we'll help you out.
+            invited you to join their organization as a{' '}
+            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="primary">
+              <TagLabel textTransform="capitalize">{invitation?.memberType}</TagLabel>
+            </Tag>
           </Text>
 
-          <Input value={email} onChange={onEmailChange} mb={4} variant="filled" placeholder="Your account email" />
+          <InputGroup mb={4}>
+            <InputLeftElement pointerEvents="none" children={<Icon as={FiMail} />} />
+
+            <Input
+              value={form.email}
+              disabled={isLoading}
+              onKeyDown={onKeyDown}
+              onChange={onInputChange('email')}
+              variant="filled"
+              placeholder="Email"
+            />
+          </InputGroup>
+
+          <InputGroup mb={4}>
+            <InputLeftElement pointerEvents="none" children={<Icon as={FiKey} />} />
+
+            <Input
+              value={form.password}
+              disabled={isLoading}
+              onKeyDown={onKeyDown}
+              onChange={onInputChange('password')}
+              variant="filled"
+              type="password"
+              placeholder="Password"
+            />
+          </InputGroup>
 
           <Box display="flex">
             {!!temporaryMessage.message && (
@@ -43,8 +173,15 @@ function AcceptInvitationPage() {
               </Text>
             )}
 
-            <Button loadingText="Send reset password email" onClick={sendPasswordReset} ml="auto" colorScheme="primary">
-              Here
+            <Button
+              isLoading={isRegisterLoading}
+              disabled={isRegisterLoading}
+              loadingText="Creating Account"
+              onClick={onRegister}
+              ml="auto"
+              colorScheme="primary"
+            >
+              Create Account
             </Button>
           </Box>
         </CreateBox>
@@ -66,6 +203,11 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+
+const EmptyContent = styled.div`
+  max-width: 500px;
+  width: 100%;
 `
 
 const CreateBox = styled.div`

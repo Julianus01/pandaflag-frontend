@@ -10,6 +10,7 @@ import {
   DocumentData,
   setDoc,
   doc,
+  getDoc,
 } from 'firebase/firestore'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
@@ -24,9 +25,9 @@ export interface IOrganization {
 }
 
 // Get Organization
-async function getOrganization(): Promise<IOrganization> {
+async function getOrganizationWhereType(memberType: MemberType): Promise<IOrganization | undefined> {
   const user = store.getState().auth.user as IUser
-  const memberQueryValue = { id: user.uid, type: 'admin' }
+  const memberQueryValue = { id: user.uid, type: memberType }
 
   const querySnapshot = await getDocs(
     query(
@@ -35,12 +36,43 @@ async function getOrganization(): Promise<IOrganization> {
     )
   )
 
+  if (querySnapshot.empty) {
+    return undefined
+  }
+
   const [organization] = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const data = doc.data()
     return { ...data, id: doc.id }
   }) as IOrganization[]
 
   return organization
+}
+
+async function getOrganization(): Promise<IOrganization | undefined> {
+  const [adminOrganization, memberOrganization] = await Promise.all([
+    getOrganizationWhereType(MemberType.admin),
+    getOrganizationWhereType(MemberType.member),
+  ])
+
+  if (adminOrganization) {
+    return adminOrganization
+  }
+
+  if (memberOrganization) {
+    return memberOrganization
+  }
+
+  return undefined
+}
+
+async function getOrganizationById(id: string): Promise<IOrganization | undefined> {
+  const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.organizations, id))
+
+  if (!snapshot.exists()) {
+    return undefined
+  }
+
+  return { id, ...snapshot.data() } as IOrganization
 }
 
 // Create Organization
@@ -74,6 +106,7 @@ async function updateOrganization({ id, ...updates }: IUpdateOrganizationRequest
 const OrganizationsApi = {
   // Get
   getOrganization,
+  getOrganizationById,
 
   // Create
   createOrganization,
