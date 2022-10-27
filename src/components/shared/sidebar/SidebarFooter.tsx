@@ -7,15 +7,7 @@ import RoutePage from 'components/routes/RoutePage'
 import { IUser } from 'redux/ducks/authDuck'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
-
-function userDisplayName(user: IUser) {
-  if (user.displayName) {
-    return user.displayName
-  }
-
-  const email = user.email as string
-  return email.substr(0, email.indexOf('@'))
-}
+import { UserUtils } from 'utils/UserUtils'
 
 function SidebarFooter() {
   const user = useSelector((state: IStoreState) => state.auth.user)
@@ -29,7 +21,7 @@ function SidebarFooter() {
     <CustomMenuButton $active={window.location.pathname.includes(RoutePage.profile())} onClick={navigateToProfile}>
       <Container>
         <Avatar
-          name={userDisplayName(user as IUser)}
+          name={UserUtils.userDisplayName(user as IUser)}
           size="md"
           shadow="lg"
           ignoreFallback
@@ -40,7 +32,7 @@ function SidebarFooter() {
 
         <Box overflow="hidden" whiteSpace="nowrap" ml={4} flex={1}>
           <Text isTruncated fontWeight="medium">
-            {userDisplayName(user as IUser)}
+            {UserUtils.userDisplayName(user as IUser)}
           </Text>
         </Box>
       </Container>

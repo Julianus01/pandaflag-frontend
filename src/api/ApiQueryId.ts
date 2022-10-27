@@ -13,4 +13,7 @@ export enum ApiQueryId {
   getFlags = 'getFlags',
   getFlag = 'getFlag',
   getFlagByName = 'getFlagByName',
+
+  // Members
+  getMembers = 'getMembers'
 }

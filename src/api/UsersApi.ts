@@ -20,7 +20,10 @@ export interface IMemberRelation {
   type: MemberType
 }
 
-export type IMember = IUser
+export interface IMember extends IUser {
+  createdAt: Timestamp
+  updatedAt: Timestamp
+}
 
 export enum MemberType {
   admin = 'admin',
@@ -59,11 +62,11 @@ async function getOrganizationMembers() {
   )
 
   const users = usersQuerySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
-    const data = doc.data()
+    const data = doc.data() as IMember
     return { ...data, id: doc.id }
-  })
+  }) as IMember[]
 
-  console.log(users)
+  return users
 }
 
 const UsersApi = {

@@ -1,16 +1,9 @@
 import { Button, Heading, Input, Text, Box } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ChangeEvent, useState } from 'react'
-import * as yup from 'yup'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import useQueryParam from 'hooks/routing/useQueryParam'
 import { QueryParam } from 'hooks/routing/useQueryParams'
-import { NavLink } from 'react-router-dom'
-import RoutePage from 'components/routes/RoutePage'
-
-const ValidationSchema = yup.object().shape({
-  Email: yup.string().email().required(),
-})
 
 function AcceptInvitationPage() {
   // TODO: To be developed
@@ -37,13 +30,7 @@ function AcceptInvitationPage() {
             We got you covered. Let us know of your account email below, and we'll help you out.
           </Text>
 
-          <Input
-            value={email}
-            onChange={onEmailChange}
-            mb={4}
-            variant="filled"
-            placeholder="Your account email"
-          />
+          <Input value={email} onChange={onEmailChange} mb={4} variant="filled" placeholder="Your account email" />
 
           <Box display="flex">
             {!!temporaryMessage.message && (
@@ -52,12 +39,7 @@ function AcceptInvitationPage() {
               </Text>
             )}
 
-            <Button
-              loadingText="Send reset password email"
-              onClick={sendPasswordReset}
-              ml="auto"
-              colorScheme="blue"
-            >
+            <Button loadingText="Send reset password email" onClick={sendPasswordReset} ml="auto" colorScheme="blue">
               Here
             </Button>
           </Box>
