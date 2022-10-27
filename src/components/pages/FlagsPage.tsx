@@ -1,4 +1,4 @@
-import { Box, Button, Heading, useDisclosure, Spinner, Icon, Text } from '@chakra-ui/react'
+import { Box, Button, Heading, useDisclosure, Spinner, Icon } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import BoxedPage from 'components/styles/BoxedPage'
@@ -14,6 +14,7 @@ import AccessibleBackground from 'components/styles/AccessibleBackground'
 import TableContainer from 'components/shared/TableContainer'
 import DocumentationSDKs from './flags/DocumentationSDKs'
 import SkeletonTable from 'components/styles/SkeletonTable'
+import Section from 'components/styles/Section'
 
 function FlagsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -57,7 +58,7 @@ function FlagsPage() {
         </>
       )}
 
-      {!isLoading && !Boolean(flags?.length) && <Text>No flags. Go ahead and add your first flag</Text>}
+      {!isLoading && !Boolean(flags?.length) && <Section>No flags. Go ahead and add your first flag</Section>}
 
       <CreateFlagDialog doesFlagAlreadyExist={doesFlagAlreadyExist} isOpen={isOpen} onClose={onClose} />
     </BoxedPage>

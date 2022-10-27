@@ -17,6 +17,7 @@ import UsersApi, { IMember } from 'api/UsersApi'
 import RoutePage from 'components/routes/RoutePage'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
+import Section from 'components/styles/Section'
 import SkeletonTable from 'components/styles/SkeletonTable'
 import { useEffect } from 'react'
 import { FiUser } from 'react-icons/fi'
@@ -36,7 +37,11 @@ interface IParams {
 }
 
 function getInvitationsTabText(invitationsLength: number | undefined) {
-  if (!invitationsLength || invitationsLength < 1) {
+  if (invitationsLength === 0) {
+    return 'invitations'
+  }
+
+  if (!invitationsLength) {
     return '- invitations'
   }
 
@@ -135,6 +140,10 @@ function MembersPage() {
               <TableContainer>
                 <InvitationsTable invitations={invitationsQuery.data as IInvitation[]} />
               </TableContainer>
+            )}
+
+            {!invitationsQuery.isLoading && !Boolean(invitationsQuery.data?.length) && (
+              <Section>No invitations</Section>
             )}
           </TabPanel>
         </TabPanels>
