@@ -4,11 +4,15 @@ import { ChangeEvent, useState } from 'react'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import useQueryParam from 'hooks/routing/useQueryParam'
 import { QueryParam } from 'hooks/routing/useQueryParams'
+import { useQuery } from 'react-query'
+import { ApiQueryId } from 'api/ApiQueryId'
 
 function AcceptInvitationPage() {
   // TODO: To be developed
   const temporaryMessage = useTemporaryMessage()
   const [email, setEmail] = useState<string>(useQueryParam(QueryParam.email) as string)
+
+  const invitationQuery = useQuery(ApiQueryId.getInvitation)
 
   function onEmailChange(event: ChangeEvent<HTMLInputElement>) {
     setEmail(event.target.value)

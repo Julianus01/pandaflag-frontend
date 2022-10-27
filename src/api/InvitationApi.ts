@@ -1,7 +1,9 @@
 import {
   addDoc,
   collection,
+  doc,
   DocumentData,
+  getDoc,
   getDocs,
   getFirestore,
   query,
@@ -43,6 +45,16 @@ async function getPendingInvitations(): Promise<IInvitation[]> {
   return invitations
 }
 
+async function getInvitation(id: string): Promise<IInvitation | undefined> {
+  const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.invitations, id))
+
+  if (!snapshot.exists()) {
+    return undefined
+  }
+
+  return { id, ...snapshot.data() } as IInvitation
+}
+
 export interface ICreateInvitationParams {
   email: string
   memberType: MemberType
@@ -67,6 +79,7 @@ async function createInvitation(params: ICreateInvitationParams): Promise<IInvit
 
 const InvitationApi = {
   getPendingInvitations,
+  getInvitation,
   createInvitation,
 }
 
