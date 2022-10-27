@@ -72,7 +72,7 @@ function CreateFirstProjectPage() {
             loadingText="Creating Project"
             disabled={projectName.length < 3 || isLoading}
             ml="auto"
-            colorScheme="blue"
+            colorScheme="primary"
             isLoading={isLoading}
           >
             Create Project

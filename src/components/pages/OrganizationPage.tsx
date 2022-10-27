@@ -76,7 +76,7 @@ function OrganizationPage() {
           }
           onClick={onUpdate}
           ml="auto"
-          colorScheme="blue"
+          colorScheme="primary"
           loadingText="Updating"
         >
           Update

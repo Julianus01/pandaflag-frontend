@@ -21,10 +21,10 @@ function EnvironmentsPage() {
       <Box display="flex">
         <Heading mb={10} flex={1} as="h3" size="lg">
           Environments
-          {isFetching && <Spinner colorScheme="blue" ml={6} size="sm" />}
+          {isFetching && <Spinner colorScheme="primary" ml={6} size="sm" />}
         </Heading>
 
-        <Button disabled leftIcon={<Icon as={FiHash} />} onClick={() => null} colorScheme="blue">
+        <Button disabled leftIcon={<Icon as={FiHash} />} onClick={() => null} colorScheme="primary">
           Add Environment
         </Button>
       </Box>

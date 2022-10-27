@@ -140,7 +140,7 @@ function LoginPage() {
               disabled={isLoading}
               mt={4}
               onClick={onLogin}
-              colorScheme="blue"
+              colorScheme="primary"
               width="100%"
               size="md"
             >

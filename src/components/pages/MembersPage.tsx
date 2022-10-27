@@ -96,10 +96,10 @@ function MembersPage() {
       <Box display="flex">
         <Heading flex={1} mb={10} as="h3" size="lg">
           Members
-          {isLoading && <Spinner colorScheme="blue" ml={6} size="sm" />}
+          {isLoading && <Spinner colorScheme="primary" ml={6} size="sm" />}
         </Heading>
 
-        <Button leftIcon={<Icon as={FiUser} />} onClick={onOpen} colorScheme="blue">
+        <Button leftIcon={<Icon as={FiUser} />} onClick={onOpen} colorScheme="primary">
           Invite member
         </Button>
       </Box>
@@ -109,7 +109,7 @@ function MembersPage() {
         onChange={onTabChange}
         size="sm"
         variant="soft-rounded"
-        colorScheme="blue"
+        colorScheme="primary"
       >
         <TabList>
           <Tab>active</Tab>

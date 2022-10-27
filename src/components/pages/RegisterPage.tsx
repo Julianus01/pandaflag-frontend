@@ -149,7 +149,7 @@ function RegisterPage() {
               disabled={isLoading}
               mt={6}
               onClick={onRegister}
-              colorScheme="blue"
+              colorScheme="primary"
               width="100%"
               size="md"
             >

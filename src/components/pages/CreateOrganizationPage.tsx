@@ -75,7 +75,7 @@ function CreateOrganizationPage() {
             loadingText="Creating Organization"
             disabled={creationDisabled}
             ml="auto"
-            colorScheme="blue"
+            colorScheme="primary"
             isLoading={isLoading}
           >
             Create Organization

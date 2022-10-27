@@ -39,7 +39,7 @@ function AcceptInvitationPage() {
               </Text>
             )}
 
-            <Button loadingText="Send reset password email" onClick={sendPasswordReset} ml="auto" colorScheme="blue">
+            <Button loadingText="Send reset password email" onClick={sendPasswordReset} ml="auto" colorScheme="primary">
               Here
             </Button>
           </Box>

@@ -143,7 +143,7 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
             disabled={
               projectName.length < 3 || updateProjectMutation.isLoading || projectName.trim() === project.name.trim()
             }
-            colorScheme="blue"
+            colorScheme="primary"
             isLoading={updateProjectMutation.isLoading}
           >
             Update

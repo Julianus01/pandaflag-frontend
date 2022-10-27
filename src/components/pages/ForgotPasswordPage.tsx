@@ -89,7 +89,7 @@ function ForgotPasswordPage() {
               onClick={sendPasswordReset}
               disabled={isLoading || hasBeenSent}
               ml="auto"
-              colorScheme="blue"
+              colorScheme="primary"
               isLoading={isLoading}
             >
               {!hasBeenSent && 'Send reset password email'}

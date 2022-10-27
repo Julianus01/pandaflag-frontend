@@ -24,7 +24,7 @@ function ProjectsPage() {
           Projects
         </Heading>
 
-        <Button disabled={isProjectsQuotaReached} leftIcon={<Icon as={FiLayers} />} onClick={onOpen} colorScheme="blue">
+        <Button disabled={isProjectsQuotaReached} leftIcon={<Icon as={FiLayers} />} onClick={onOpen} colorScheme="primary">
           Add Project
         </Button>
       </Box>

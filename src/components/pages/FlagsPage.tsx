@@ -31,10 +31,10 @@ function FlagsPage() {
       <Box display="flex">
         <Heading flex={1} mb={10} as="h3" size="lg">
           Flags
-          {isLoading && <Spinner colorScheme="blue" ml={6} size="sm" />}
+          {isLoading && <Spinner colorScheme="primary" ml={6} size="sm" />}
         </Heading>
 
-        <Button leftIcon={<Icon as={FiFlag} />} onClick={onOpen} colorScheme="blue">
+        <Button leftIcon={<Icon as={FiFlag} />} onClick={onOpen} colorScheme="primary">
           Add Flag
         </Button>
       </Box>

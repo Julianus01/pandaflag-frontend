@@ -131,7 +131,7 @@ function InviteMemberDialog({ isOpen, onClose }: IProps) {
             onClick={sendInvitation}
             loadingText="Sending invitation"
             disabled={!isValidForm || sendInvitationMutation.isLoading}
-            colorScheme="blue"
+            colorScheme="primary"
             isLoading={sendInvitationMutation.isLoading}
           >
             Send invitation

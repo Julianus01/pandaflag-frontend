@@ -251,7 +251,7 @@ function TryApi({ flags, isOpen }: IProps) {
 
             <Button
               data-splitbee-event={SplitbeeEvent.RunTryApi}
-              colorScheme="blue"
+              colorScheme="primary"
               onClick={runApi}
               isLoading={isLoading}
               disabled={isLoading}
