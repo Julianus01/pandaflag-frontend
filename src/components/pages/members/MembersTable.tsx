@@ -20,6 +20,10 @@ function MembersTable({ members }: IProps) {
           <Th textTransform="capitalize">Photo</Th>
 
           <Th textTransform="capitalize" isNumeric>
+            Type
+          </Th>
+
+          <Th textTransform="capitalize" isNumeric>
             Created at
           </Th>
 

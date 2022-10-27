@@ -1,4 +1,4 @@
-import { Box, Td, Tr, Avatar } from '@chakra-ui/react'
+import { Box, Td, Tr, Avatar, TagLabel, Tag } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { format, fromUnixTime } from 'date-fns'
 import { useSelector } from 'react-redux'
@@ -34,10 +34,14 @@ function MemberRow({ member }: IProps) {
       </Td>
 
       <Td whiteSpace="nowrap" isNumeric>
-        {format(createdAt, `MMM do ${showYear ? 'uu' : ''}`)}
+        <Tag size="md" borderRadius="md" variant="subtle" colorScheme={UserUtils.getMemberTypeColorSchema(member)}>
+          <TagLabel textTransform="capitalize">{member.type}</TagLabel>
+        </Tag>
       </Td>
 
-      <Td>{/* TODO: Here */}</Td>
+      <Td whiteSpace="nowrap" isNumeric>
+        {format(createdAt, `MMM do ${showYear ? 'uu' : ''}`)}
+      </Td>
     </Row>
   )
 }

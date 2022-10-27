@@ -1,6 +1,7 @@
-import { Heading, TableContainer, Thead, Skeleton, Td, Tbody, Table, Th, Tr } from '@chakra-ui/react'
+import { Heading, Thead, Skeleton, Td, Tbody, Table, Th, Tr } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import UsersApi, { IMember } from 'api/UsersApi'
+import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'

@@ -21,6 +21,7 @@ export interface IMemberRelation {
 }
 
 export interface IMember extends IUser {
+  type: MemberType
   createdAt: Timestamp
   updatedAt: Timestamp
 }
@@ -62,8 +63,10 @@ async function getOrganizationMembers() {
   )
 
   const users = usersQuerySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const userRelation = relations?.find((relation) => relation.id === doc.id)
+
     const data = doc.data() as IMember
-    return { ...data, id: doc.id }
+    return { ...data, id: doc.id, type: userRelation?.type }
   }) as IMember[]
 
   return users

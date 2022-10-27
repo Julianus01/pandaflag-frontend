@@ -1,4 +1,4 @@
-import { IMember } from 'api/UsersApi'
+import { IMember, MemberType } from 'api/UsersApi'
 import { IUser } from 'redux/ducks/authDuck'
 
 function userDisplayName(user: IMember | IUser) {
@@ -10,6 +10,17 @@ function userDisplayName(user: IMember | IUser) {
   return email.substr(0, email.indexOf('@'))
 }
 
+function getMemberTypeColorSchema(member: IMember) {
+  switch (member.type) {
+    case MemberType.admin:
+      return 'green'
+
+    default:
+      break
+  }
+}
+
 export const UserUtils = {
   userDisplayName,
+  getMemberTypeColorSchema,
 }

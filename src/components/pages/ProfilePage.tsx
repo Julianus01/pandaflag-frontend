@@ -58,7 +58,7 @@ function ProfilePage() {
           </Heading>
 
           <Box>
-            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="blue">
+            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="green">
               <TagLabel>Admin</TagLabel>
             </Tag>
           </Box>
