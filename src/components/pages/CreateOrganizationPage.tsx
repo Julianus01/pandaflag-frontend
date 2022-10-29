@@ -1,4 +1,4 @@
-import { Button, Heading, Input, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Input, Text, useToast } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { useMutation } from 'react-query'
@@ -6,6 +6,8 @@ import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { useDispatch } from 'react-redux'
 import { configurationActions } from 'redux/ducks/configurationDuck'
 import AuthApi from 'api/AuthApi'
+import ThemeButton from 'theme/ThemeButton'
+import Section from 'components/styles/Section'
 
 function CreateOrganizationPage() {
   const dispatch = useDispatch()
@@ -52,9 +54,9 @@ function CreateOrganizationPage() {
   return (
     <Container>
       <Content>
-        <CreateBox>
+        <ContentBox>
           <Heading mb={2} as="h4" size="md">
-            Your organization
+            Your organization 🏢
           </Heading>
 
           <Text color="gray.500" mb={4}>
@@ -67,7 +69,7 @@ function CreateOrganizationPage() {
             value={organizationName}
             onChange={onOrganizationNameChange}
             variant="filled"
-            placeholder="Tesla or Personal"
+            placeholder="Ex: Tesla, Netflix, Startup"
           />
 
           <Button
@@ -80,12 +82,16 @@ function CreateOrganizationPage() {
           >
             Create Organization
           </Button>
-        </CreateBox>
+        </ContentBox>
       </Content>
 
-      <Button onClick={AuthApi.logout} mb={6} variant="ghost" mx="auto">
+      <Button onClick={AuthApi.logout} mt={24} variant="ghost" mx="auto">
         Logout
       </Button>
+
+      <Box mx="auto" mt={6}>
+        <ThemeButton />
+      </Box>
     </Container>
   )
 }
@@ -93,21 +99,20 @@ function CreateOrganizationPage() {
 export default CreateOrganizationPage
 
 const Container = styled.div`
-  height: 100vh;
+  margin-top: 20vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 `
 
-const CreateBox = styled.div`
+const ContentBox = styled(Section).attrs({ py: 10, px: 12 })`
   display: flex;
   flex-direction: column;
-  max-width: 500px;
+  max-width: 550px;
   width: 100%;
 `

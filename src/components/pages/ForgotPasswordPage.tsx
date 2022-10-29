@@ -8,6 +8,8 @@ import useQueryParam from 'hooks/routing/useQueryParam'
 import { QueryParam } from 'hooks/routing/useQueryParams'
 import { NavLink } from 'react-router-dom'
 import RoutePage from 'components/routes/RoutePage'
+import ThemeButton from 'theme/ThemeButton'
+import Section from 'components/styles/Section'
 
 const ValidationSchema = yup.object().shape({
   Email: yup.string().email().required(),
@@ -58,9 +60,9 @@ function ForgotPasswordPage() {
   return (
     <Container>
       <Content>
-        <CreateBox>
+        <ContentBox>
           <Heading mb={2} as="h4" size="md">
-            Forgot your password?
+            Forgot your password? 🔓
           </Heading>
 
           <Text color="gray.500" mb={4}>
@@ -96,13 +98,17 @@ function ForgotPasswordPage() {
               {hasBeenSent && 'Reset password email sent'}
             </Button>
           </Box>
-        </CreateBox>
+        </ContentBox>
       </Content>
 
-      <Box mb={6} mx="auto">
+      <Box mt={24} mx="auto">
         <NavLink to={RoutePage.login()}>
           <Button variant="ghost">Go to login</Button>
         </NavLink>
+      </Box>
+
+      <Box mx="auto" mt={6}>
+        <ThemeButton />
       </Box>
     </Container>
   )
@@ -111,21 +117,20 @@ function ForgotPasswordPage() {
 export default ForgotPasswordPage
 
 const Container = styled.div`
-  height: 100vh;
+  margin-top: 20vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 `
 
-const CreateBox = styled.div`
+const ContentBox = styled(Section).attrs({ py: 10, px: 12 })`
   display: flex;
   flex-direction: column;
-  max-width: 500px;
+  max-width: 550px;
   width: 100%;
 `

@@ -28,6 +28,8 @@ import { IMemberRelation, MemberType } from 'api/UsersApi'
 import { FaGoogle } from 'react-icons/fa'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 import { UserCredential } from '@firebase/auth'
+import ThemeButton from 'theme/ThemeButton'
+import Section from 'components/styles/Section'
 
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
   return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
@@ -149,7 +151,7 @@ function AcceptInvitationPage() {
   return (
     <Container>
       <Content>
-        <CreateBox>
+        <ContentBox>
           <Heading mb={2} as="h2" size="lg">
             {organization?.name}
           </Heading>
@@ -200,26 +202,33 @@ function AcceptInvitationPage() {
               disabled={isRegisterLoading}
               loadingText="Creating Account"
               onClick={onRegister}
-              ml="auto"
               colorScheme="primary"
             >
               Create Account
             </Button>
-
-            <Text mt={4}>Or</Text>
-
-            <Button
-              data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
-              leftIcon={<FaGoogle />}
-              mt={4}
-              // size="md"
-              onClick={onLoginWithGoogleCredential}
-            >
-              continue with Google
-            </Button>
           </Box>
-        </CreateBox>
+        </ContentBox>
       </Content>
+
+      <Text mx="auto" mt={24}>
+        Or
+      </Text>
+
+      <Button
+        isLoading={isRegisterLoading}
+        disabled={isRegisterLoading}
+        mx="auto"
+        data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
+        leftIcon={<FaGoogle />}
+        mt={4}
+        onClick={onLoginWithGoogleCredential}
+      >
+        continue with Google
+      </Button>
+
+      <Box mx="auto" mt={6}>
+        <ThemeButton />
+      </Box>
     </Container>
   )
 }
@@ -227,13 +236,12 @@ function AcceptInvitationPage() {
 export default AcceptInvitationPage
 
 const Container = styled.div`
-  height: 100vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
-  flex: 1;
+  margin-top: 20vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,9 +252,9 @@ const EmptyContent = styled.div`
   width: 100%;
 `
 
-const CreateBox = styled.div`
+const ContentBox = styled(Section).attrs({ py: 10, px: 12 })`
   display: flex;
   flex-direction: column;
-  max-width: 500px;
+  max-width: 550px;
   width: 100%;
 `

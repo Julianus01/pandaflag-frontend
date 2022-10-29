@@ -170,6 +170,8 @@ function RegisterPage() {
               width="100%"
               size="md"
               onClick={onLoginWithGoogleCredential}
+              isLoading={isLoading}
+              disabled={isLoading}
             >
               continue with Google
             </Button>
@@ -181,7 +183,7 @@ function RegisterPage() {
         </Text>
       </Content>
 
-      <Box mx="auto" mb={6}>
+      <Box mx="auto" mt={6}>
         <ThemeButton />
       </Box>
     </Container>
@@ -191,13 +193,12 @@ function RegisterPage() {
 export default RegisterPage
 
 const Container = styled.div`
-  height: 100vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
-  flex: 1;
+  margin-top: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
