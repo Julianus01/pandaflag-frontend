@@ -148,7 +148,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
             onClick={createFlag}
             loadingText="Adding Flag"
             disabled={flagName.length < 3 || createFlagMutation.isLoading}
-            colorScheme="blue"
+            colorScheme="primary"
             isLoading={createFlagMutation.isLoading}
           >
             Add Flag

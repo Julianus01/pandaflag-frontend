@@ -18,8 +18,7 @@ function FeedbackPage() {
   const sendFeedbackMutation = useMutation(FeedbackApi.sendFeedback, {
     onSuccess: () => {
       toast({
-        title: `Feedback sent!`,
-        position: 'top-right',
+        title: `Feedback sent! 📬`,
         isClosable: true,
         variant: 'subtle',
       })
@@ -50,9 +49,9 @@ function FeedbackPage() {
       </Text>
 
       <Section mb={4}>
-        <FormControl id="name">
+        <FormControl id="Title">
           <FormLabel fontSize="sm" color="gray.500">
-            Name
+            Title
           </FormLabel>
 
           <Input

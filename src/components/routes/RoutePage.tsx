@@ -2,6 +2,10 @@ function root() {
   return `/`
 }
 
+function notFound() {
+  return `/not-found`
+}
+
 function login() {
   return `/login`
 }
@@ -54,13 +58,27 @@ function feedback() {
   return `/feedback`
 }
 
+function acceptInvitation(invitationId: string) {
+  return `/accept-invitation/${invitationId}`
+}
+
+function membersRoot() {
+  return `/members`
+}
+
+function members(tab: string) {
+  return `/members/${tab}`
+}
+
 const RoutePage = {
   // Public
   root,
+  notFound,
   login,
   register,
   emailVerification,
   forgotPassword,
+  acceptInvitation,
 
   // Authenticated
   flags,
@@ -71,7 +89,9 @@ const RoutePage = {
   createOrganization,
   createFirstProject,
   profile,
-  feedback
+  feedback,
+  membersRoot,
+  members,
 }
 
 export default RoutePage

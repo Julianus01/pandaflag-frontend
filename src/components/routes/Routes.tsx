@@ -22,6 +22,9 @@ import EnvironmentsPage from 'components/pages/EnvironmentsPage'
 import FeedbackPage from 'components/pages/FeedbackPage'
 import CreateOrganizationRoute from './CreateOrganizationRoute'
 import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
+import AcceptInvitationPage from 'components/pages/AcceptInvitationPage'
+import MembersPage from 'components/pages/MembersPage'
+import NotFoundPage from 'components/pages/NotFoundPage'
 
 function Routes() {
   return (
@@ -32,6 +35,11 @@ function Routes() {
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.login()} />
         <RedirectAuthenticatedRoute component={RegisterPage} exact path={RoutePage.register()} />
         <RedirectAuthenticatedRoute component={ForgotPasswordPage} exact path={RoutePage.forgotPassword()} />
+        <RedirectAuthenticatedRoute
+          component={AcceptInvitationPage}
+          exact
+          path={RoutePage.acceptInvitation(':invitationId')}
+        />
 
         {/* Authenticated routes */}
         <AuthenticatedRoute component={FlagsPage} exact path={RoutePage.flags()} />
@@ -43,11 +51,22 @@ function Routes() {
         <AuthenticatedRoute component={ProfilePage} exact path={RoutePage.profile()} />
         <AuthenticatedRoute component={FeedbackPage} exact path={RoutePage.feedback()} />
 
+        {/* Members */}
+        <AuthenticatedRoute
+          component={() => <Redirect to={RoutePage.members('active')} />}
+          exact
+          path={RoutePage.membersRoot()}
+        />
+        <AuthenticatedRoute component={MembersPage} exact path={RoutePage.members(':tab')} />
+
         {/* Use case routes */}
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
 
         <CreateFirstProjectRoute component={CreateFirstProjectPage} exact path={RoutePage.createFirstProject()} />
         <CreateOrganizationRoute component={CreateOrganizationPage} exact path={RoutePage.createOrganization()} />
+
+        {/* Not Found */}
+        <Route component={NotFoundPage} exact path={RoutePage.notFound()} />
 
         {/* Redirect to root */}
         <Route component={() => <Redirect to={RoutePage.root()} />} exact path="/*" />

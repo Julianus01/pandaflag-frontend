@@ -1,18 +1,20 @@
 import { Box, Icon, Text } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import SidebarMenuItem, { ISidebarMenuItem } from './SidebarMenuItem'
-import { FiLayers, FiFlag, FiGlobe, FiHash, FiMessageSquare } from 'react-icons/fi'
+import { FiLayers, FiFlag, FiGlobe, FiHash, FiMessageSquare, FiUsers } from 'react-icons/fi'
 import RoutePage from 'components/routes/RoutePage'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
-import SidebarProjectsCount from './SidebarProjectsCounts'
+import SidebarProjectsCount from './SidebarProjectsCount'
 import PandaflagLogo from '../PandaflagLogo'
+import SidebarFlagsCount from './SidebarFlagsCount'
 
 const MENU_ITEMS: ISidebarMenuItem[] = [
   {
     name: 'Flags',
     href: RoutePage.flags(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiFlag} />,
+    endComponent: () => <SidebarFlagsCount />,
   },
   {
     name: 'Environments',
@@ -27,6 +29,11 @@ const CONFIGURATION_MENU_ITEMS: ISidebarMenuItem[] = [
     href: RoutePage.projects(),
     icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiLayers} />,
     endComponent: () => <SidebarProjectsCount />,
+  },
+  {
+    name: 'Members',
+    href: RoutePage.membersRoot(),
+    icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiUsers} />,
   },
   {
     name: 'Organization',

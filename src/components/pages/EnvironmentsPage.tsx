@@ -1,53 +1,13 @@
-import {
-  Heading,
-  Alert,
-  AlertIcon,
-  Button,
-  Icon,
-  Box,
-  Spinner,
-  Th,
-  Tbody,
-  Skeleton,
-  Td,
-  Thead,
-  Table,
-  Tr,
-} from '@chakra-ui/react'
+import { Heading, Alert, AlertIcon, Button, Icon, Box, Spinner } from '@chakra-ui/react'
 import { IEnvironment } from 'api/EnvironmentsApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import EnvironmentsContext from 'context/EnvironmentsContext'
 import { useContext } from 'react'
 import { FiHash } from 'react-icons/fi'
-import { applyColorMode } from 'theme/StyledThemeProvider'
 import { PricingUtils } from 'utils/PricingUtils'
 import EnvironmentsTable from './environments/EnvironmentsTable'
-import styled from 'styled-components/macro'
-
-function SkeletonTable() {
-  return (
-    <TableContainer>
-      <CustomTable variant="simple">
-        <TableHead>
-          <Row>
-            <Th width="100%" textTransform="capitalize">
-              Name
-            </Th>
-          </Row>
-        </TableHead>
-
-        <Tbody>
-          <Row>
-            <Td>
-              <Skeleton height="24px" />
-            </Td>
-          </Row>
-        </Tbody>
-      </CustomTable>
-    </TableContainer>
-  )
-}
+import SkeletonTable from 'components/styles/SkeletonTable'
 
 const Quota = PricingUtils.getQuota()
 
@@ -61,10 +21,10 @@ function EnvironmentsPage() {
       <Box display="flex">
         <Heading mb={10} flex={1} as="h3" size="lg">
           Environments
-          {isFetching && <Spinner colorScheme="blue" ml={6} size="sm" />}
+          {isFetching && <Spinner colorScheme="primary" ml={6} size="sm" />}
         </Heading>
 
-        <Button disabled leftIcon={<Icon as={FiHash} />} onClick={() => null} colorScheme="blue">
+        <Button disabled leftIcon={<Icon as={FiHash} />} onClick={() => null} colorScheme="primary">
           Add Environment
         </Button>
       </Box>
@@ -77,6 +37,7 @@ function EnvironmentsPage() {
       )}
 
       {isLoading && <SkeletonTable />}
+
       {!!environments?.length && (
         <TableContainer>
           <EnvironmentsTable environments={environments as IEnvironment[]} />
@@ -87,19 +48,3 @@ function EnvironmentsPage() {
 }
 
 export default EnvironmentsPage
-
-const TableHead = styled(Thead)`
-  background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
-`
-
-const CustomTable = styled(Table)`
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
-`
-
-const Row = styled(Tr)`
-  :last-child {
-    > td {
-      border: 0;
-    }
-  }
-`

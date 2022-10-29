@@ -15,13 +15,15 @@ import {
 import AuthApi from 'api/AuthApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
+import { useCurrentUserMemberType } from 'hooks/userHooks'
 import { FiLogOut } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
 import { IUser } from 'redux/ducks/authDuck'
 import { IStoreState } from 'redux/store'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import ThemeButton from 'theme/ThemeButton'
+import { UserUtils } from 'utils/UserUtils'
 import ProfileChangePasswordButton from './profile/ProfileChangePasswordButton'
 
 function userDisplayName(user: IUser) {
@@ -36,6 +38,7 @@ function userDisplayName(user: IUser) {
 function ProfilePage() {
   const { colorMode } = useColorMode()
   const user = useSelector((state: IStoreState) => state.auth.user)
+  const memberType = useCurrentUserMemberType()
 
   return (
     <BoxedPage>
@@ -58,8 +61,13 @@ function ProfilePage() {
           </Heading>
 
           <Box>
-            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="blue">
-              <TagLabel>Admin</TagLabel>
+            <Tag
+              size="md"
+              borderRadius="md"
+              variant="subtle"
+              colorScheme={UserUtils.getMemberTypeColorSchema(memberType)}
+            >
+              <TagLabel textTransform="capitalize">{memberType}</TagLabel>
             </Tag>
           </Box>
         </Box>

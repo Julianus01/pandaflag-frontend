@@ -116,7 +116,6 @@ function TryApi({ flags, isOpen }: IProps) {
     } catch {
       toast({
         title: `An error has occured`,
-        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
         status: 'error',
@@ -252,7 +251,7 @@ function TryApi({ flags, isOpen }: IProps) {
 
             <Button
               data-splitbee-event={SplitbeeEvent.RunTryApi}
-              colorScheme="blue"
+              colorScheme="primary"
               onClick={runApi}
               isLoading={isLoading}
               disabled={isLoading}

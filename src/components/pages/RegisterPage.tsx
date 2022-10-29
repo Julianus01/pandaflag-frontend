@@ -106,6 +106,7 @@ function RegisterPage() {
               <InputLeftElement pointerEvents="none" children={<Icon as={FiGlobe} />} />
 
               <Input
+                value={form.organizationName}
                 disabled={isLoading}
                 onKeyDown={onKeyDown}
                 onChange={onInputChange('organizationName')}
@@ -118,6 +119,7 @@ function RegisterPage() {
               <InputLeftElement pointerEvents="none" children={<Icon as={FiMail} />} />
 
               <Input
+                value={form.email}
                 disabled={isLoading}
                 type="email"
                 onKeyDown={onKeyDown}
@@ -131,6 +133,7 @@ function RegisterPage() {
               <InputLeftElement pointerEvents="none" children={<Icon as={FiKey} />} />
 
               <Input
+                value={form.password}
                 disabled={isLoading}
                 onKeyDown={onKeyDown}
                 onChange={onInputChange('password')}
@@ -149,7 +152,7 @@ function RegisterPage() {
               disabled={isLoading}
               mt={6}
               onClick={onRegister}
-              colorScheme="blue"
+              colorScheme="primary"
               width="100%"
               size="md"
             >
@@ -167,6 +170,8 @@ function RegisterPage() {
               width="100%"
               size="md"
               onClick={onLoginWithGoogleCredential}
+              isLoading={isLoading}
+              disabled={isLoading}
             >
               continue with Google
             </Button>
@@ -178,7 +183,7 @@ function RegisterPage() {
         </Text>
       </Content>
 
-      <Box mx="auto" mb={6}>
+      <Box mx="auto" mt={6}>
         <ThemeButton />
       </Box>
     </Container>
@@ -188,13 +193,12 @@ function RegisterPage() {
 export default RegisterPage
 
 const Container = styled.div`
-  height: 100vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
-  flex: 1;
+  margin-top: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
