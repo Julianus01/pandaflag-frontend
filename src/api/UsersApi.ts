@@ -10,7 +10,6 @@ import {
   where,
   QueryDocumentSnapshot,
   DocumentData,
-  deleteDoc,
 } from 'firebase/firestore'
 import { FirestoreCollection } from './FirestoreCollection'
 import { IUser } from 'redux/ducks/authDuck'
