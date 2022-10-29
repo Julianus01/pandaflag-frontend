@@ -2,8 +2,6 @@ import { Tbody, Th, Tr, Box } from '@chakra-ui/react'
 import { IEnvironment } from 'api/EnvironmentsApi'
 import Table from 'components/styles/Table'
 import Thead from 'components/styles/Thead'
-import styled from 'styled-components/macro'
-import { applyColorMode } from 'theme/StyledThemeProvider'
 import EnvironmentRow from './EnvironmentRow'
 
 interface IProps {
