@@ -11,11 +11,14 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import usePropState from 'hooks/common/usePropState'
 import OrganizationPricingPlan, { PricingPlan } from './organization/OrganizationPricingPlan'
 import styled from 'styled-components/macro'
+import { useIsCurrentUserMemberType } from 'hooks/userHooks'
+import { MemberType } from 'api/UsersApi'
 
 function OrganizationPage() {
   const queryClient = useQueryClient()
   const toast = useToast()
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
+  const isAdmin = useIsCurrentUserMemberType(MemberType.admin)
 
   const [name, setName] = usePropState<string>(organization?.name as string)
   const [isDirty, setIsDirty] = useState<boolean>(false)
@@ -66,21 +69,23 @@ function OrganizationPage() {
           Organization
         </Heading>
 
-        <Button
-          isLoading={updateOrganizationMutation.isLoading}
-          disabled={
-            !isDirty ||
-            _.isEqual(name.trim(), organization?.name) ||
-            name.length < 3 ||
-            updateOrganizationMutation.isLoading
-          }
-          onClick={onUpdate}
-          ml="auto"
-          colorScheme="primary"
-          loadingText="Updating"
-        >
-          Update
-        </Button>
+        {isAdmin && (
+          <Button
+            isLoading={updateOrganizationMutation.isLoading}
+            disabled={
+              !isDirty ||
+              _.isEqual(name.trim(), organization?.name) ||
+              name.length < 3 ||
+              updateOrganizationMutation.isLoading
+            }
+            onClick={onUpdate}
+            ml="auto"
+            colorScheme="primary"
+            loadingText="Updating"
+          >
+            Update
+          </Button>
+        )}
       </Box>
 
       <Section mb={10}>
@@ -93,7 +98,14 @@ function OrganizationPage() {
             Name
           </FormLabel>
 
-          <Input onKeyDown={onKeyDown} onChange={onNameChange} value={name} variant="filled" placeholder="Name" />
+          <Input
+            isDisabled={!isAdmin || updateOrganizationMutation.isLoading}
+            onKeyDown={onKeyDown}
+            onChange={onNameChange}
+            value={name}
+            variant="filled"
+            placeholder="Name"
+          />
         </FormControl>
       </Section>
 

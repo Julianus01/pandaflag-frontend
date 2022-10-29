@@ -13,16 +13,19 @@ import {
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import InvitationApi, { IInvitation } from 'api/InvitationApi'
-import UsersApi, { IMember } from 'api/UsersApi'
+import UsersApi, { IMember, MemberType } from 'api/UsersApi'
 import RoutePage from 'components/routes/RoutePage'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
 import SkeletonTable from 'components/styles/SkeletonTable'
+import { useIsCurrentUserMemberType } from 'hooks/userHooks'
 import { useEffect } from 'react'
 import { FiUser } from 'react-icons/fi'
 import { useQuery } from 'react-query'
+import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
+import { IStoreState } from 'redux/store'
 import InvitationsTable from './invitations/InvitationsTable'
 import InviteMemberDialog from './members/InviteMemberDialog'
 import MembersTable from './members/MembersTable'
@@ -75,6 +78,8 @@ function convertIndexToTab(index: number) {
 }
 
 function MembersPage() {
+  const user = useSelector((state: IStoreState) => state.auth.user)
+  const isAdmin = useIsCurrentUserMemberType(MemberType.admin)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const history = useHistory()
   const params = useParams<IParams>()
@@ -83,6 +88,9 @@ function MembersPage() {
   const invitationsQuery = useQuery([ApiQueryId.getPendingInvitations], InvitationApi.getPendingInvitations)
 
   const isLoading = membersQuery.isLoading || invitationsQuery.isLoading
+  const membersWithUserInFront = membersQuery.data?.sort((firstMember: IMember, secondMember: IMember) =>
+    firstMember.uid === user?.uid ? -1 : secondMember.uid === user?.uid ? 1 : 0
+  )
 
   function onTabChange(index: number) {
     const tab = convertIndexToTab(index)
@@ -104,9 +112,11 @@ function MembersPage() {
           {isLoading && <Spinner colorScheme="primary" ml={6} size="sm" />}
         </Heading>
 
-        <Button leftIcon={<Icon as={FiUser} />} onClick={onOpen} colorScheme="primary">
-          Invite member
-        </Button>
+        {isAdmin && (
+          <Button leftIcon={<Icon as={FiUser} />} onClick={onOpen} colorScheme="primary">
+            Invite member
+          </Button>
+        )}
       </Box>
 
       <Tabs
@@ -126,9 +136,9 @@ function MembersPage() {
           <TabPanel pl="0" pr="0">
             {membersQuery.isLoading && <SkeletonTable />}
 
-            {!membersQuery.isLoading && Boolean(membersQuery.data?.length) && (
+            {!membersQuery.isLoading && Boolean(membersWithUserInFront?.length) && (
               <TableContainer>
-                <MembersTable members={membersQuery.data as IMember[]} />
+                <MembersTable members={membersWithUserInFront as IMember[]} />
               </TableContainer>
             )}
           </TabPanel>

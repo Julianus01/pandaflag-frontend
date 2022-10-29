@@ -13,10 +13,9 @@ import {
   useColorMode,
 } from '@chakra-ui/react'
 import AuthApi from 'api/AuthApi'
-import { IMemberRelation, MemberType } from 'api/UsersApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
-import { useMemo } from 'react'
+import { useCurrentUserMemberType } from 'hooks/userHooks'
 import { FiLogOut } from 'react-icons/fi'
 import { useSelector } from 'react-redux'
 import { IUser } from 'redux/ducks/authDuck'
@@ -39,15 +38,7 @@ function userDisplayName(user: IUser) {
 function ProfilePage() {
   const { colorMode } = useColorMode()
   const user = useSelector((state: IStoreState) => state.auth.user)
-  const organization = useSelector((state: IStoreState) => state.configuration.organization)
-
-  const memberType = useMemo(() => {
-    const foundMemberRelation = organization?.members.find(
-      (memberRelation: IMemberRelation) => memberRelation.id === user?.uid
-    )
-
-    return foundMemberRelation?.type as MemberType
-  }, [user, organization])
+  const memberType = useCurrentUserMemberType()
 
   return (
     <BoxedPage>
