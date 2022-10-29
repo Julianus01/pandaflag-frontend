@@ -24,6 +24,7 @@ import CreateOrganizationRoute from './CreateOrganizationRoute'
 import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
 import AcceptInvitationPage from 'components/pages/AcceptInvitationPage'
 import MembersPage from 'components/pages/MembersPage'
+import NotFoundPage from 'components/pages/NotFoundPage'
 
 function Routes() {
   return (
@@ -63,6 +64,9 @@ function Routes() {
 
         <CreateFirstProjectRoute component={CreateFirstProjectPage} exact path={RoutePage.createFirstProject()} />
         <CreateOrganizationRoute component={CreateOrganizationPage} exact path={RoutePage.createOrganization()} />
+
+        {/* Not Found */}
+        <Route component={NotFoundPage} exact path={RoutePage.notFound()} />
 
         {/* Redirect to root */}
         <Route component={() => <Redirect to={RoutePage.root()} />} exact path="/*" />

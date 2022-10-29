@@ -18,7 +18,7 @@ import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import InvitationApi, { IInvitation, InvitationStatus } from 'api/InvitationApi'
-import { useParams } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { FiMail, FiKey } from 'react-icons/fi'
 import { ICredentials } from './LoginPage'
@@ -30,6 +30,7 @@ import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 import { UserCredential } from '@firebase/auth'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
+import RoutePage from 'components/routes/RoutePage'
 
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
   return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
@@ -136,16 +137,20 @@ function AcceptInvitationPage() {
     return (
       <Container>
         <Content>
-          <EmptyContent>
-            <Spinner />
+          <ContentBox>
+            <Spinner mb={6} />
 
             <Skeleton mt={2} height="24px" />
             <Skeleton mt={2} height="24px" />
             <Skeleton mt={2} height="24px" />
-          </EmptyContent>
+          </ContentBox>
         </Content>
       </Container>
     )
+  }
+
+  if (invitation?.status !== InvitationStatus.pending) {
+    return <Redirect to={RoutePage.notFound()} />
   }
 
   return (
@@ -245,11 +250,6 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
-
-const EmptyContent = styled.div`
-  max-width: 500px;
-  width: 100%;
 `
 
 const ContentBox = styled(Section).attrs({ py: 10, px: 12 })`

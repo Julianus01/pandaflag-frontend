@@ -2,6 +2,10 @@ function root() {
   return `/`
 }
 
+function notFound() {
+  return `/not-found`
+}
+
 function login() {
   return `/login`
 }
@@ -69,6 +73,7 @@ function members(tab: string) {
 const RoutePage = {
   // Public
   root,
+  notFound,
   login,
   register,
   emailVerification,
