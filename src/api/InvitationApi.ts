@@ -8,6 +8,7 @@ import {
   getFirestore,
   query,
   QueryDocumentSnapshot,
+  setDoc,
   Timestamp,
   where,
 } from 'firebase/firestore'
@@ -18,7 +19,7 @@ import { MemberType } from './UsersApi'
 
 export enum InvitationStatus {
   pending = 'pending',
-  completed = 'completed',
+  complete = 'complete',
 }
 
 export interface IInvitation {
@@ -34,7 +35,11 @@ async function getPendingInvitations(): Promise<IInvitation[]> {
   const organization = store.getState().configuration.organization as IOrganization
 
   const querySnapshot = await getDocs(
-    query(collection(getFirestore(), FirestoreCollection.invitations), where('organizationId', '==', organization.id))
+    query(
+      collection(getFirestore(), FirestoreCollection.invitations),
+      where('organizationId', '==', organization.id),
+      where('status', '==', InvitationStatus.pending)
+    )
   )
 
   const invitations = querySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
@@ -77,10 +82,19 @@ async function createInvitation(params: ICreateInvitationParams): Promise<IInvit
   return { ...newInvitation, id: newInvitationDoc.id }
 }
 
+export interface IUpdateInvitationRequestParams extends Partial<IInvitation> {
+  id: string
+}
+
+async function updateInvitation({ id, ...updates }: IUpdateInvitationRequestParams): Promise<void> {
+  return setDoc(doc(getFirestore(), FirestoreCollection.invitations, id), updates, { merge: true })
+}
+
 const InvitationApi = {
   getPendingInvitations,
   getInvitation,
   createInvitation,
+  updateInvitation,
 }
 
 export default InvitationApi

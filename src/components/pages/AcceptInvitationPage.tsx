@@ -17,7 +17,7 @@ import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
-import InvitationApi, { IInvitation } from 'api/InvitationApi'
+import InvitationApi, { IInvitation, InvitationStatus } from 'api/InvitationApi'
 import { useParams } from 'react-router-dom'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { FiMail, FiKey } from 'react-icons/fi'
@@ -100,6 +100,7 @@ function AcceptInvitationPage() {
       })
 
       await OrganizationsApi.updateOrganization(organizationWithNewMember)
+      await InvitationApi.updateInvitation({ id: params.invitationId, status: InvitationStatus.complete })
       await AuthApi.sendVerificationEmail()
     } catch (err) {
       const error = err as Error

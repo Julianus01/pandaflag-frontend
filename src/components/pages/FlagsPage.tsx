@@ -10,11 +10,10 @@ import FlagsTable from './flags/FlagsTable'
 import { useQuery } from 'react-query'
 import { FiFlag } from 'react-icons/fi'
 import TryApi from './flags/TryApi'
-import AccessibleBackground from 'components/styles/AccessibleBackground'
+import Section from 'components/styles/Section'
 import TableContainer from 'components/shared/TableContainer'
 import DocumentationSDKs from './flags/DocumentationSDKs'
 import SkeletonTable from 'components/styles/SkeletonTable'
-import Section from 'components/styles/Section'
 
 function FlagsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -67,7 +66,7 @@ function FlagsPage() {
 
 export default FlagsPage
 
-const CodeContainer = styled(AccessibleBackground)`
+const CodeContainer = styled(Section)`
   border-radius: ${({ theme }) => theme.radii.md};
   padding: ${({ theme }) => theme.space[2]};
 `

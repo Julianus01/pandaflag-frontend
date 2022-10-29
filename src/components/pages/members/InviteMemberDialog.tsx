@@ -114,7 +114,12 @@ function InviteMemberDialog({ isOpen, onClose }: IProps) {
             placeholder="Ex: johndoe@email.com"
           />
 
-          <Select onChange={(event) => setType(event.target.value as MemberType)} value={type} variant="filled">
+          <Select
+            disabled={sendInvitationMutation.isLoading}
+            onChange={(event) => setType(event.target.value as MemberType)}
+            value={type}
+            variant="filled"
+          >
             <option value={MemberType.member}>Member</option>
           </Select>
 

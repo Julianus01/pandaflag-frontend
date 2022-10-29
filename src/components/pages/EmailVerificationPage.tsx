@@ -41,7 +41,7 @@ function EmailVerificationPage() {
           <Text mb={8} color="gray.500">
             We need to verify you are truthful and you did not steal this account :)
             <br />
-            Refresh this page after you have accessed the link
+            Refresh this page after you have accessed the link.
           </Text>
 
           <Box display="flex">
@@ -61,7 +61,7 @@ function EmailVerificationPage() {
               {hasBeenSent && 'Email sent'}
             </Button>
 
-            <Button isLoading={isLoading} onClick={onRefresh} ml="2" colorScheme="primary">
+            <Button disabled={isLoading} onClick={onRefresh} ml="2" colorScheme="primary">
               Refresh
             </Button>
           </Box>
