@@ -24,7 +24,6 @@ function SidebarFooter() {
           name={UserUtils.userDisplayName(user as IUser)}
           size="md"
           shadow="lg"
-          ignoreFallback
           src={user?.photoURL as string}
         >
           <AvatarBadge boxSize="1em" bg="green.500" />

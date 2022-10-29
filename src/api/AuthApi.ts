@@ -69,7 +69,8 @@ async function loginWithGoogleCredential() {
     const auth = getAuth()
     const provider = new GoogleAuthProvider()
 
-    await signInWithPopup(auth, provider)
+    const userCredential = await signInWithPopup(auth, provider)
+    return userCredential
   } catch (err) {
     const error: AuthError = err as AuthError
     throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))

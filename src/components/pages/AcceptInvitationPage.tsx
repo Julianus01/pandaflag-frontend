@@ -25,6 +25,9 @@ import { ICredentials } from './LoginPage'
 import * as yup from 'yup'
 import AuthApi from 'api/AuthApi'
 import { IMemberRelation, MemberType } from 'api/UsersApi'
+import { FaGoogle } from 'react-icons/fa'
+import { SplitbeeEvent } from 'utils/SplitbeeUtils'
+import { UserCredential } from '@firebase/auth'
 
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
   return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
@@ -94,19 +97,37 @@ function AcceptInvitationPage() {
         validatedForm.Password
       )
 
-      const organizationWithNewMember = addMemberToOrganization(organization as IOrganization, {
-        id: userCredential.user.uid,
-        type: invitation?.memberType as MemberType,
-      })
-
-      await OrganizationsApi.updateOrganization(organizationWithNewMember)
-      await InvitationApi.updateInvitation({ id: params.invitationId, status: InvitationStatus.complete })
+      await postRegistrationUpdates(userCredential)
       await AuthApi.sendVerificationEmail()
     } catch (err) {
       const error = err as Error
       temporaryMessage.showMessage(error.message)
       setIsRegisterLoading(false)
     }
+  }
+
+  async function onLoginWithGoogleCredential() {
+    try {
+      temporaryMessage.hideMessage()
+      setIsRegisterLoading(true)
+
+      const userCredential = await AuthApi.loginWithGoogleCredential()
+      await postRegistrationUpdates(userCredential)
+    } catch (err) {
+      const error = err as Error
+      temporaryMessage.showMessage(error.message)
+      setIsRegisterLoading(false)
+    }
+  }
+
+  async function postRegistrationUpdates(userCredential: UserCredential) {
+    const organizationWithNewMember = addMemberToOrganization(organization as IOrganization, {
+      id: userCredential.user.uid,
+      type: invitation?.memberType as MemberType,
+    })
+
+    await OrganizationsApi.updateOrganization(organizationWithNewMember)
+    await InvitationApi.updateInvitation({ id: params.invitationId, status: InvitationStatus.complete })
   }
 
   if (isLoading) {
@@ -167,7 +188,7 @@ function AcceptInvitationPage() {
             />
           </InputGroup>
 
-          <Box display="flex">
+          <Box display="flex" flexDirection="column" alignItems="flex-end">
             {!!temporaryMessage.message && (
               <Text flex="1" mr={4} color="red.500">
                 {temporaryMessage.message}
@@ -183,6 +204,18 @@ function AcceptInvitationPage() {
               colorScheme="primary"
             >
               Create Account
+            </Button>
+
+            <Text mt={4}>Or</Text>
+
+            <Button
+              data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
+              leftIcon={<FaGoogle />}
+              mt={4}
+              // size="md"
+              onClick={onLoginWithGoogleCredential}
+            >
+              continue with Google
             </Button>
           </Box>
         </CreateBox>
