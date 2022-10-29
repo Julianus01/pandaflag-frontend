@@ -33,7 +33,7 @@ async function getProjects(): Promise<IProject[]> {
   const organization = store.getState().configuration.organization
 
   if (!organization) {
-    return []
+    throw new Error('No organization')
   }
 
   const querySnapshot = await getDocs(

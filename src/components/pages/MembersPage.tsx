@@ -79,7 +79,7 @@ function MembersPage() {
   const history = useHistory()
   const params = useParams<IParams>()
 
-  const membersQuery = useQuery([ApiQueryId.getMembers], UsersApi.getOrganizationMembers)
+  const membersQuery = useQuery(ApiQueryId.getMembers, UsersApi.getOrganizationMembers)
   const invitationsQuery = useQuery([ApiQueryId.getPendingInvitations], InvitationApi.getPendingInvitations)
 
   const isLoading = membersQuery.isLoading || invitationsQuery.isLoading

@@ -6,12 +6,14 @@ import { IStoreState } from 'redux/store'
 import { IMember } from 'api/UsersApi'
 import GreenPulse from 'components/styles/GreenPulse'
 import { UserUtils } from 'utils/UserUtils'
+import MemberRemoveButton from './MemberRemoveButton'
 
 interface IProps {
   member: IMember
+  showDeleteAction: boolean
 }
 
-function MemberRow({ member }: IProps) {
+function MemberRow({ member, showDeleteAction }: IProps) {
   const currentUser = useSelector((state: IStoreState) => state.auth.user)
   const displayName = UserUtils.userDisplayName(member)
 
@@ -47,6 +49,8 @@ function MemberRow({ member }: IProps) {
       <Td whiteSpace="nowrap" isNumeric>
         {format(createdAt, `MMM do ${showYear ? 'uu' : ''}`)}
       </Td>
+
+      {showDeleteAction && <Td>{member.uid !== currentUser?.uid && <MemberRemoveButton member={member} />}</Td>}
     </Row>
   )
 }

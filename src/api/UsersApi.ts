@@ -10,12 +10,14 @@ import {
   where,
   QueryDocumentSnapshot,
   DocumentData,
+  deleteDoc,
 } from 'firebase/firestore'
 import { FirestoreCollection } from './FirestoreCollection'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
 import InvitationApi, { IInvitation } from './InvitationApi'
 import EmailApi from './EmailApi'
+import OrganizationsApi from './OrganizationsApi'
 
 export interface IMemberRelation {
   id: string
@@ -103,6 +105,20 @@ async function inviteMember(params: IInviteMemberParams) {
   await EmailApi.sendMemberInvitation({ email: params.email, invitationId: invitation.id })
 }
 
+async function removeMemberFromOrganization(memberId: string) {
+  const organization = store.getState().configuration.organization
+
+  if (!organization) {
+    throw new Error('No organization')
+  }
+
+  const newOrganizationMembers = organization?.members.filter(
+    (memberRelation: IMemberRelation) => memberRelation.id !== memberId
+  )
+
+  await OrganizationsApi.updateOrganization({ id: organization?.id, members: newOrganizationMembers })
+}
+
 const UsersApi = {
   // Create
   addUserIfDoesntExist,
@@ -113,6 +129,7 @@ const UsersApi = {
   // Members
   getOrganizationMembers,
   inviteMember,
+  removeMemberFromOrganization,
 }
 
 export default UsersApi

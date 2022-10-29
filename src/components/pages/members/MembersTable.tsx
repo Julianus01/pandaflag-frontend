@@ -2,8 +2,6 @@ import { Tbody, Th, Tr, Box } from '@chakra-ui/react'
 import { IMember } from 'api/UsersApi'
 import Table from 'components/styles/Table'
 import Thead from 'components/styles/Thead'
-import styled from 'styled-components/macro'
-import { applyColorMode } from 'theme/StyledThemeProvider'
 import MemberRow from './MemberRow'
 
 interface IProps {
@@ -28,12 +26,14 @@ function MembersTable({ members }: IProps) {
           <Th textTransform="capitalize" isNumeric>
             Created at
           </Th>
+
+          {members.length > 1 && <Th />}
         </Tr>
       </Thead>
 
       <Tbody>
         {members.map((member: IMember) => (
-          <MemberRow key={member.uid} member={member} />
+          <MemberRow showDeleteAction={members.length > 1} key={member.uid} member={member} />
         ))}
       </Tbody>
     </Table>
