@@ -46,8 +46,7 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
       dispatch(configurationActions.setProject({ ...project, name: projectName }))
 
       toast({
-        title: `Updated successfully`,
-        position: 'top-right',
+        title: `Updated successfully 👍`,
         isClosable: true,
         variant: 'subtle',
         status: 'success',
@@ -144,7 +143,7 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
             disabled={
               projectName.length < 3 || updateProjectMutation.isLoading || projectName.trim() === project.name.trim()
             }
-            colorScheme="blue"
+            colorScheme="primary"
             isLoading={updateProjectMutation.isLoading}
           >
             Update

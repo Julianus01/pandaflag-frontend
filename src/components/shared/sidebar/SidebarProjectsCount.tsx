@@ -2,7 +2,7 @@ import { Tag } from '@chakra-ui/react'
 import { useContext } from 'react'
 import ProjectsContext from 'context/ProjectsContext'
 
-function ProjectsCount() {
+function SidebarProjectsCount() {
   const { data: projects } = useContext(ProjectsContext)
 
   if (projects?.length === 1) {
@@ -12,4 +12,4 @@ function ProjectsCount() {
   return <Tag fontSize="xs">{projects?.length}</Tag>
 }
 
-export default ProjectsCount
+export default SidebarProjectsCount

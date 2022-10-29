@@ -1,10 +1,12 @@
-import { Button, Heading, Input, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Input, Text, useToast } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi from 'api/ProjectsApi'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import AuthApi from 'api/AuthApi'
+import ThemeButton from 'theme/ThemeButton'
+import Section from 'components/styles/Section'
 
 function CreateFirstProjectPage() {
   const queryClient = useQueryClient()
@@ -38,8 +40,7 @@ function CreateFirstProjectPage() {
         queryClient.invalidateQueries(ApiQueryId.getProjectsByOrganizationId)
 
         toast({
-          title: `Created project '${projectName}'`,
-          position: 'top-right',
+          title: `Created project '${projectName}' 📦`,
           isClosable: true,
           variant: 'subtle',
         })
@@ -50,9 +51,9 @@ function CreateFirstProjectPage() {
   return (
     <Container>
       <Content>
-        <CreateBox>
+        <ContentBox>
           <Heading mb={2} as="h4" size="md">
-            Create your first project
+            Create your first project 📦
           </Heading>
 
           <Text color="gray.500" mb={4}>
@@ -65,7 +66,7 @@ function CreateFirstProjectPage() {
             onChange={onProjectNameChange}
             mb={4}
             variant="filled"
-            placeholder="Instagram, Uber, Twitter..."
+            placeholder="Ex: Instagram, Uber, Twitter..."
           />
 
           <Button
@@ -73,17 +74,21 @@ function CreateFirstProjectPage() {
             loadingText="Creating Project"
             disabled={projectName.length < 3 || isLoading}
             ml="auto"
-            colorScheme="blue"
+            colorScheme="primary"
             isLoading={isLoading}
           >
             Create Project
           </Button>
-        </CreateBox>
+        </ContentBox>
       </Content>
 
-      <Button onClick={AuthApi.logout} mb={6} variant="ghost" mx="auto">
+      <Button onClick={AuthApi.logout} mt={24} variant="ghost" mx="auto">
         Logout
       </Button>
+
+      <Box mx="auto" mt={6}>
+        <ThemeButton />
+      </Box>
     </Container>
   )
 }
@@ -91,21 +96,20 @@ function CreateFirstProjectPage() {
 export default CreateFirstProjectPage
 
 const Container = styled.div`
-  height: 100vh;
+  margin-top: 20vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 `
 
-const CreateBox = styled.div`
+const ContentBox = styled(Section).attrs({ py: 10, px: 12 })`
   display: flex;
   flex-direction: column;
-  max-width: 500px;
+  max-width: 550px;
   width: 100%;
 `

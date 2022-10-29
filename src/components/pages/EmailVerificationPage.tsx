@@ -2,6 +2,8 @@ import { Button, Heading, Box, Text, useToast } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { useState } from 'react'
 import AuthApi from 'api/AuthApi'
+import ThemeButton from 'theme/ThemeButton'
+import Section from 'components/styles/Section'
 
 function EmailVerificationPage() {
   const toast = useToast()
@@ -21,8 +23,7 @@ function EmailVerificationPage() {
       setHasBeenSent(true)
 
       toast({
-        title: `Verification email sent`,
-        position: 'top-right',
+        title: `Verification email sent 📬`,
         isClosable: true,
         variant: 'subtle',
       })
@@ -34,15 +35,15 @@ function EmailVerificationPage() {
   return (
     <Container>
       <Content>
-        <Box display="flex" flexDirection="column">
+        <ContentBox display="flex" flexDirection="column">
           <Heading mb={1} as="h4" size="md">
-            Verify your email address inbox
+            Verify your email address inbox ✉️
           </Heading>
 
-          <Text mb={8} color="gray.500">
+          <Text mb={12} color="gray.500">
             We need to verify you are truthful and you did not steal this account :)
             <br />
-            Refresh this page after you have accessed the link
+            Refresh this page after you have accessed the link.
           </Text>
 
           <Box display="flex">
@@ -62,21 +63,20 @@ function EmailVerificationPage() {
               {hasBeenSent && 'Email sent'}
             </Button>
 
-            <Button
-              isLoading={isLoading}
-              onClick={onRefresh}
-              ml="2"
-              colorScheme="blue"
-            >
+            <Button disabled={isLoading} onClick={onRefresh} ml="2" colorScheme="primary">
               Refresh
             </Button>
           </Box>
-        </Box>
+        </ContentBox>
       </Content>
 
-      <Button onClick={AuthApi.logout} mb={6} variant="ghost" mx="auto">
+      <Button onClick={AuthApi.logout} mt={24} variant="ghost" mx="auto">
         Logout
       </Button>
+
+      <Box mx="auto" mt={6}>
+        <ThemeButton />
+      </Box>
     </Container>
   )
 }
@@ -84,14 +84,20 @@ function EmailVerificationPage() {
 export default EmailVerificationPage
 
 const Container = styled.div`
-  height: 100vh;
+  margin-top: 20vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+`
+
+const ContentBox = styled(Section).attrs({ py: 10, px: 12 })`
+  display: flex;
+  flex-direction: column;
+  max-width: 550px;
+  width: 100%;
 `

@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 import { FiExternalLink } from 'react-icons/fi'
 import ReactLogoPNG from 'assets/images/react-logo.png'
 import JSLogoPNG from 'assets/images/js-logo.png'
-import AccessibleBackground from 'components/styles/AccessibleBackground'
+import Section from 'components/styles/Section'
 
 const DocumentationSDKs = () => {
   return (
@@ -65,8 +65,7 @@ const Title = styled(Text)`
   font-weight: semibold;
 `
 
-const SDKContainer = styled(AccessibleBackground)`
-  border-radius: ${({ theme }) => theme.radii.md};
+const SDKContainer = styled(Section)`
   padding: ${({ theme }) => theme.space[3]};
 
   :hover {

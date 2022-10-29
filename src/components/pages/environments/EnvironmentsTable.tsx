@@ -1,12 +1,7 @@
-import {
-  Table,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-  Box,
-} from '@chakra-ui/react'
+import { Tbody, Th, Tr, Box } from '@chakra-ui/react'
 import { IEnvironment } from 'api/EnvironmentsApi'
+import Table from 'components/styles/Table'
+import Thead from 'components/styles/Thead'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
 import EnvironmentRow from './EnvironmentRow'
@@ -17,8 +12,8 @@ interface IProps {
 
 function EnvironmentTable({ environments }: IProps) {
   return (
-    <CustomTable variant="simple">
-      <TableHead>
+    <Table variant="simple">
+      <Thead>
         <Tr>
           <Th textTransform="capitalize">
             <Box>Name</Box>
@@ -28,23 +23,15 @@ function EnvironmentTable({ environments }: IProps) {
             Color
           </Th>
         </Tr>
-      </TableHead>
+      </Thead>
 
       <Tbody>
         {environments.map((environment: IEnvironment) => (
           <EnvironmentRow key={environment.name} environment={environment} />
         ))}
       </Tbody>
-    </CustomTable>
+    </Table>
   )
 }
 
 export default EnvironmentTable
-
-const TableHead = styled(Thead)`
-  background: ${({ theme }) => applyColorMode(theme.colors.gray[100], theme.colors.gray[900])(theme)};
-`
-
-const CustomTable = styled(Table)`
-  background: ${({ theme }) => applyColorMode(theme.colors.white, theme.colors.gray[800])(theme)};
-`

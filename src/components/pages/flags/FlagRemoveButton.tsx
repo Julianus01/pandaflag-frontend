@@ -32,8 +32,7 @@ function FlagRemoveButton({ flag }: IProps) {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
 
       toast({
-        title: `Removed flag '${flag.name}'`,
-        position: 'top-right',
+        title: `Removed flag '${flag.name}' 🚩`,
         isClosable: true,
         variant: 'subtle',
         status: 'success',

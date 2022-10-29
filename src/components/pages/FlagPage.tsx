@@ -60,8 +60,7 @@ function FlagPage() {
       history.push(RoutePage.flags())
 
       toast({
-        title: `Updated successfully`,
-        position: 'top-right',
+        title: `Updated successfully 👍`,
         isClosable: true,
         variant: 'subtle',
         status: 'success',
@@ -186,7 +185,7 @@ function FlagPage() {
           loadingText="Updating"
           onClick={onUpdate}
           ml="auto"
-          colorScheme="blue"
+          colorScheme="primary"
           disabled={!isDirty || updateFlagMutation.isLoading || _.isEqual(flag, data) || flag.name.length < 3}
         >
           Update

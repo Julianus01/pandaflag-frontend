@@ -5,7 +5,7 @@ export enum SplitbeeEvent {
   Register = 'Register',
 
   // Feedback
-  SendFeedback = "Send Feedback",
+  SendFeedback = 'Send Feedback',
 
   // Flags
   CreateFlag = 'Create Flag',
@@ -14,5 +14,8 @@ export enum SplitbeeEvent {
 
   // Try Api
   CopyTryApiCode = 'Copy Try Api code',
-  RunTryApi = 'Run Try Api'
+  RunTryApi = 'Run Try Api',
+
+  // Members
+  InviteMember = 'Invite Member',
 }

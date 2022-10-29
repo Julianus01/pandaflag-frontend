@@ -19,15 +19,13 @@ function ProfileChangePasswordButton() {
       setHasBeenSent(true)
 
       toast({
-        title: `Reset password email sent`,
-        position: 'top-right',
+        title: `Reset password email sent 📬`,
         isClosable: true,
         variant: 'subtle',
       })
     } catch {
       toast({
         title: `Something went wrong`,
-        position: 'top-right',
         isClosable: true,
         variant: 'subtle',
         status: 'error',
@@ -38,12 +36,7 @@ function ProfileChangePasswordButton() {
   }
 
   return (
-    <Button
-      loadingText="Change"
-      isLoading={isLoading}
-      disabled={isLoading || hasBeenSent}
-      onClick={onChangePassword}
-    >
+    <Button loadingText="Change" isLoading={isLoading} disabled={isLoading || hasBeenSent} onClick={onChangePassword}>
       {!hasBeenSent && 'Change'}
       {hasBeenSent && 'Request sent'}
     </Button>

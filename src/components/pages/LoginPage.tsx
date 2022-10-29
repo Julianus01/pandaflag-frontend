@@ -36,7 +36,7 @@ interface IError {
   code: number
 }
 
-interface ICredentials {
+export interface ICredentials {
   email: string
   password: string
 }
@@ -140,7 +140,7 @@ function LoginPage() {
               disabled={isLoading}
               mt={4}
               onClick={onLogin}
-              colorScheme="blue"
+              colorScheme="primary"
               width="100%"
               size="md"
             >
@@ -152,6 +152,8 @@ function LoginPage() {
             </Text>
 
             <Button
+              isLoading={isLoading}
+              disabled={isLoading}
               data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
               leftIcon={<FaGoogle />}
               mt={4}
@@ -169,7 +171,7 @@ function LoginPage() {
         </Text>
       </Content>
 
-      <Box mx="auto" mb={6}>
+      <Box mx="auto" mt={6}>
         <ThemeButton />
       </Box>
     </Container>
@@ -179,13 +181,12 @@ function LoginPage() {
 export default LoginPage
 
 const Container = styled.div`
-  height: 100vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
-  flex: 1;
+  margin-top: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
