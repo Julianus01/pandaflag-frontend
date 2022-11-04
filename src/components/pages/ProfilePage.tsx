@@ -51,7 +51,6 @@ function ProfilePage() {
           name={userDisplayName(user as IUser)}
           size="lg"
           shadow="lg"
-          ignoreFallback
           src={user?.photoURL as string}
         />
 

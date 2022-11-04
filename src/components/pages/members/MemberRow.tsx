@@ -37,7 +37,7 @@ function MemberRow({ member, showDeleteAction }: IProps) {
       </Td>
 
       <Td>
-        <Avatar name={displayName} size="sm" shadow="lg" ignoreFallback src={member?.photoURL as string} />
+        <Avatar name={displayName} size="sm" shadow="lg" src={member?.photoURL as string} />
       </Td>
 
       <Td whiteSpace="nowrap" isNumeric>
