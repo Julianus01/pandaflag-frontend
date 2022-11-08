@@ -13,6 +13,7 @@ import { ProjectsContextProvider } from 'context/ProjectsContext'
 import { EnvironmentsContextProvider } from 'context/EnvironmentsContext'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import splitbee from '@splitbee/web'
+import { PandaflagProvider } from 'pandaflag-react'
 
 // For version checking
 console.log('v1.0.0')
@@ -33,22 +34,27 @@ splitbee.init()
 
 function RootHTML() {
   return (
-    <ReduxProvider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <ProjectsContextProvider>
-            <EnvironmentsContextProvider>
-              <GlobalStyles />
-              <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+    <PandaflagProvider
+      apiKey={process.env.REACT_APP_PANDAFLAG_PROJECT_KEY as string}
+      environment={process.env.REACT_APP_STAGE as string}
+    >
+      <ReduxProvider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <ChakraProvider theme={theme}>
+            <ProjectsContextProvider>
+              <EnvironmentsContextProvider>
+                <GlobalStyles />
+                <ColorModeScript initialColorMode={theme.config.initialColorMode} />
 
-              <StyledThemeProvider>
-                <App />
-              </StyledThemeProvider>
-            </EnvironmentsContextProvider>
-          </ProjectsContextProvider>
-        </ChakraProvider>
-      </QueryClientProvider>
-    </ReduxProvider>
+                <StyledThemeProvider>
+                  <App />
+                </StyledThemeProvider>
+              </EnvironmentsContextProvider>
+            </ProjectsContextProvider>
+          </ChakraProvider>
+        </QueryClientProvider>
+      </ReduxProvider>
+    </PandaflagProvider>
   )
 }
 

@@ -1,5 +1,9 @@
 import { KeyboardEvent, MouseEvent } from 'react'
 
+export enum FeatureFlag {
+  feedbackPage = 'feedback_page',
+}
+
 export enum NodeEnvironment {
   development = 'development',
   production = 'production',
