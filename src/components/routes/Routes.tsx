@@ -25,8 +25,12 @@ import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
 import AcceptInvitationPage from 'components/pages/AcceptInvitationPage'
 import MembersPage from 'components/pages/MembersPage'
 import NotFoundPage from 'components/pages/NotFoundPage'
+import { useFlag } from 'pandaflag-react'
+import { FeatureFlag } from 'utils/CommonUtils'
 
 function Routes() {
+  const feedbackFlagData = useFlag(FeatureFlag.feedbackPage)
+
   return (
     <Router>
       <Switch>
@@ -49,7 +53,10 @@ function Routes() {
         <AuthenticatedRoute component={EnvironmentsPage} exact path={RoutePage.environments()} />
         <AuthenticatedRoute component={OrganizationPage} exact path={RoutePage.organization()} />
         <AuthenticatedRoute component={ProfilePage} exact path={RoutePage.profile()} />
-        <AuthenticatedRoute component={FeedbackPage} exact path={RoutePage.feedback()} />
+
+        {feedbackFlagData.flag?.enabled && (
+          <AuthenticatedRoute component={FeedbackPage} exact path={RoutePage.feedback()} />
+        )}
 
         {/* Members */}
         <AuthenticatedRoute

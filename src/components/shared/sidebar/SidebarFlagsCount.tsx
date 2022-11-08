@@ -9,7 +9,7 @@ function SidebarFlagsCount() {
   const project = useSelector((state: IStoreState) => state.configuration.project)
   const flagsQuery = useQuery([ApiQueryId.getFlags, project?.id], FlagsApi.getFlags)
 
-  if (flagsQuery.data?.length === 1) {
+  if (!flagsQuery.data || flagsQuery.data?.length === 1) {
     return null
   }
 
