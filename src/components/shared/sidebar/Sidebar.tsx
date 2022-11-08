@@ -8,6 +8,8 @@ import SidebarFooter from './SidebarFooter'
 import SidebarProjectsCount from './SidebarProjectsCount'
 import PandaflagLogo from '../PandaflagLogo'
 import SidebarFlagsCount from './SidebarFlagsCount'
+import { useFlag } from 'pandaflag-react'
+import { FeatureFlag } from 'utils/CommonUtils'
 
 const MENU_ITEMS: ISidebarMenuItem[] = [
   {
@@ -49,6 +51,8 @@ const FEEDBACK_MENU_ITEM = {
 }
 
 function Sidebar() {
+  const feedbackFlagData = useFlag(FeatureFlag.feedbackPage)
+
   return (
     <Container>
       <PandaflagLogo textAlign="left" mb={16} ml={4} />
@@ -83,14 +87,16 @@ function Sidebar() {
         ))}
       </Content>
 
-      <Box marginTop="auto">
-        <SidebarMenuItem
-          menuItem={FEEDBACK_MENU_ITEM}
-          active={window.location.pathname.includes(FEEDBACK_MENU_ITEM.href)}
-        >
-          {FEEDBACK_MENU_ITEM.name}
-        </SidebarMenuItem>
-      </Box>
+      {feedbackFlagData.flag?.enabled && (
+        <Box marginTop="auto">
+          <SidebarMenuItem
+            menuItem={FEEDBACK_MENU_ITEM}
+            active={window.location.pathname.includes(FEEDBACK_MENU_ITEM.href)}
+          >
+            {FEEDBACK_MENU_ITEM.name}
+          </SidebarMenuItem>
+        </Box>
+      )}
       <SidebarFooter />
     </Container>
   )

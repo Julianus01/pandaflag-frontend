@@ -14,8 +14,12 @@ import Section from 'components/styles/Section'
 import TableContainer from 'components/shared/TableContainer'
 import DocumentationSDKs from './flags/DocumentationSDKs'
 import SkeletonTable from 'components/styles/SkeletonTable'
+import { useFlag } from 'pandaflag-react'
+import { FeatureFlag } from 'utils/CommonUtils'
 
 function FlagsPage() {
+  const tryApiFlagData = useFlag(FeatureFlag.tryApi)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const project = useSelector((state: IStoreState) => state.configuration.project)
 
@@ -51,9 +55,11 @@ function FlagsPage() {
             <DocumentationSDKs />
           </Box>
 
-          <CodeContainer shadow="xs" mt={4}>
-            <TryApi flags={flags as IFlag[]} />
-          </CodeContainer>
+          {tryApiFlagData.flag?.enabled && (
+            <CodeContainer shadow="xs" mt={4}>
+              <TryApi flags={flags as IFlag[]} />
+            </CodeContainer>
+          )}
         </>
       )}
 

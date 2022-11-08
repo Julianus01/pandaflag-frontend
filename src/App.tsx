@@ -10,6 +10,7 @@ import { getAuth } from '@firebase/auth'
 import { IStoreState } from 'redux/store'
 import UsersApi from 'api/UsersApi'
 import ErrorBoundary from 'components/shared/ErrorBoundary'
+import { useFlags } from 'pandaflag-react'
 
 function useInitUserAndOrganization(): boolean {
   const dispatch = useDispatch()
@@ -51,9 +52,10 @@ function useInitUserAndOrganization(): boolean {
 }
 
 function App() {
+  const flagsData = useFlags()
   const initialized = useInitUserAndOrganization()
 
-  if (!initialized) {
+  if (!initialized || flagsData.isLoading) {
     return null
   }
 
