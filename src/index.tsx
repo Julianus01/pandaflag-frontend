@@ -16,7 +16,7 @@ import splitbee from '@splitbee/web'
 import { PandaflagProvider } from 'pandaflag-react'
 
 // For version checking
-console.log('v1.0.0')
+console.log('v1.0.1')
 
 let vh = window.innerHeight * 0.01
 document.documentElement.style.setProperty('--vh', `${vh}px`)
