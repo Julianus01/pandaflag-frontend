@@ -2,6 +2,7 @@ import { KeyboardEvent, MouseEvent } from 'react'
 
 export enum FeatureFlag {
   feedbackPage = 'feedback_page',
+  tryApi = 'try_api',
 }
 
 export enum NodeEnvironment {
