@@ -23,13 +23,14 @@ import { FiMail, FiKey } from 'react-icons/fi'
 import { ICredentials } from './LoginPage'
 import * as yup from 'yup'
 import AuthApi from 'api/AuthApi'
-import { IMemberRelation, MemberType } from 'api/UsersApi'
+import UsersApi, { IMemberRelation, MemberType } from 'api/UsersApi'
 import { FaGoogle } from 'react-icons/fa'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 import { UserCredential } from '@firebase/auth'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
+import { useMountedState } from 'react-use'
 
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
   return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
@@ -50,13 +51,15 @@ interface IParams {
 }
 
 function AcceptInvitationPage() {
+  const isMounted = useMountedState()
   const params = useParams<IParams>()
   const temporaryMessage = useTemporaryMessage()
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
   const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false)
+  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState<boolean>(false)
 
   const organizationQuery = useQuery(
-    ApiQueryId.getOrganization,
+    ApiQueryId.getOrganizationForInvitation,
     () => OrganizationsApi.getOrganizationById(params.orgId),
     {
       enabled: Boolean(params.orgId),
@@ -86,12 +89,13 @@ function AcceptInvitationPage() {
       })
 
       setIsRegisterLoading(true)
+      await UsersApi.canInviteMember({ orgId: params.orgId, email: validatedForm.Email })
       const userCredential = await AuthApi.createAccountWithEmailAndPassword(
         validatedForm.Email,
         validatedForm.Password
       )
 
-      await postRegistrationUpdates(userCredential)
+      await updateOrganizationWithNewUser(userCredential)
       await AuthApi.sendVerificationEmail()
     } catch (err) {
       const error = err as Error
@@ -103,18 +107,21 @@ function AcceptInvitationPage() {
   async function onLoginWithGoogleCredential() {
     try {
       temporaryMessage.hideMessage()
-      setIsRegisterLoading(true)
+      setIsGoogleLoginLoading(true)
 
       const userCredential = await AuthApi.loginWithGoogleCredential()
-      await postRegistrationUpdates(userCredential)
+      await UsersApi.canInviteMember({ orgId: params.orgId, email: userCredential.user.email as string })
+      await updateOrganizationWithNewUser(userCredential)
     } catch (err) {
-      const error = err as Error
-      temporaryMessage.showMessage(error.message)
-      setIsRegisterLoading(false)
+      if (isMounted()) {
+        const error = err as Error
+        temporaryMessage.showMessage(error.message)
+        setIsGoogleLoginLoading(false)
+      }
     }
   }
 
-  async function postRegistrationUpdates(userCredential: UserCredential) {
+  async function updateOrganizationWithNewUser(userCredential: UserCredential) {
     const organizationWithNewMember = addMemberToOrganization(organization as IOrganization, {
       id: userCredential.user.uid,
       type: MemberType.member,
@@ -185,7 +192,7 @@ function AcceptInvitationPage() {
             />
           </InputGroup>
 
-          <Box display="flex" flexDirection="column" alignItems="flex-end">
+          <Box display="flex">
             {!!temporaryMessage.message && (
               <Text flex="1" mr={4} color="red.500">
                 {temporaryMessage.message}
@@ -193,6 +200,7 @@ function AcceptInvitationPage() {
             )}
 
             <Button
+              ml="auto"
               isLoading={isRegisterLoading}
               disabled={isRegisterLoading}
               loadingText="Creating Account"
@@ -210,8 +218,7 @@ function AcceptInvitationPage() {
       </Text>
 
       <Button
-        isLoading={isRegisterLoading}
-        disabled={isRegisterLoading}
+        disabled={isGoogleLoginLoading}
         mx="auto"
         data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
         leftIcon={<FaGoogle />}

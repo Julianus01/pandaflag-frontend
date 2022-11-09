@@ -56,8 +56,11 @@ async function upsertUser(user: IUser): Promise<void> {
   await setDoc(doc(getFirestore(), FirestoreCollection.users, user.uid), user, { merge: true })
 }
 
-async function getOrganizationMembers() {
-  const relations = store.getState().configuration.organization?.members
+async function getOrganizationMembers(orgId?: string) {
+  const storeOrganization = store.getState().configuration.organization
+  const organization = orgId ? await OrganizationsApi.getOrganizationById(orgId) : storeOrganization
+
+  const relations = organization?.members
   const relationIds = relations?.map((relation) => relation.id)
 
   const usersQuerySnapshot = await getDocs(
@@ -74,22 +77,49 @@ async function getOrganizationMembers() {
   return users
 }
 
-export interface IInviteMemberParams {
-  email: string
-  memberType: MemberType
+async function doesUserAlreadyExistAndHasOrganization(email: string): Promise<boolean> {
+  const usersQuerySnapshot = await getDocs(
+    query(collection(getFirestore(), FirestoreCollection.users), where('email', '==', email))
+  )
+
+  if (usersQuerySnapshot.empty) {
+    return false
+  }
+
+  const [user] = usersQuerySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, uid: doc.id }
+  }) as IUser[]
+
+  const userOrganization = await OrganizationsApi.getOrganization(user.uid)
+
+  if (userOrganization) {
+    return false
+  }
+
+  return true
 }
 
-// TODO: use this
-// async function inviteMember(params: IInviteMemberParams) {
-//   const users = await getOrganizationMembers()
-//   const alreadyPartOfTeam = users.find((user: IMember) => user.email === params.email)
+interface ICanInviteMemberParams {
+  orgId: string
+  email: string
+}
 
-//   if (alreadyPartOfTeam) {
-//     throw new Error('A user with this email already exists within your organization')
-//   }
+async function canInviteMember(params: ICanInviteMemberParams): Promise<boolean> {
+  const userAlreadyExists = await doesUserAlreadyExistAndHasOrganization(params.email)
+  if (userAlreadyExists) {
+    throw new Error(`A user with this email already exists`)
+  }
 
-//   await EmailApi.sendMemberInvitation({ email: params.email, invitationId: invitation.id })
-// }
+  const users = await getOrganizationMembers(params.orgId)
+  const alreadyPartOfTeam = users.find((user: IMember) => user.email === params.email)
+
+  if (alreadyPartOfTeam) {
+    throw new Error(`A user with this email already exists within the organization`)
+  }
+
+  return true
+}
 
 async function removeMemberFromOrganization(memberId: string) {
   const organization = store.getState().configuration.organization
@@ -115,6 +145,10 @@ const UsersApi = {
   // Members
   getOrganizationMembers,
   removeMemberFromOrganization,
+
+  // Helpers
+  doesUserAlreadyExistAndHasOrganization,
+  canInviteMember,
 }
 
 export default UsersApi
