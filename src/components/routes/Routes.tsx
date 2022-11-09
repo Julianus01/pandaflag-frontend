@@ -42,7 +42,7 @@ function Routes() {
         <RedirectAuthenticatedRoute
           component={AcceptInvitationPage}
           exact
-          path={RoutePage.acceptInvitation(':invitationId')}
+          path={RoutePage.acceptInvitation(':orgId')}
         />
 
         {/* Authenticated routes */}

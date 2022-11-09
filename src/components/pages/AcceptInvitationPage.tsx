@@ -17,7 +17,6 @@ import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
-import InvitationApi, { IInvitation, InvitationStatus } from 'api/InvitationApi'
 import { Redirect, useParams } from 'react-router-dom'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { FiMail, FiKey } from 'react-icons/fi'
@@ -47,7 +46,7 @@ const ValidationSchema = yup.object().shape({
 })
 
 interface IParams {
-  invitationId: string
+  orgId: string
 }
 
 function AcceptInvitationPage() {
@@ -56,23 +55,15 @@ function AcceptInvitationPage() {
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
   const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false)
 
-  const invitationQuery = useQuery(ApiQueryId.getInvitation, () => InvitationApi.getInvitation(params.invitationId), {
-    onSuccess: (data: IInvitation) => {
-      setForm({ ...form, email: data.email as string })
-    },
-  })
-
   const organizationQuery = useQuery(
     ApiQueryId.getOrganization,
-    () => OrganizationsApi.getOrganizationById(invitationQuery.data?.organizationId as string),
+    () => OrganizationsApi.getOrganizationById(params.orgId),
     {
-      enabled: Boolean(invitationQuery.data),
+      enabled: Boolean(params.orgId),
     }
   )
 
-  const invitation = invitationQuery.data
   const organization = organizationQuery.data
-  const isLoading = invitationQuery.isLoading || organizationQuery.isLoading
 
   function onInputChange(inputName: string) {
     return function (event: ChangeEvent<HTMLInputElement>) {
@@ -126,14 +117,13 @@ function AcceptInvitationPage() {
   async function postRegistrationUpdates(userCredential: UserCredential) {
     const organizationWithNewMember = addMemberToOrganization(organization as IOrganization, {
       id: userCredential.user.uid,
-      type: invitation?.memberType as MemberType,
+      type: MemberType.member,
     })
 
     await OrganizationsApi.updateOrganization(organizationWithNewMember)
-    await InvitationApi.updateInvitation({ id: params.invitationId, status: InvitationStatus.complete })
   }
 
-  if (isLoading) {
+  if (organizationQuery.isLoading) {
     return (
       <Container>
         <Content>
@@ -149,7 +139,7 @@ function AcceptInvitationPage() {
     )
   }
 
-  if (invitation?.status !== InvitationStatus.pending) {
+  if (!organization) {
     return <Redirect to={RoutePage.notFound()} />
   }
 
@@ -164,7 +154,7 @@ function AcceptInvitationPage() {
           <Text color="gray.500" mb={4}>
             invited you to join their organization as a{' '}
             <Tag size="md" borderRadius="md" variant="subtle" colorScheme="primary">
-              <TagLabel textTransform="capitalize">{invitation?.memberType}</TagLabel>
+              <TagLabel textTransform="capitalize">{MemberType.member}</TagLabel>
             </Tag>
           </Text>
 
@@ -173,7 +163,7 @@ function AcceptInvitationPage() {
 
             <Input
               value={form.email}
-              disabled={isLoading}
+              disabled={organizationQuery.isLoading}
               onKeyDown={onKeyDown}
               onChange={onInputChange('email')}
               variant="filled"
@@ -186,7 +176,7 @@ function AcceptInvitationPage() {
 
             <Input
               value={form.password}
-              disabled={isLoading}
+              disabled={organizationQuery.isLoading}
               onKeyDown={onKeyDown}
               onChange={onInputChange('password')}
               variant="filled"

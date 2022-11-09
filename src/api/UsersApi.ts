@@ -14,8 +14,6 @@ import {
 import { FirestoreCollection } from './FirestoreCollection'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
-import InvitationApi, { IInvitation } from './InvitationApi'
-import EmailApi from './EmailApi'
 import OrganizationsApi from './OrganizationsApi'
 
 export interface IMemberRelation {
@@ -81,28 +79,17 @@ export interface IInviteMemberParams {
   memberType: MemberType
 }
 
-async function inviteMember(params: IInviteMemberParams) {
-  const users = await getOrganizationMembers()
-  const alreadyPartOfTeam = users.find((user: IMember) => user.email === params.email)
+// TODO: use this
+// async function inviteMember(params: IInviteMemberParams) {
+//   const users = await getOrganizationMembers()
+//   const alreadyPartOfTeam = users.find((user: IMember) => user.email === params.email)
 
-  if (alreadyPartOfTeam) {
-    throw new Error('A user with this email already exists within your organization')
-  }
+//   if (alreadyPartOfTeam) {
+//     throw new Error('A user with this email already exists within your organization')
+//   }
 
-  const pendingInvitations = await InvitationApi.getPendingInvitations()
-  const invitationAlreadyPending = pendingInvitations.find(
-    (invitation: IInvitation) => invitation.email === params.email
-  )
-
-  if (invitationAlreadyPending) {
-    throw new Error(
-      `An invitation is already pending for ${params.email}. You can resend the invitation from the table`
-    )
-  }
-
-  const invitation = await InvitationApi.createInvitation({ email: params.email, memberType: params.memberType })
-  await EmailApi.sendMemberInvitation({ email: params.email, invitationId: invitation.id })
-}
+//   await EmailApi.sendMemberInvitation({ email: params.email, invitationId: invitation.id })
+// }
 
 async function removeMemberFromOrganization(memberId: string) {
   const organization = store.getState().configuration.organization
@@ -127,7 +114,6 @@ const UsersApi = {
 
   // Members
   getOrganizationMembers,
-  inviteMember,
   removeMemberFromOrganization,
 }
 

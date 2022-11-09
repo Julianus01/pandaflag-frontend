@@ -58,8 +58,8 @@ function feedback() {
   return `/feedback`
 }
 
-function acceptInvitation(invitationId: string) {
-  return `/accept-invitation/${invitationId}`
+function acceptInvitation(orgId: string) {
+  return `/accept-invitation/${orgId}`
 }
 
 function members() {
