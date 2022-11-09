@@ -106,12 +106,12 @@ function CreateOrganizationPage() {
 export default CreateOrganizationPage
 
 const Container = styled.div`
-  margin-top: 20vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
+  margin-top: 20vh;
   display: flex;
   align-items: center;
   justify-content: center;

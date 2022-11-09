@@ -90,10 +90,7 @@ function AcceptInvitationLoginPage() {
       })
 
       setIsLoginLoading(true)
-      // await UsersApi.canInviteMember({ orgId: params.orgId, email: validatedForm.Email })
       const alreadyHasOrganization = await UsersApi.doesUserHaveOrganization(validatedForm.Email)
-      console.log('Has organization')
-      console.log(alreadyHasOrganization)
       if (alreadyHasOrganization) {
         temporaryMessage.showMessage(
           'This account is already part of an organization. Leave that organization in order to join this one'

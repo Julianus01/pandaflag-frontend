@@ -40,16 +40,9 @@ function Routes() {
         <RedirectAuthenticatedRoute component={LoginPage} exact path={RoutePage.login()} />
         <RedirectAuthenticatedRoute component={RegisterPage} exact path={RoutePage.register()} />
         <RedirectAuthenticatedRoute component={ForgotPasswordPage} exact path={RoutePage.forgotPassword()} />
-        <RedirectAuthenticatedRoute
-          component={AcceptInvitationRegisterPage}
-          exact
-          path={RoutePage.acceptInvitationRegister(':orgId')}
-        />
-        <RedirectAuthenticatedRoute
-          component={AcceptInvitationLoginPage}
-          exact
-          path={RoutePage.acceptInvitationLogin(':orgId')}
-        />
+
+        <Route component={AcceptInvitationRegisterPage} exact path={RoutePage.acceptInvitationRegister(':orgId')} />
+        <Route component={AcceptInvitationLoginPage} exact path={RoutePage.acceptInvitationLogin(':orgId')} />
 
         {/* Authenticated routes */}
         <AuthenticatedRoute component={FlagsPage} exact path={RoutePage.flags()} />
