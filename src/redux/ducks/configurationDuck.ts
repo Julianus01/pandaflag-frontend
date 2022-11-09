@@ -39,8 +39,11 @@ const actions = {
     return { type: types.SET_ORGANIZATION, payload: organization }
   },
 
-  setProject: (project: IProject) => {
-    LSUtils.saveLastProjectName(project.name)
+  setProject: (project: IProject | undefined) => {
+    if (project?.name) {
+      LSUtils.saveLastProjectName(project.name)
+    }
+
     return { type: types.SET_PROJECT, payload: project }
   },
 }
