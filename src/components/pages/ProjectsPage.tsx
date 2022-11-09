@@ -32,7 +32,7 @@ function ProjectsPage() {
       {isProjectsQuotaReached && (
         <Alert fontSize="sm" borderRadius="md" mb="6" status="info">
           <AlertIcon w="4" h="4" />
-          You've reached the limit for number of projects.
+          You've reached the limit for number of projects 📦
         </Alert>
       )}
 

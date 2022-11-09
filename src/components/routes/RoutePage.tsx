@@ -58,8 +58,12 @@ function feedback() {
   return `/feedback`
 }
 
-function acceptInvitation(orgId: string) {
-  return `/accept-invitation/${orgId}`
+function acceptInvitationRegister(orgId: string) {
+  return `/accept-invitation-register/${orgId}`
+}
+
+function acceptInvitationLogin(orgId: string) {
+  return `/accept-invitation-login/${orgId}`
 }
 
 function members() {
@@ -74,7 +78,8 @@ const RoutePage = {
   register,
   emailVerification,
   forgotPassword,
-  acceptInvitation,
+  acceptInvitationRegister,
+  acceptInvitationLogin,
 
   // Authenticated
   flags,

@@ -17,7 +17,7 @@ const Quota = PricingUtils.getQuota()
 function useInvitationLink() {
   const orgId = useSelector((state: IStoreState) => state.configuration.organization?.id)
 
-  return `${process.env.REACT_APP_PANDAFLAG_APP_URL}${RoutePage.acceptInvitation(orgId as string)}`
+  return `${process.env.REACT_APP_PANDAFLAG_APP_URL}${RoutePage.acceptInvitationRegister(orgId as string)}`
 }
 
 function MembersPage() {
@@ -50,7 +50,7 @@ function MembersPage() {
       {isMembersQuotaReached && (
         <Alert fontSize="sm" borderRadius="md" mb="6" status="info">
           <AlertIcon w="4" h="4" />
-          You've reached the limit for number of members.
+          You've reached the limit for number of team members 🧑‍💻
         </Alert>
       )}
 

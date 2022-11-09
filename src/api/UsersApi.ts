@@ -70,13 +70,13 @@ async function getOrganizationMembers(orgId?: string) {
   return users
 }
 
-async function doesUserAlreadyExistAndHasOrganization(email: string): Promise<boolean> {
+async function getUserByEmail(email: string): Promise<IUser | undefined> {
   const usersQuerySnapshot = await getDocs(
     query(collection(getFirestore(), FirestoreCollection.users), where('email', '==', email))
   )
 
   if (usersQuerySnapshot.empty) {
-    return false
+    return undefined
   }
 
   const [user] = usersQuerySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
@@ -84,34 +84,18 @@ async function doesUserAlreadyExistAndHasOrganization(email: string): Promise<bo
     return { ...data, uid: doc.id }
   }) as IUser[]
 
+  return user
+}
+
+async function doesUserHaveOrganization(email: string): Promise<boolean> {
+  const user = await getUserByEmail(email)
+
+  if (!user) {
+    throw new Error(`User with the given email doesn't exist`)
+  }
+
   const userOrganization = await OrganizationsApi.getOrganization(user.uid)
-
-  if (userOrganization) {
-    return true
-  }
-
-  return false
-}
-
-interface ICanInviteMemberParams {
-  orgId: string
-  email: string
-}
-
-async function canInviteMember(params: ICanInviteMemberParams): Promise<boolean> {
-  const userAlreadyExists = await doesUserAlreadyExistAndHasOrganization(params.email)
-  if (userAlreadyExists) {
-    throw new Error(`A user with this email already exists`)
-  }
-
-  const users = await getOrganizationMembers(params.orgId)
-  const alreadyPartOfTeam = users.find((user: IMember) => user.email === params.email)
-
-  if (alreadyPartOfTeam) {
-    throw new Error(`A user with this email already exists within the organization`)
-  }
-
-  return true
+  return Boolean(userOrganization)
 }
 
 async function removeMemberFromOrganization(memberId: string) {
@@ -140,8 +124,8 @@ const UsersApi = {
   removeMemberFromOrganization,
 
   // Helpers
-  doesUserAlreadyExistAndHasOrganization,
-  canInviteMember,
+  // canInviteMember,
+  doesUserHaveOrganization,
 }
 
 export default UsersApi

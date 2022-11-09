@@ -13,11 +13,9 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
-import { ChangeEvent, useState, KeyboardEvent } from 'react'
+import { ChangeEvent, useState, KeyboardEvent, useEffect } from 'react'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
-import { useQuery } from 'react-query'
-import { ApiQueryId } from 'api/ApiQueryId'
-import { Redirect, useParams } from 'react-router-dom'
+import { NavLink, Redirect, useHistory, useParams } from 'react-router-dom'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { FiMail, FiKey } from 'react-icons/fi'
 import { ICredentials } from './LoginPage'
@@ -25,10 +23,15 @@ import * as yup from 'yup'
 import AuthApi from 'api/AuthApi'
 import UsersApi, { IMemberRelation, MemberType } from 'api/UsersApi'
 import { UserCredential } from '@firebase/auth'
+import PandaflagLogo from 'components/shared/PandaflagLogo'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
 import { PricingUtils } from 'utils/PricingUtils'
+import { FaGoogle } from 'react-icons/fa'
+import store from 'redux/store'
+import { useQueryClient } from 'react-query'
+import { ApiQueryId } from 'api/ApiQueryId'
 
 const Quota = PricingUtils.getQuota()
 
@@ -46,25 +49,53 @@ const ValidationSchema = yup.object().shape({
   Email: yup.string().email().required(),
 })
 
+// Use old api instead of react-query because this route needs to be logged out
+// in order for "continue with google" to work
+// For google, we need to login the user to get credentials, then based on them,
+// continue and update organization with new member or logout
+// When logging out, we have queryClient.resetQueries() in App.tsx
+// Which resets the query and
+function useOrganizationById(orgId: string) {
+  const [organization, setOrganization] = useState<IOrganization | undefined>(undefined)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    async function getOrganization() {
+      setIsLoading(true)
+      const data = await OrganizationsApi.getOrganizationById(orgId)
+
+      setOrganization(data)
+      setIsLoading(false)
+    }
+
+    getOrganization()
+  }, [orgId])
+
+  return { organization, isLoading }
+}
+
 interface IParams {
   orgId: string
 }
 
-function AcceptInvitationPage() {
+function AcceptInvitationRegisterPage() {
+  const history = useHistory()
   const params = useParams<IParams>()
   const temporaryMessage = useTemporaryMessage()
+  const queryClient = useQueryClient()
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
   const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false)
+  const { organization, isLoading } = useOrganizationById(params.orgId)
 
-  const organizationQuery = useQuery(
-    ApiQueryId.getOrganizationForInvitation,
-    () => OrganizationsApi.getOrganizationById(params.orgId),
-    {
-      enabled: Boolean(params.orgId),
+  // Log user out for this page
+  useEffect(() => {
+    const user = store.getState().auth.user
+
+    if (user) {
+      AuthApi.logout()
     }
-  )
-
-  const organization = organizationQuery.data
+  }, [])
 
   const isMembersQuotaReached = (organization?.members?.length as number) >= Quota.members
 
@@ -89,7 +120,6 @@ function AcceptInvitationPage() {
       })
 
       setIsRegisterLoading(true)
-      await UsersApi.canInviteMember({ orgId: params.orgId, email: validatedForm.Email })
       const userCredential = await AuthApi.createAccountWithEmailAndPassword(
         validatedForm.Email,
         validatedForm.Password
@@ -104,6 +134,37 @@ function AcceptInvitationPage() {
     }
   }
 
+  async function onLoginWithGoogleCredential() {
+    try {
+      setIsGoogleLoading(true)
+      temporaryMessage.hideMessage()
+      const userCredential = await AuthApi.loginWithGoogleCredential()
+
+      const userHasOrganization = await UsersApi.doesUserHaveOrganization(userCredential.user.email as string)
+
+      if (userHasOrganization) {
+        AuthApi.logout()
+        setIsGoogleLoading(false)
+        temporaryMessage.showMessage(
+          'This account is already part of an organization. Leave that organization in order to join this one'
+        )
+
+        return
+      }
+
+      await updateOrganizationWithNewUser(userCredential)
+
+      // Reset getOrganization so that 'isLoading' from OrganizationRoute
+      // triggers, and the UI doesn't flinch with wrong screen
+      queryClient.resetQueries(ApiQueryId.getOrganization)
+      history.push(RoutePage.members())
+    } catch (err) {
+      const error = err as Error
+      temporaryMessage.showMessage(error.message)
+      setIsGoogleLoading(false)
+    }
+  }
+
   async function updateOrganizationWithNewUser(userCredential: UserCredential) {
     const organizationWithNewMember = addMemberToOrganization(organization as IOrganization, {
       id: userCredential.user.uid,
@@ -113,9 +174,15 @@ function AcceptInvitationPage() {
     await OrganizationsApi.updateOrganization(organizationWithNewMember)
   }
 
-  if (organizationQuery.isLoading) {
+  if (isLoading) {
     return (
       <Container>
+        <Box display="flex" justifyContent="center">
+          <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
+            <PandaflagLogo mx="auto" mt={6} />
+          </a>
+        </Box>
+
         <Content>
           <ContentBox>
             <Spinner mb={6} />
@@ -135,14 +202,20 @@ function AcceptInvitationPage() {
 
   return (
     <Container>
+      <Box display="flex" justifyContent="center">
+        <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
+          <PandaflagLogo mx="auto" mt={6} />
+        </a>
+      </Box>
+
       <Content>
         <ContentBox>
           <Heading mb={2} as="h2" size="lg">
-            {organization?.name}
+            Create account in {organization?.name}
           </Heading>
 
           <Text color="gray.500" mb={4}>
-            invited you to join their organization as a{' '}
+            {organization?.name} invited you to join their organization as{' '}
             <Tag size="md" borderRadius="md" variant="subtle" colorScheme="primary">
               <TagLabel textTransform="capitalize">{MemberType.member}</TagLabel>
             </Tag>
@@ -153,7 +226,7 @@ function AcceptInvitationPage() {
 
             <Input
               value={form.email}
-              disabled={organizationQuery.isLoading}
+              disabled={isLoading}
               onKeyDown={onKeyDown}
               onChange={onInputChange('email')}
               variant="filled"
@@ -166,7 +239,7 @@ function AcceptInvitationPage() {
 
             <Input
               value={form.password}
-              disabled={organizationQuery.isLoading}
+              disabled={isLoading}
               onKeyDown={onKeyDown}
               onChange={onInputChange('password')}
               variant="filled"
@@ -175,35 +248,49 @@ function AcceptInvitationPage() {
             />
           </InputGroup>
 
-          <Box display="flex">
-            {!!temporaryMessage.message && (
-              <Text flex="1" mr={4} color="red.500">
-                {temporaryMessage.message}
-              </Text>
-            )}
+          <Button
+            ml="auto"
+            isLoading={isRegisterLoading}
+            disabled={isRegisterLoading}
+            loadingText="Create Account & Join"
+            onClick={onRegister}
+            colorScheme="primary"
+          >
+            Create Account & Join
+          </Button>
 
-            <Button
-              ml="auto"
-              isLoading={isRegisterLoading}
-              disabled={isRegisterLoading}
-              loadingText="Creating Account"
-              onClick={onRegister}
-              colorScheme="primary"
-            >
-              Create Account
-            </Button>
-          </Box>
+          {!!temporaryMessage.message && (
+            <Text flex="1" mt={4} color="red.500">
+              {temporaryMessage.message}
+            </Text>
+          )}
         </ContentBox>
       </Content>
 
-      <Box mx="auto" mt={24}>
+      <Box mt={6} mx="auto">
+        <Button
+          isLoading={isGoogleLoading}
+          disabled={isRegisterLoading}
+          leftIcon={<FaGoogle />}
+          width="100%"
+          onClick={onLoginWithGoogleCredential}
+        >
+          continue with Google
+        </Button>
+      </Box>
+
+      <Text mt={24} mx="auto" color="gray.500">
+        Already a member? <LoginLink to={RoutePage.acceptInvitationLogin(params.orgId)}>Log in</LoginLink>
+      </Text>
+
+      <Box mx="auto" mt={4}>
         <ThemeButton />
       </Box>
     </Container>
   )
 }
 
-export default AcceptInvitationPage
+export default AcceptInvitationRegisterPage
 
 const Container = styled.div`
   display: flex;
@@ -222,4 +309,13 @@ const ContentBox = styled(Section).attrs({ py: 10, px: 12 })`
   flex-direction: column;
   max-width: 550px;
   width: 100%;
+`
+
+const LoginLink = styled(NavLink)`
+  color: ${({ theme }) => theme.colors.blue[500]};
+  font-weight: 500;
+
+  :hover {
+    text-decoration: underline;
+  }
 `
