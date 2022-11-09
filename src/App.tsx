@@ -32,7 +32,7 @@ function useInitUserAndOrganization(): boolean {
     const unsubscribe = auth.onAuthStateChanged((user: IUser | null) => {
       if (user) {
         dispatch(authActions.authStateChanged(user))
-        UsersApi.addUserIfDoesntExist(user)
+        UsersApi.updateUser(user)
       } else {
         dispatch(configurationActions.setOrganization(undefined))
         dispatch(authActions.authStateChanged(user))

@@ -12,13 +12,16 @@ import {
   Icon,
   useColorMode,
 } from '@chakra-ui/react'
+import { GoogleAuthProvider, EmailAuthProvider } from '@firebase/auth'
 import AuthApi from 'api/AuthApi'
+import UsersApi from 'api/UsersApi'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
 import { useCurrentUserMemberType } from 'hooks/userHooks'
+import { FaGoogle } from 'react-icons/fa'
 import { FiLogOut } from 'react-icons/fi'
-import { useSelector } from 'react-redux'
-import { IUser } from 'redux/ducks/authDuck'
+import { useSelector, useDispatch } from 'react-redux'
+import { IUser, authActions } from 'redux/ducks/authDuck'
 import { IStoreState } from 'redux/store'
 import styled from 'styled-components/macro'
 import { applyColorMode } from 'theme/StyledThemeProvider'
@@ -35,10 +38,31 @@ function userDisplayName(user: IUser) {
   return email.substr(0, email.indexOf('@'))
 }
 
+function userContainsProviderId(user: IUser, providerId: string) {
+  let found = false
+
+  user.providerData.forEach((providerData) => {
+    if (providerData.providerId === providerId) {
+      found = true
+    }
+  })
+
+  return found
+}
+
 function ProfilePage() {
+  const dispatch = useDispatch()
   const { colorMode } = useColorMode()
   const user = useSelector((state: IStoreState) => state.auth.user)
   const memberType = useCurrentUserMemberType()
+  const hasGoogleProvider = userContainsProviderId(user as IUser, GoogleAuthProvider.PROVIDER_ID)
+  const hasEmailProvider = userContainsProviderId(user as IUser, EmailAuthProvider.PROVIDER_ID)
+
+  async function onConnectGoogleAccount() {
+    const userCredential = await AuthApi.loginWithGoogleCredential()
+    dispatch(authActions.authStateChanged(userCredential.user))
+    UsersApi.updateUser(userCredential.user)
+  }
 
   return (
     <BoxedPage>
@@ -47,12 +71,7 @@ function ProfilePage() {
       </Heading>
 
       <Box mb={10} display="flex">
-        <Avatar
-          name={userDisplayName(user as IUser)}
-          size="lg"
-          shadow="lg"
-          src={user?.photoURL as string}
-        />
+        <Avatar name={userDisplayName(user as IUser)} size="lg" shadow="lg" src={user?.photoURL as string} />
 
         <Box display="flex" flexDirection="column" justifyContent="center" ml={4}>
           <Heading mb={1} fontWeight="semibold" size="md">
@@ -73,7 +92,7 @@ function ProfilePage() {
       </Box>
 
       <Section mb={4}>
-        <FormControl mb={4} id="email">
+        <FormControl mb={6} id="email">
           <FormLabel mb={1} fontSize="sm" color="gray.500">
             Email
           </FormLabel>
@@ -81,29 +100,51 @@ function ProfilePage() {
           <Text fontWeight="semibold">{user?.email}</Text>
         </FormControl>
 
-        <Box display="flex" alignItems="center">
+        <Box mb={6} display="flex" alignItems="center">
           <Box flex={1}>
             <FormControl id="password">
               <FormLabel fontSize="sm" color="gray.500">
                 Password
               </FormLabel>
 
-              <PasswordContainer>
-                <Dot />
-                <Dot />
-                <Dot />
-                <Dot />
-                <Dot />
-                <Dot />
-                <Dot />
-                <Dot />
-                <Dot />
-                <Dot />
-              </PasswordContainer>
+              {hasEmailProvider ? (
+                <PasswordContainer>
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                </PasswordContainer>
+              ) : (
+                <Text fontWeight="semibold">Setup a password</Text>
+              )}
             </FormControl>
           </Box>
 
-          <ProfileChangePasswordButton />
+          <ProfileChangePasswordButton hasEmailProvider={hasEmailProvider} />
+        </Box>
+
+        <Box display="flex" alignItems="center">
+          <FormControl id="email">
+            <FormLabel mb={1} fontSize="sm" color="gray.500">
+              Google account
+            </FormLabel>
+
+            <Text fontWeight="semibold">{hasGoogleProvider ? 'Connected' : 'Not connected'}</Text>
+          </FormControl>
+
+          {!hasGoogleProvider && (
+            <Box ml="auto">
+              <Button leftIcon={<FaGoogle />} width="100%" onClick={onConnectGoogleAccount}>
+                connect
+              </Button>
+            </Box>
+          )}
         </Box>
       </Section>
 
