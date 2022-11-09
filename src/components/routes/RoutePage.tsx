@@ -62,12 +62,8 @@ function acceptInvitation(invitationId: string) {
   return `/accept-invitation/${invitationId}`
 }
 
-function membersRoot() {
+function members() {
   return `/members`
-}
-
-function members(tab: string) {
-  return `/members/${tab}`
 }
 
 const RoutePage = {
@@ -90,7 +86,6 @@ const RoutePage = {
   createFirstProject,
   profile,
   feedback,
-  membersRoot,
   members,
 }
 
