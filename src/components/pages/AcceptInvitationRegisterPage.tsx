@@ -33,8 +33,6 @@ import store from 'redux/store'
 import { useQueryClient } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 
-const Quota = PricingUtils.getQuota()
-
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
   return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
 }
@@ -87,6 +85,7 @@ function AcceptInvitationRegisterPage() {
   const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false)
   const { organization, isLoading } = useOrganizationById(params.orgId)
+  const Quota = PricingUtils.getQuota(organization?.id)
 
   // Log user out for this page
   useEffect(() => {

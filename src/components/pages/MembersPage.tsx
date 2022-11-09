@@ -12,8 +12,6 @@ import { IStoreState } from 'redux/store'
 import { PricingUtils } from 'utils/PricingUtils'
 import MembersTable from './members/MembersTable'
 
-const Quota = PricingUtils.getQuota()
-
 function useInvitationLink() {
   const orgId = useSelector((state: IStoreState) => state.configuration.organization?.id)
 
@@ -21,6 +19,7 @@ function useInvitationLink() {
 }
 
 function MembersPage() {
+  const Quota = PricingUtils.getQuota()
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
   const invitationLink = useInvitationLink()
   const { hasCopied, onCopy } = useClipboard(invitationLink)
