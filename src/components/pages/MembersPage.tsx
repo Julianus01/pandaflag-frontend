@@ -1,4 +1,4 @@
-import { Heading, Box, Spinner, useClipboard, Button, Icon } from '@chakra-ui/react'
+import { Heading, Box, Spinner, useClipboard, Button, Icon, Alert, AlertIcon } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import UsersApi, { IMember } from 'api/UsersApi'
 import TableContainer from 'components/shared/TableContainer'
@@ -8,7 +8,10 @@ import { FiSend } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
+import { PricingUtils } from 'utils/PricingUtils'
 import MembersTable from './members/MembersTable'
+
+const Quota = PricingUtils.getQuota()
 
 function useInvitationLink() {
   const orgId = useSelector((state: IStoreState) => state.configuration.organization?.id)
@@ -23,9 +26,11 @@ function MembersPage() {
   const user = useSelector((state: IStoreState) => state.auth.user)
   const membersQuery = useQuery(ApiQueryId.getMembers, () => UsersApi.getOrganizationMembers())
 
-  const membersWithUserInFront = membersQuery.data?.sort((firstMember: IMember, secondMember: IMember) =>
+  const membersWithCurrentUserInFront = membersQuery.data?.sort((firstMember: IMember, secondMember: IMember) =>
     firstMember.uid === user?.uid ? -1 : secondMember.uid === user?.uid ? 1 : 0
   )
+
+  const isMembersQuotaReached = (membersWithCurrentUserInFront?.length as number) >= Quota.members
 
   return (
     <BoxedPage>
@@ -35,17 +40,24 @@ function MembersPage() {
           {membersQuery.isLoading && <Spinner colorScheme="primary" ml={6} size="sm" />}
         </Heading>
 
-        <Button mt="auto" onClick={onCopy} leftIcon={<Icon as={FiSend} />} size="xs">
+        <Button disabled={isMembersQuotaReached} mt="auto" onClick={onCopy} leftIcon={<Icon as={FiSend} />} size="xs">
           {hasCopied ? 'Copied link' : 'Copy invitation link'}
         </Button>
       </Box>
 
+      {isMembersQuotaReached && (
+        <Alert fontSize="sm" borderRadius="md" mb="6" status="info">
+          <AlertIcon w="4" h="4" />
+          You've reached the limit for number of members.
+        </Alert>
+      )}
+
       {membersQuery.isLoading && <SkeletonTable />}
 
-      {!membersQuery.isLoading && Boolean(membersWithUserInFront?.length) && (
+      {!membersQuery.isLoading && Boolean(membersWithCurrentUserInFront?.length) && (
         <>
           <TableContainer>
-            <MembersTable members={membersWithUserInFront as IMember[]} />
+            <MembersTable members={membersWithCurrentUserInFront as IMember[]} />
           </TableContainer>
         </>
       )}
