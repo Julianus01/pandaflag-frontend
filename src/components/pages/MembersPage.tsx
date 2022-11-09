@@ -1,6 +1,7 @@
 import { Heading, Box, Spinner, useClipboard, Button, Icon, Alert, AlertIcon } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import UsersApi, { IMember } from 'api/UsersApi'
+import RoutePage from 'components/routes/RoutePage'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import SkeletonTable from 'components/styles/SkeletonTable'
@@ -16,7 +17,7 @@ const Quota = PricingUtils.getQuota()
 function useInvitationLink() {
   const orgId = useSelector((state: IStoreState) => state.configuration.organization?.id)
 
-  return `${process.env.REACT_APP_PANDAFLAG_APP_URL}/${orgId}`
+  return `${process.env.REACT_APP_PANDAFLAG_APP_URL}${RoutePage.acceptInvitation(orgId as string)}`
 }
 
 function MembersPage() {
