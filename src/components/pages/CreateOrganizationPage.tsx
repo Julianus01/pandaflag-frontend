@@ -8,6 +8,7 @@ import { configurationActions } from 'redux/ducks/configurationDuck'
 import AuthApi from 'api/AuthApi'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
+import PandaflagLogo from 'components/shared/PandaflagLogo'
 
 function CreateOrganizationPage() {
   const dispatch = useDispatch()
@@ -53,6 +54,12 @@ function CreateOrganizationPage() {
 
   return (
     <Container>
+      <Box display="flex" justifyContent="center">
+        <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
+          <PandaflagLogo mx="auto" mt={6} />
+        </a>
+      </Box>
+
       <Content>
         <ContentBox>
           <Heading mb={2} as="h4" size="md">

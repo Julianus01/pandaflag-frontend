@@ -25,6 +25,7 @@ import * as yup from 'yup'
 import AuthApi from 'api/AuthApi'
 import { IMemberRelation, MemberType } from 'api/UsersApi'
 import { UserCredential } from '@firebase/auth'
+import PandaflagLogo from 'components/shared/PandaflagLogo'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
@@ -134,6 +135,12 @@ function AcceptInvitationRegisterPage() {
 
   return (
     <Container>
+      <Box display="flex" justifyContent="center">
+        <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
+          <PandaflagLogo mx="auto" mt={6} />
+        </a>
+      </Box>
+
       <Content>
         <ContentBox>
           <Heading mb={2} as="h2" size="lg">

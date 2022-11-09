@@ -86,7 +86,7 @@ function RegisterPage() {
   return (
     <Container>
       <Box display="flex" justifyContent="center">
-        <a href={process.env.REACT_APP_PANDAFLAG_WEBSITE as string}>
+        <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
           <PandaflagLogo mx="auto" mt={6} />
         </a>
       </Box>
