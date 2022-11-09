@@ -4,12 +4,18 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 
-function ProfileChangePasswordButton() {
+interface IProps {
+  hasEmailProvider: boolean
+}
+
+function ProfileChangePasswordButton({ hasEmailProvider }: IProps) {
   const toast = useToast()
   const user = useSelector((state: IStoreState) => state.auth.user)
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [hasBeenSent, setHasBeenSent] = useState<boolean>(false)
+
+  const buttonText = hasEmailProvider ? 'Change' : 'Setup password'
 
   async function onChangePassword() {
     try {
@@ -36,8 +42,13 @@ function ProfileChangePasswordButton() {
   }
 
   return (
-    <Button loadingText="Change" isLoading={isLoading} disabled={isLoading || hasBeenSent} onClick={onChangePassword}>
-      {!hasBeenSent && 'Change'}
+    <Button
+      loadingText={buttonText}
+      isLoading={isLoading}
+      disabled={isLoading || hasBeenSent}
+      onClick={onChangePassword}
+    >
+      {!hasBeenSent && buttonText}
       {hasBeenSent && 'Request sent'}
     </Button>
   )

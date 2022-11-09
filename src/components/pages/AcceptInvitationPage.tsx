@@ -24,13 +24,10 @@ import { ICredentials } from './LoginPage'
 import * as yup from 'yup'
 import AuthApi from 'api/AuthApi'
 import UsersApi, { IMemberRelation, MemberType } from 'api/UsersApi'
-import { FaGoogle } from 'react-icons/fa'
-import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 import { UserCredential } from '@firebase/auth'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
-import { useMountedState } from 'react-use'
 
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
   return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
@@ -51,12 +48,10 @@ interface IParams {
 }
 
 function AcceptInvitationPage() {
-  const isMounted = useMountedState()
   const params = useParams<IParams>()
   const temporaryMessage = useTemporaryMessage()
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
   const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false)
-  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState<boolean>(false)
 
   const organizationQuery = useQuery(
     ApiQueryId.getOrganizationForInvitation,
@@ -101,23 +96,6 @@ function AcceptInvitationPage() {
       const error = err as Error
       temporaryMessage.showMessage(error.message)
       setIsRegisterLoading(false)
-    }
-  }
-
-  async function onLoginWithGoogleCredential() {
-    try {
-      temporaryMessage.hideMessage()
-      setIsGoogleLoginLoading(true)
-
-      const userCredential = await AuthApi.loginWithGoogleCredential()
-      await UsersApi.canInviteMember({ orgId: params.orgId, email: userCredential.user.email as string })
-      await updateOrganizationWithNewUser(userCredential)
-    } catch (err) {
-      if (isMounted()) {
-        const error = err as Error
-        temporaryMessage.showMessage(error.message)
-        setIsGoogleLoginLoading(false)
-      }
     }
   }
 
@@ -213,22 +191,7 @@ function AcceptInvitationPage() {
         </ContentBox>
       </Content>
 
-      <Text mx="auto" mt={24}>
-        Or
-      </Text>
-
-      <Button
-        disabled={isGoogleLoginLoading}
-        mx="auto"
-        data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
-        leftIcon={<FaGoogle />}
-        mt={4}
-        onClick={onLoginWithGoogleCredential}
-      >
-        continue with Google
-      </Button>
-
-      <Box mx="auto" mt={6}>
+      <Box mx="auto" mt={24}>
         <ThemeButton />
       </Box>
     </Container>

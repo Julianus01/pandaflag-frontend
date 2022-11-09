@@ -2,7 +2,6 @@ import {
   getFirestore,
   doc,
   setDoc,
-  getDoc,
   Timestamp,
   getDocs,
   query,
@@ -32,13 +31,7 @@ export enum MemberType {
   member = 'member',
 }
 
-async function addUserIfDoesntExist(user: IUser): Promise<void> {
-  const snapshot = await getDoc(doc(getFirestore(), FirestoreCollection.users, user.uid))
-
-  if (snapshot.exists()) {
-    return
-  }
-
+async function updateUser(user: IUser): Promise<void> {
   const newUser = {
     uid: user.uid,
     displayName: user.displayName,
@@ -94,10 +87,10 @@ async function doesUserAlreadyExistAndHasOrganization(email: string): Promise<bo
   const userOrganization = await OrganizationsApi.getOrganization(user.uid)
 
   if (userOrganization) {
-    return false
+    return true
   }
 
-  return true
+  return false
 }
 
 interface ICanInviteMemberParams {
@@ -137,7 +130,7 @@ async function removeMemberFromOrganization(memberId: string) {
 
 const UsersApi = {
   // Create
-  addUserIfDoesntExist,
+  updateUser,
 
   // Upsert
   upsertUser,
