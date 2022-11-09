@@ -19,6 +19,7 @@ const components = {
 }
 
 const colors = {
+  // Blue
   primary: {
     50: '#EBF8FF',
     100: '#BEE3F8',
@@ -31,6 +32,20 @@ const colors = {
     800: '#2A4365',
     900: '#1A365D',
   },
+
+  // Teal
+  // primary: {
+  //   50: '#E6FFFA',
+  //   100: '#B2F5EA',
+  //   200: '#81E6D9',
+  //   300: '#4FD1C5',
+  //   400: '#38B2AC',
+  //   500: '#319795',
+  //   600: '#2C7A7B',
+  //   700: '#285E61',
+  //   800: '#234E52',
+  //   900: '#1D4044',
+  // },
 
   // Attempt for black and white
   // primary: {
