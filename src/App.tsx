@@ -35,11 +35,12 @@ function useInitUserAndOrganization(): boolean {
         UsersApi.updateUser(user)
       } else {
         dispatch(configurationActions.setOrganization(undefined))
+        dispatch(configurationActions.setProject(undefined))
         dispatch(authActions.authStateChanged(user))
         setInitialized(true)
 
         // Remove all queries and caches
-        queryClient.removeQueries()
+        queryClient.resetQueries()
       }
     })
 
