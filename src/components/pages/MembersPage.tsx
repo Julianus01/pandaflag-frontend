@@ -50,7 +50,7 @@ function MembersPage() {
       {isMembersQuotaReached && (
         <Alert fontSize="sm" borderRadius="md" mb="6" status="info">
           <AlertIcon w="4" h="4" />
-          You've reached the limit for number of members.
+          You've reached the limit for number of team members 🧑‍💻
         </Alert>
       )}
 
