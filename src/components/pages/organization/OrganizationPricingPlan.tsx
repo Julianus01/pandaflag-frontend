@@ -61,11 +61,11 @@ function OrganizationPricingPlan({ pricingPlan }: IProps) {
 
       <Box mb="2" display="flex">
         <Heading mr="2" as="h4" size="md">
-          {isFreePricingPlan ? '1' : 'X'}
+          {isFreePricingPlan ? '2' : 'X'}
         </Heading>
 
         <Text fontSize="sm" mt="1" color="gray.500">
-          Team Member
+          Team Members
         </Text>
       </Box>
 
