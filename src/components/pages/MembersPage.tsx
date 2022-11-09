@@ -20,6 +20,7 @@ function useInvitationLink() {
 }
 
 function MembersPage() {
+  const organization = useSelector((state: IStoreState) => state.configuration.organization)
   const invitationLink = useInvitationLink()
   const { hasCopied, onCopy } = useClipboard(invitationLink)
 
@@ -30,7 +31,7 @@ function MembersPage() {
     firstMember.uid === user?.uid ? -1 : secondMember.uid === user?.uid ? 1 : 0
   )
 
-  const isMembersQuotaReached = (membersWithCurrentUserInFront?.length as number) >= Quota.members
+  const isMembersQuotaReached = (organization?.members?.length as number) >= Quota.members
 
   return (
     <BoxedPage>
