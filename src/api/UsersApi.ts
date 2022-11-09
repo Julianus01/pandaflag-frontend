@@ -98,27 +98,6 @@ async function doesUserHaveOrganization(email: string): Promise<boolean> {
   return Boolean(userOrganization)
 }
 
-// interface ICanInviteMemberParams {
-//   orgId: string
-//   email: string
-// }
-
-// async function canInviteMember(params: ICanInviteMemberParams): Promise<boolean> {
-//   const userAlreadyExists = await doesUserAlreadyExistAndHasOrganization(params.email)
-//   if (userAlreadyExists) {
-//     throw new Error(`A user with this email already exists`)
-//   }
-
-//   const users = await getOrganizationMembers(params.orgId)
-//   const alreadyPartOfTeam = users.find((user: IMember) => user.email === params.email)
-
-//   if (alreadyPartOfTeam) {
-//     throw new Error(`A user with this email already exists within the organization`)
-//   }
-
-//   return true
-// }
-
 async function removeMemberFromOrganization(memberId: string) {
   const organization = store.getState().configuration.organization
 
@@ -146,6 +125,7 @@ const UsersApi = {
 
   // Helpers
   // canInviteMember,
+  doesUserHaveOrganization,
 }
 
 export default UsersApi

@@ -23,7 +23,7 @@ import { FiMail, FiKey } from 'react-icons/fi'
 import { ICredentials } from './LoginPage'
 import * as yup from 'yup'
 import AuthApi from 'api/AuthApi'
-import UsersApi, { IMemberRelation, MemberType } from 'api/UsersApi'
+import { IMemberRelation, MemberType } from 'api/UsersApi'
 import { UserCredential } from '@firebase/auth'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
@@ -174,24 +174,22 @@ function AcceptInvitationRegisterPage() {
             />
           </InputGroup>
 
-          <Box display="flex">
-            {!!temporaryMessage.message && (
-              <Text flex="1" mr={4} color="red.500">
-                {temporaryMessage.message}
-              </Text>
-            )}
+          <Button
+            ml="auto"
+            isLoading={isRegisterLoading}
+            disabled={isRegisterLoading}
+            loadingText="Create Account & Join"
+            onClick={onRegister}
+            colorScheme="primary"
+          >
+            Create Account & Join
+          </Button>
 
-            <Button
-              ml="auto"
-              isLoading={isRegisterLoading}
-              disabled={isRegisterLoading}
-              loadingText="Creating Account"
-              onClick={onRegister}
-              colorScheme="primary"
-            >
-              Create Account
-            </Button>
-          </Box>
+          {!!temporaryMessage.message && (
+            <Text flex="1" mt={4} color="red.500">
+              {temporaryMessage.message}
+            </Text>
+          )}
         </ContentBox>
       </Content>
 

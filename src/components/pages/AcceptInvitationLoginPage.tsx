@@ -54,7 +54,7 @@ function AcceptInvitationLoginPage() {
   const params = useParams<IParams>()
   const temporaryMessage = useTemporaryMessage()
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
-  const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false)
+  const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false)
 
   const organizationQuery = useQuery(
     ApiQueryId.getOrganizationForInvitation,
@@ -88,19 +88,26 @@ function AcceptInvitationLoginPage() {
         Password: form.password,
       })
 
-      setIsRegisterLoading(true)
+      setIsLoginLoading(true)
       // await UsersApi.canInviteMember({ orgId: params.orgId, email: validatedForm.Email })
-      const userCredential = await AuthApi.createAccountWithEmailAndPassword(
-        validatedForm.Email,
-        validatedForm.Password
-      )
+      const alreadyHasOrganization = await UsersApi.doesUserHaveOrganization(validatedForm.Email)
+      console.log('Has organization')
+      console.log(alreadyHasOrganization)
+      if (alreadyHasOrganization) {
+        temporaryMessage.showMessage(
+          'This account is already part of an organization. Leave that organization in order to join this one'
+        )
 
+        setIsLoginLoading(false)
+        return
+      }
+
+      const userCredential = await AuthApi.loginInWithEmailAndPassword(validatedForm.Email, validatedForm.Password)
       await updateOrganizationWithNewUser(userCredential)
-      await AuthApi.sendVerificationEmail()
     } catch (err) {
       const error = err as Error
       temporaryMessage.showMessage(error.message)
-      setIsRegisterLoading(false)
+      setIsLoginLoading(false)
     }
   }
 
@@ -175,24 +182,22 @@ function AcceptInvitationLoginPage() {
             />
           </InputGroup>
 
-          <Box display="flex">
-            {!!temporaryMessage.message && (
-              <Text flex="1" mr={4} color="red.500">
-                {temporaryMessage.message}
-              </Text>
-            )}
+          <Button
+            ml="auto"
+            isLoading={isLoginLoading}
+            disabled={isLoginLoading}
+            loadingText="Log in & Join"
+            onClick={onRegister}
+            colorScheme="primary"
+          >
+            Log in & Join
+          </Button>
 
-            <Button
-              ml="auto"
-              isLoading={isRegisterLoading}
-              disabled={isRegisterLoading}
-              loadingText="Creating Account"
-              onClick={onRegister}
-              colorScheme="primary"
-            >
-              Login
-            </Button>
-          </Box>
+          {!!temporaryMessage.message && (
+            <Text flex="1" mt={4} color="red.500">
+              {temporaryMessage.message}
+            </Text>
+          )}
         </ContentBox>
       </Content>
 
