@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import AuthApi from 'api/AuthApi'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
+import PandaflagLogo from 'components/shared/PandaflagLogo'
 
 function CreateFirstProjectPage() {
   const queryClient = useQueryClient()
@@ -50,6 +51,12 @@ function CreateFirstProjectPage() {
 
   return (
     <Container>
+      <Box display="flex" justifyContent="center">
+        <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
+          <PandaflagLogo mx="auto" mt={6} />
+        </a>
+      </Box>
+
       <Content>
         <ContentBox>
           <Heading mb={2} as="h4" size="md">
@@ -96,12 +103,12 @@ function CreateFirstProjectPage() {
 export default CreateFirstProjectPage
 
 const Container = styled.div`
-  margin-top: 20vh;
   display: flex;
   flex-direction: column;
 `
 
 const Content = styled.div`
+  margin-top: 20vh;
   display: flex;
   align-items: center;
   justify-content: center;

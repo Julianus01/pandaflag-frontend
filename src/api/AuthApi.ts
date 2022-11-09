@@ -45,7 +45,7 @@ async function loginInWithEmailAndPassword(email: string, password: string) {
   try {
     const auth = getAuth()
 
-    await signInWithEmailAndPassword(auth, email, password)
+    return await signInWithEmailAndPassword(auth, email, password)
   } catch (err) {
     const error: AuthError = err as AuthError
     throw new Error(authErrorMessage(error.code as FirebaseAuthErrorCode))

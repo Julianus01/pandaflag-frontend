@@ -9,9 +9,8 @@ import { PricingUtils } from 'utils/PricingUtils'
 import CreateProjectDialog from './projects/CreateProjectDialog'
 import ProjectsTable from './projects/ProjectsTable'
 
-const Quota = PricingUtils.getQuota()
-
 function ProjectsPage() {
+  const Quota = PricingUtils.getQuota()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { data: projects } = useContext(ProjectsContext)
 
@@ -24,7 +23,12 @@ function ProjectsPage() {
           Projects
         </Heading>
 
-        <Button disabled={isProjectsQuotaReached} leftIcon={<Icon as={FiLayers} />} onClick={onOpen} colorScheme="primary">
+        <Button
+          disabled={isProjectsQuotaReached}
+          leftIcon={<Icon as={FiLayers} />}
+          onClick={onOpen}
+          colorScheme="primary"
+        >
           Add Project
         </Button>
       </Box>
@@ -32,7 +36,7 @@ function ProjectsPage() {
       {isProjectsQuotaReached && (
         <Alert fontSize="sm" borderRadius="md" mb="6" status="info">
           <AlertIcon w="4" h="4" />
-          You've reached the limit for number of projects.
+          You've reached the limit for number of projects 📦
         </Alert>
       )}
 

@@ -9,9 +9,8 @@ import { PricingUtils } from 'utils/PricingUtils'
 import EnvironmentsTable from './environments/EnvironmentsTable'
 import SkeletonTable from 'components/styles/SkeletonTable'
 
-const Quota = PricingUtils.getQuota()
-
 function EnvironmentsPage() {
+  const Quota = PricingUtils.getQuota()
   const { data: environments, isFetching, isLoading } = useContext(EnvironmentsContext)
 
   const isEnvironmentsQuotaReached = (environments?.length as number) >= Quota.environments
