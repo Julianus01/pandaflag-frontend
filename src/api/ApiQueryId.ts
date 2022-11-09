@@ -1,6 +1,7 @@
 export enum ApiQueryId {
   // Organization
   getOrganization = 'getOrganization',
+  getOrganizationForInvitation = 'getOrganizationForInvitation',
 
   // Projects
   getProjects = 'getProjects',
@@ -16,8 +17,4 @@ export enum ApiQueryId {
 
   // Members
   getMembers = 'getMembers',
-
-  // Invitations
-  getPendingInvitations = 'getPendingInvitations',
-  getInvitation = 'getInvitation',
 }

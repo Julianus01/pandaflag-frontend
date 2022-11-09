@@ -17,20 +17,20 @@ import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
-import InvitationApi, { IInvitation, InvitationStatus } from 'api/InvitationApi'
 import { Redirect, useParams } from 'react-router-dom'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { FiMail, FiKey } from 'react-icons/fi'
 import { ICredentials } from './LoginPage'
 import * as yup from 'yup'
 import AuthApi from 'api/AuthApi'
-import { IMemberRelation, MemberType } from 'api/UsersApi'
+import UsersApi, { IMemberRelation, MemberType } from 'api/UsersApi'
 import { FaGoogle } from 'react-icons/fa'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 import { UserCredential } from '@firebase/auth'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
+import { useMountedState } from 'react-use'
 
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
   return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
@@ -47,32 +47,26 @@ const ValidationSchema = yup.object().shape({
 })
 
 interface IParams {
-  invitationId: string
+  orgId: string
 }
 
 function AcceptInvitationPage() {
+  const isMounted = useMountedState()
   const params = useParams<IParams>()
   const temporaryMessage = useTemporaryMessage()
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
   const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false)
-
-  const invitationQuery = useQuery(ApiQueryId.getInvitation, () => InvitationApi.getInvitation(params.invitationId), {
-    onSuccess: (data: IInvitation) => {
-      setForm({ ...form, email: data.email as string })
-    },
-  })
+  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState<boolean>(false)
 
   const organizationQuery = useQuery(
-    ApiQueryId.getOrganization,
-    () => OrganizationsApi.getOrganizationById(invitationQuery.data?.organizationId as string),
+    ApiQueryId.getOrganizationForInvitation,
+    () => OrganizationsApi.getOrganizationById(params.orgId),
     {
-      enabled: Boolean(invitationQuery.data),
+      enabled: Boolean(params.orgId),
     }
   )
 
-  const invitation = invitationQuery.data
   const organization = organizationQuery.data
-  const isLoading = invitationQuery.isLoading || organizationQuery.isLoading
 
   function onInputChange(inputName: string) {
     return function (event: ChangeEvent<HTMLInputElement>) {
@@ -95,12 +89,13 @@ function AcceptInvitationPage() {
       })
 
       setIsRegisterLoading(true)
+      await UsersApi.canInviteMember({ orgId: params.orgId, email: validatedForm.Email })
       const userCredential = await AuthApi.createAccountWithEmailAndPassword(
         validatedForm.Email,
         validatedForm.Password
       )
 
-      await postRegistrationUpdates(userCredential)
+      await updateOrganizationWithNewUser(userCredential)
       await AuthApi.sendVerificationEmail()
     } catch (err) {
       const error = err as Error
@@ -112,28 +107,30 @@ function AcceptInvitationPage() {
   async function onLoginWithGoogleCredential() {
     try {
       temporaryMessage.hideMessage()
-      setIsRegisterLoading(true)
+      setIsGoogleLoginLoading(true)
 
       const userCredential = await AuthApi.loginWithGoogleCredential()
-      await postRegistrationUpdates(userCredential)
+      await UsersApi.canInviteMember({ orgId: params.orgId, email: userCredential.user.email as string })
+      await updateOrganizationWithNewUser(userCredential)
     } catch (err) {
-      const error = err as Error
-      temporaryMessage.showMessage(error.message)
-      setIsRegisterLoading(false)
+      if (isMounted()) {
+        const error = err as Error
+        temporaryMessage.showMessage(error.message)
+        setIsGoogleLoginLoading(false)
+      }
     }
   }
 
-  async function postRegistrationUpdates(userCredential: UserCredential) {
+  async function updateOrganizationWithNewUser(userCredential: UserCredential) {
     const organizationWithNewMember = addMemberToOrganization(organization as IOrganization, {
       id: userCredential.user.uid,
-      type: invitation?.memberType as MemberType,
+      type: MemberType.member,
     })
 
     await OrganizationsApi.updateOrganization(organizationWithNewMember)
-    await InvitationApi.updateInvitation({ id: params.invitationId, status: InvitationStatus.complete })
   }
 
-  if (isLoading) {
+  if (organizationQuery.isLoading) {
     return (
       <Container>
         <Content>
@@ -149,7 +146,7 @@ function AcceptInvitationPage() {
     )
   }
 
-  if (invitation?.status !== InvitationStatus.pending) {
+  if (!organization) {
     return <Redirect to={RoutePage.notFound()} />
   }
 
@@ -164,7 +161,7 @@ function AcceptInvitationPage() {
           <Text color="gray.500" mb={4}>
             invited you to join their organization as a{' '}
             <Tag size="md" borderRadius="md" variant="subtle" colorScheme="primary">
-              <TagLabel textTransform="capitalize">{invitation?.memberType}</TagLabel>
+              <TagLabel textTransform="capitalize">{MemberType.member}</TagLabel>
             </Tag>
           </Text>
 
@@ -173,7 +170,7 @@ function AcceptInvitationPage() {
 
             <Input
               value={form.email}
-              disabled={isLoading}
+              disabled={organizationQuery.isLoading}
               onKeyDown={onKeyDown}
               onChange={onInputChange('email')}
               variant="filled"
@@ -186,7 +183,7 @@ function AcceptInvitationPage() {
 
             <Input
               value={form.password}
-              disabled={isLoading}
+              disabled={organizationQuery.isLoading}
               onKeyDown={onKeyDown}
               onChange={onInputChange('password')}
               variant="filled"
@@ -195,7 +192,7 @@ function AcceptInvitationPage() {
             />
           </InputGroup>
 
-          <Box display="flex" flexDirection="column" alignItems="flex-end">
+          <Box display="flex">
             {!!temporaryMessage.message && (
               <Text flex="1" mr={4} color="red.500">
                 {temporaryMessage.message}
@@ -203,6 +200,7 @@ function AcceptInvitationPage() {
             )}
 
             <Button
+              ml="auto"
               isLoading={isRegisterLoading}
               disabled={isRegisterLoading}
               loadingText="Creating Account"
@@ -220,8 +218,7 @@ function AcceptInvitationPage() {
       </Text>
 
       <Button
-        isLoading={isRegisterLoading}
-        disabled={isRegisterLoading}
+        disabled={isGoogleLoginLoading}
         mx="auto"
         data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
         leftIcon={<FaGoogle />}

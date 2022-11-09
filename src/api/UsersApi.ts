@@ -14,8 +14,6 @@ import {
 import { FirestoreCollection } from './FirestoreCollection'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
-import InvitationApi, { IInvitation } from './InvitationApi'
-import EmailApi from './EmailApi'
 import OrganizationsApi from './OrganizationsApi'
 
 export interface IMemberRelation {
@@ -58,8 +56,11 @@ async function upsertUser(user: IUser): Promise<void> {
   await setDoc(doc(getFirestore(), FirestoreCollection.users, user.uid), user, { merge: true })
 }
 
-async function getOrganizationMembers() {
-  const relations = store.getState().configuration.organization?.members
+async function getOrganizationMembers(orgId?: string) {
+  const storeOrganization = store.getState().configuration.organization
+  const organization = orgId ? await OrganizationsApi.getOrganizationById(orgId) : storeOrganization
+
+  const relations = organization?.members
   const relationIds = relations?.map((relation) => relation.id)
 
   const usersQuerySnapshot = await getDocs(
@@ -76,32 +77,48 @@ async function getOrganizationMembers() {
   return users
 }
 
-export interface IInviteMemberParams {
-  email: string
-  memberType: MemberType
+async function doesUserAlreadyExistAndHasOrganization(email: string): Promise<boolean> {
+  const usersQuerySnapshot = await getDocs(
+    query(collection(getFirestore(), FirestoreCollection.users), where('email', '==', email))
+  )
+
+  if (usersQuerySnapshot.empty) {
+    return false
+  }
+
+  const [user] = usersQuerySnapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const data = doc.data()
+    return { ...data, uid: doc.id }
+  }) as IUser[]
+
+  const userOrganization = await OrganizationsApi.getOrganization(user.uid)
+
+  if (userOrganization) {
+    return false
+  }
+
+  return true
 }
 
-async function inviteMember(params: IInviteMemberParams) {
-  const users = await getOrganizationMembers()
+interface ICanInviteMemberParams {
+  orgId: string
+  email: string
+}
+
+async function canInviteMember(params: ICanInviteMemberParams): Promise<boolean> {
+  const userAlreadyExists = await doesUserAlreadyExistAndHasOrganization(params.email)
+  if (userAlreadyExists) {
+    throw new Error(`A user with this email already exists`)
+  }
+
+  const users = await getOrganizationMembers(params.orgId)
   const alreadyPartOfTeam = users.find((user: IMember) => user.email === params.email)
 
   if (alreadyPartOfTeam) {
-    throw new Error('A user with this email already exists within your organization')
+    throw new Error(`A user with this email already exists within the organization`)
   }
 
-  const pendingInvitations = await InvitationApi.getPendingInvitations()
-  const invitationAlreadyPending = pendingInvitations.find(
-    (invitation: IInvitation) => invitation.email === params.email
-  )
-
-  if (invitationAlreadyPending) {
-    throw new Error(
-      `An invitation is already pending for ${params.email}. You can resend the invitation from the table`
-    )
-  }
-
-  const invitation = await InvitationApi.createInvitation({ email: params.email, memberType: params.memberType })
-  await EmailApi.sendMemberInvitation({ email: params.email, invitationId: invitation.id })
+  return true
 }
 
 async function removeMemberFromOrganization(memberId: string) {
@@ -127,8 +144,11 @@ const UsersApi = {
 
   // Members
   getOrganizationMembers,
-  inviteMember,
   removeMemberFromOrganization,
+
+  // Helpers
+  doesUserAlreadyExistAndHasOrganization,
+  canInviteMember,
 }
 
 export default UsersApi

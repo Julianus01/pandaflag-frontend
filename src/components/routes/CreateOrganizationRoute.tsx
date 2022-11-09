@@ -10,7 +10,7 @@ function CreateOrganizationRoute(props: RouteProps) {
   const user = useSelector((state: IStoreState) => state.auth.user)
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
 
-  const organizationQuery = useQuery(ApiQueryId.getOrganization, OrganizationsApi.getOrganization)
+  const organizationQuery = useQuery(ApiQueryId.getOrganization, () => OrganizationsApi.getOrganization())
 
   if (!user) {
     return <Redirect to={RoutePage.login()} />

@@ -25,9 +25,14 @@ export interface IOrganization {
 }
 
 // Get Organization
-async function getOrganizationWhereType(memberType: MemberType): Promise<IOrganization | undefined> {
-  const user = store.getState().auth.user as IUser
-  const memberQueryValue = { id: user.uid, type: memberType }
+interface IGetOrganizationWhereTypeParams {
+  userId?: string
+  memberType: MemberType
+}
+
+async function getOrganizationWhereType(params: IGetOrganizationWhereTypeParams): Promise<IOrganization | undefined> {
+  const userId = params.userId || store.getState().auth.user?.uid
+  const memberQueryValue = { id: userId, type: params.memberType }
 
   const querySnapshot = await getDocs(
     query(
@@ -48,10 +53,12 @@ async function getOrganizationWhereType(memberType: MemberType): Promise<IOrgani
   return organization
 }
 
-async function getOrganization(): Promise<IOrganization | undefined> {
+async function getOrganization(userId?: string): Promise<IOrganization | undefined> {
+  const uid = userId || store.getState().auth.user?.uid
+
   const [adminOrganization, memberOrganization] = await Promise.all([
-    getOrganizationWhereType(MemberType.admin),
-    getOrganizationWhereType(MemberType.member),
+    getOrganizationWhereType({ memberType: MemberType.admin, userId: uid }),
+    getOrganizationWhereType({ memberType: MemberType.member, userId: uid }),
   ])
 
   if (adminOrganization) {

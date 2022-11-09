@@ -42,7 +42,7 @@ function Routes() {
         <RedirectAuthenticatedRoute
           component={AcceptInvitationPage}
           exact
-          path={RoutePage.acceptInvitation(':invitationId')}
+          path={RoutePage.acceptInvitation(':orgId')}
         />
 
         {/* Authenticated routes */}
@@ -59,12 +59,7 @@ function Routes() {
         )}
 
         {/* Members */}
-        <AuthenticatedRoute
-          component={() => <Redirect to={RoutePage.members('active')} />}
-          exact
-          path={RoutePage.membersRoot()}
-        />
-        <AuthenticatedRoute component={MembersPage} exact path={RoutePage.members(':tab')} />
+        <AuthenticatedRoute component={MembersPage} exact path={RoutePage.members()} />
 
         {/* Use case routes */}
         <EmailVerificationRoute component={EmailVerificationPage} exact path={RoutePage.emailVerification()} />
