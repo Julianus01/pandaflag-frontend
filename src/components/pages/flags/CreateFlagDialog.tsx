@@ -19,13 +19,13 @@ import _ from 'lodash/fp'
 import AutoTextArea from 'components/styles/AutoTextarea'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
-interface Props {
+interface IProps {
   isOpen: boolean
   onClose: () => void
   doesFlagAlreadyExist: (flagName: string) => boolean
 }
 
-function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: Props) {
+function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: IProps) {
   const inputRef = useRef()
   const queryClient = useQueryClient()
 
