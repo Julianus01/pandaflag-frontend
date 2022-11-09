@@ -178,7 +178,7 @@ function RegisterPage() {
         </Section>
 
         <Text mt={10} mx="auto" color="gray.500">
-          Already a member? <RegisterLink to={RoutePage.login}>Log in</RegisterLink>
+          Already a member? <LoginLink to={RoutePage.login}>Log in</LoginLink>
         </Text>
       </Content>
 
@@ -208,7 +208,7 @@ const RegisterContainer = styled.div`
   width: 300px;
 `
 
-const RegisterLink = styled(NavLink)`
+const LoginLink = styled(NavLink)`
   color: ${({ theme }) => theme.colors.blue[500]};
   font-weight: 500;
 

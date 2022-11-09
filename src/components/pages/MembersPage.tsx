@@ -17,7 +17,7 @@ const Quota = PricingUtils.getQuota()
 function useInvitationLink() {
   const orgId = useSelector((state: IStoreState) => state.configuration.organization?.id)
 
-  return `${process.env.REACT_APP_PANDAFLAG_APP_URL}${RoutePage.acceptInvitation(orgId as string)}`
+  return `${process.env.REACT_APP_PANDAFLAG_APP_URL}${RoutePage.acceptInvitationRegister(orgId as string)}`
 }
 
 function MembersPage() {

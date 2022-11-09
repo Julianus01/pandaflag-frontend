@@ -17,7 +17,7 @@ import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { useTemporaryMessage } from 'hooks/common/useTemporaryMessage'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
-import { Redirect, useParams } from 'react-router-dom'
+import { NavLink, Redirect, useParams } from 'react-router-dom'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { FiMail, FiKey } from 'react-icons/fi'
 import { ICredentials } from './LoginPage'
@@ -50,7 +50,7 @@ interface IParams {
   orgId: string
 }
 
-function AcceptInvitationPage() {
+function AcceptInvitationRegisterPage() {
   const params = useParams<IParams>()
   const temporaryMessage = useTemporaryMessage()
   const [form, setForm] = useState<ICredentials>(DefaultCredentials)
@@ -89,7 +89,6 @@ function AcceptInvitationPage() {
       })
 
       setIsRegisterLoading(true)
-      await UsersApi.canInviteMember({ orgId: params.orgId, email: validatedForm.Email })
       const userCredential = await AuthApi.createAccountWithEmailAndPassword(
         validatedForm.Email,
         validatedForm.Password
@@ -138,11 +137,11 @@ function AcceptInvitationPage() {
       <Content>
         <ContentBox>
           <Heading mb={2} as="h2" size="lg">
-            {organization?.name}
+            Create account in {organization?.name}
           </Heading>
 
           <Text color="gray.500" mb={4}>
-            invited you to join their organization as a{' '}
+            {organization?.name} invited you to join their organization as{' '}
             <Tag size="md" borderRadius="md" variant="subtle" colorScheme="primary">
               <TagLabel textTransform="capitalize">{MemberType.member}</TagLabel>
             </Tag>
@@ -196,14 +195,18 @@ function AcceptInvitationPage() {
         </ContentBox>
       </Content>
 
-      <Box mx="auto" mt={24}>
+      <Text mt={24} mx="auto" color="gray.500">
+        Already a member? <LoginLink to={RoutePage.acceptInvitationLogin(params.orgId)}>Log in</LoginLink>
+      </Text>
+
+      <Box mx="auto" mt={4}>
         <ThemeButton />
       </Box>
     </Container>
   )
 }
 
-export default AcceptInvitationPage
+export default AcceptInvitationRegisterPage
 
 const Container = styled.div`
   display: flex;
@@ -222,4 +225,13 @@ const ContentBox = styled(Section).attrs({ py: 10, px: 12 })`
   flex-direction: column;
   max-width: 550px;
   width: 100%;
+`
+
+const LoginLink = styled(NavLink)`
+  color: ${({ theme }) => theme.colors.blue[500]};
+  font-weight: 500;
+
+  :hover {
+    text-decoration: underline;
+  }
 `

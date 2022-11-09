@@ -22,11 +22,12 @@ import EnvironmentsPage from 'components/pages/EnvironmentsPage'
 import FeedbackPage from 'components/pages/FeedbackPage'
 import CreateOrganizationRoute from './CreateOrganizationRoute'
 import CreateOrganizationPage from 'components/pages/CreateOrganizationPage'
-import AcceptInvitationPage from 'components/pages/AcceptInvitationPage'
+import AcceptInvitationRegisterPage from 'components/pages/AcceptInvitationRegisterPage'
 import MembersPage from 'components/pages/MembersPage'
 import NotFoundPage from 'components/pages/NotFoundPage'
 import { useFlag } from 'pandaflag-react'
 import { FeatureFlag } from 'utils/CommonUtils'
+import AcceptInvitationLoginPage from 'components/pages/AcceptInvitationLoginPage'
 
 function Routes() {
   const feedbackFlagData = useFlag(FeatureFlag.feedbackPage)
@@ -40,9 +41,14 @@ function Routes() {
         <RedirectAuthenticatedRoute component={RegisterPage} exact path={RoutePage.register()} />
         <RedirectAuthenticatedRoute component={ForgotPasswordPage} exact path={RoutePage.forgotPassword()} />
         <RedirectAuthenticatedRoute
-          component={AcceptInvitationPage}
+          component={AcceptInvitationRegisterPage}
           exact
-          path={RoutePage.acceptInvitation(':orgId')}
+          path={RoutePage.acceptInvitationRegister(':orgId')}
+        />
+        <RedirectAuthenticatedRoute
+          component={AcceptInvitationLoginPage}
+          exact
+          path={RoutePage.acceptInvitationLogin(':orgId')}
         />
 
         {/* Authenticated routes */}
