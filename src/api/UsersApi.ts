@@ -94,10 +94,10 @@ async function doesUserAlreadyExistAndHasOrganization(email: string): Promise<bo
   const userOrganization = await OrganizationsApi.getOrganization(user.uid)
 
   if (userOrganization) {
-    return false
+    return true
   }
 
-  return true
+  return false
 }
 
 interface ICanInviteMemberParams {

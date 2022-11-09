@@ -152,7 +152,6 @@ function LoginPage() {
             </Text>
 
             <Button
-              isLoading={isLoading}
               disabled={isLoading}
               data-splitbee-event={SplitbeeEvent.LoginWithGoogle}
               leftIcon={<FaGoogle />}
