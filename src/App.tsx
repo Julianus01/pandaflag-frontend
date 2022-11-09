@@ -18,7 +18,7 @@ function useInitUserAndOrganization(): boolean {
   const [initialized, setInitialized] = useState<boolean>(false)
   const queryClient = useQueryClient()
 
-  useQuery(ApiQueryId.getOrganization, OrganizationsApi.getOrganization, {
+  useQuery(ApiQueryId.getOrganization, () => OrganizationsApi.getOrganization(), {
     enabled: !!user,
     onSuccess: (organization: IOrganization) => {
       dispatch(configurationActions.setOrganization(organization))

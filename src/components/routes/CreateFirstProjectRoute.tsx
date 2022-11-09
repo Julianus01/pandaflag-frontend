@@ -13,7 +13,7 @@ function CreateFirstProjectRoute(props: RouteProps) {
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
 
   const { data: projects, isLoading: projectsLoading } = useContext(ProjectsContext)
-  const { isLoading: organizationLoading } = useQuery(ApiQueryId.getOrganization, OrganizationsApi.getOrganization)
+  const { isLoading: organizationLoading } = useQuery(ApiQueryId.getOrganization, () => OrganizationsApi.getOrganization())
 
   if (!user) {
     return <Redirect to={RoutePage.login()} />
