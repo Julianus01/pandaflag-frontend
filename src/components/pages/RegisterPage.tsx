@@ -170,7 +170,6 @@ function RegisterPage() {
               width="100%"
               size="md"
               onClick={onLoginWithGoogleCredential}
-              isLoading={isLoading}
               disabled={isLoading}
             >
               continue with Google
