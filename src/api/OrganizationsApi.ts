@@ -11,10 +11,12 @@ import {
   setDoc,
   doc,
   getDoc,
+  deleteDoc,
 } from 'firebase/firestore'
 import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
+import ProjectsApi from './ProjectsApi'
 import { IMemberRelation, MemberType } from './UsersApi'
 
 export interface IOrganization {
@@ -110,6 +112,35 @@ async function updateOrganization({ id, ...updates }: IUpdateOrganizationRequest
   return setDoc(doc(getFirestore(), FirestoreCollection.organizations, id), updates, { merge: true })
 }
 
+async function leaveOrganization() {
+  const user = store.getState().auth.user
+  const organization = store.getState().configuration.organization as IOrganization
+  const isNotLastMember = organization?.members?.length > 1
+
+  if (isNotLastMember) {
+    const organizationWithoutCurrentUser: IOrganization = {
+      ...organization,
+      members: organization.members.filter((memberRelation) => memberRelation.id !== user?.uid),
+    }
+
+    return await updateOrganization(organizationWithoutCurrentUser)
+  }
+
+  await deleteOrganization()
+}
+
+async function deleteOrganization(): Promise<void> {
+  const organization = store.getState().configuration.organization as IOrganization
+
+  const projects = await ProjectsApi.getProjects()
+  const deleteProjectsPromises = projects.map((project) => ProjectsApi.deleteProject(project.id))
+
+  await Promise.all([
+    deleteDoc(doc(getFirestore(), FirestoreCollection.organizations, organization.id)),
+    ...deleteProjectsPromises,
+  ])
+}
+
 const OrganizationsApi = {
   // Get
   getOrganization,
@@ -120,6 +151,10 @@ const OrganizationsApi = {
 
   // Update
   updateOrganization,
+
+  // Delete
+  leaveOrganization,
+  deleteOrganization,
 }
 
 export default OrganizationsApi

@@ -1,4 +1,15 @@
-import { Heading, FormControl, FormLabel, Input, Box, Button, useToast } from '@chakra-ui/react'
+import {
+  Heading,
+  FormControl,
+  FormLabel,
+  Input,
+  Text,
+  Box,
+  Button,
+  useToast,
+  Icon,
+  useDisclosure,
+} from '@chakra-ui/react'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
 import { ChangeEvent, useState, KeyboardEvent } from 'react'
@@ -13,6 +24,8 @@ import OrganizationPricingPlan, { PricingPlan } from './organization/Organizatio
 import styled from 'styled-components/macro'
 import { useIsCurrentUserMemberType } from 'hooks/userHooks'
 import { MemberType } from 'api/UsersApi'
+import { FiLogOut } from 'react-icons/fi'
+import LeaveOrganizationDialog from './organization/LeaveOrganizationDialog'
 
 function OrganizationPage() {
   const queryClient = useQueryClient()
@@ -20,6 +33,7 @@ function OrganizationPage() {
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
   const isAdmin = useIsCurrentUserMemberType(MemberType.admin)
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [name, setName] = usePropState<string>(organization?.name as string)
   const [isDirty, setIsDirty] = useState<boolean>(false)
 
@@ -113,7 +127,7 @@ function OrganizationPage() {
         Pricing Plan
       </Heading>
 
-      <Box display="grid" gridGap="6" gridTemplateColumns="1fr 1fr">
+      <Box mb={10} display="grid" gridGap="6" gridTemplateColumns="1fr 1fr">
         <Section px="12" py="10">
           <OrganizationPricingPlan pricingPlan={PricingPlan.free} />
         </Section>
@@ -126,6 +140,22 @@ function OrganizationPage() {
           <ComingSoonContainer>Coming soon</ComingSoonContainer>
         </Section>
       </Box>
+
+      <Heading mb={4} as="h5" size="sm">
+        Advanced
+      </Heading>
+
+      <Section>
+        <Box display="flex" alignItems="center">
+          <Text>Leave organization</Text>
+
+          <Button onClick={onOpen} leftIcon={<Icon as={FiLogOut} />} ml="auto">
+            Leave
+          </Button>
+        </Box>
+      </Section>
+
+      <LeaveOrganizationDialog isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
   )
 }
