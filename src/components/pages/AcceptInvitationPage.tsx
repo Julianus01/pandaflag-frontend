@@ -28,6 +28,9 @@ import { UserCredential } from '@firebase/auth'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
+import { PricingUtils } from 'utils/PricingUtils'
+
+const Quota = PricingUtils.getQuota()
 
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
   return { ...organization, members: [...organization.members, memberRelation] } as IOrganization
@@ -62,6 +65,8 @@ function AcceptInvitationPage() {
   )
 
   const organization = organizationQuery.data
+
+  const isMembersQuotaReached = (organization?.members?.length as number) >= Quota.members
 
   function onInputChange(inputName: string) {
     return function (event: ChangeEvent<HTMLInputElement>) {
@@ -124,7 +129,7 @@ function AcceptInvitationPage() {
     )
   }
 
-  if (!organization) {
+  if (!organization || isMembersQuotaReached) {
     return <Redirect to={RoutePage.notFound()} />
   }
 

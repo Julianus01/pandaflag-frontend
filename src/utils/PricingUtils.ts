@@ -7,7 +7,7 @@ export interface IQuota {
 function getQuota(): IQuota {
   return {
     projects: 1,
-    members: 1,
+    members: 2,
     environments: 2,
   }
 }
