@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 import { useContext } from 'react'
 import ProjectsContext from 'context/ProjectsContext'
+import LoadingPage from 'components/pages/LoadingPage'
 
 interface ProjectRouteProps extends RouteProps {
   organizationId: string
@@ -14,7 +15,7 @@ function ProjectRoute(props: ProjectRouteProps) {
   const { data: projects, isLoading: projectsLoading } = useContext(ProjectsContext)
 
   if (projectsLoading) {
-    return null
+    return <LoadingPage />
   }
 
   if (!projects?.length) {

@@ -1,5 +1,6 @@
 import { ApiQueryId } from 'api/ApiQueryId'
 import OrganizationsApi from 'api/OrganizationsApi'
+import LoadingPage from 'components/pages/LoadingPage'
 import { useQuery } from 'react-query'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, RouteProps } from 'react-router-dom'
@@ -17,7 +18,7 @@ function CreateOrganizationRoute(props: RouteProps) {
   }
 
   if (organizationQuery.isLoading) {
-    return null
+    return <LoadingPage />
   }
 
   if (!user?.emailVerified) {
