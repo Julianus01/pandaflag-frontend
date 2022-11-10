@@ -10,6 +10,7 @@ import LSUtils from 'utils/LSUtils'
 import { configurationActions, IConfigurationState } from 'redux/ducks/configurationDuck'
 import { useEffect } from 'react'
 import AccessibleBackground from 'components/styles/AccessibleBackground'
+import LoadingPage from 'components/pages/LoadingPage'
 
 function useInitConfigurationProject(projects: IProject[] | undefined) {
   const dispatch = useDispatch()
@@ -67,8 +68,10 @@ function NavigationRoute(props: RouteProps) {
   useInitConfigurationProject(projects)
 
   if (!configuration.project) {
-    return null
+    return <LoadingPage />
   }
+
+  // return <LoadingPage />
 
   return (
     <Container>

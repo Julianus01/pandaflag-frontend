@@ -7,6 +7,7 @@ import ProjectsContext from 'context/ProjectsContext'
 import { useQuery } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import OrganizationsApi from 'api/OrganizationsApi'
+import LoadingPage from 'components/pages/LoadingPage'
 
 function CreateFirstProjectRoute(props: RouteProps) {
   const user = useSelector((state: IStoreState) => state.auth.user)
@@ -24,7 +25,7 @@ function CreateFirstProjectRoute(props: RouteProps) {
   }
 
   if (organizationLoading) {
-    return null
+    return <LoadingPage />
   }
 
   if (!organization) {
@@ -32,7 +33,7 @@ function CreateFirstProjectRoute(props: RouteProps) {
   }
 
   if (projectsLoading) {
-    return null
+    return <LoadingPage />
   }
 
   if (projects?.length) {

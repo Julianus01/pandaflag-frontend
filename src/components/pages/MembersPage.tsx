@@ -5,8 +5,9 @@ import RoutePage from 'components/routes/RoutePage'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import SkeletonTable from 'components/styles/SkeletonTable'
+import { useEffect } from 'react'
 import { FiSend } from 'react-icons/fi'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 import { PricingUtils } from 'utils/PricingUtils'
@@ -19,6 +20,7 @@ function useInvitationLink() {
 }
 
 function MembersPage() {
+  const queryClient = useQueryClient()
   const Quota = PricingUtils.getQuota()
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
   const invitationLink = useInvitationLink()
@@ -26,6 +28,10 @@ function MembersPage() {
 
   const user = useSelector((state: IStoreState) => state.auth.user)
   const membersQuery = useQuery(ApiQueryId.getMembers, () => UsersApi.getOrganizationMembers())
+
+  useEffect(() => {
+    queryClient.refetchQueries(ApiQueryId.getOrganization)
+  }, [queryClient])
 
   const membersWithCurrentUserInFront = membersQuery.data?.sort((firstMember: IMember, secondMember: IMember) =>
     firstMember.uid === user?.uid ? -1 : secondMember.uid === user?.uid ? 1 : 0
