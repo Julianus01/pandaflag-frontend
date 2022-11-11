@@ -35,7 +35,11 @@ interface ColorOption {
   color: string
 }
 
-function getColorOptions(environments: IEnvironment[]): ColorOption[] {
+function getColorOptions(environments: IEnvironment[] | undefined): ColorOption[] {
+  if (!environments?.length) {
+    return []
+  }
+
   const options = Object.keys(EnvironmentColor).map((color) => ({
     value: color,
     label: capitalizeFirstLetter(color),
@@ -66,7 +70,7 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
   const { data: environments } = useContext(EnvironmentsContext)
   const colorOptions = getColorOptions(environments as IEnvironment[])
   const [environmentName, setEnvironmentName] = useState<string>('')
-  const [color, setColor] = useState<EnvironmentColor>(colorOptions[0].value as EnvironmentColor)
+  const [color, setColor] = useState<EnvironmentColor>(colorOptions[0]?.value as EnvironmentColor)
   const [error, setError] = useState<string | undefined>(undefined)
 
   const itemHoverAndActiveBg = useColorModeValue('gray.100', 'whiteAlpha.100')
@@ -91,7 +95,7 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
   useUpdateEffect(() => {
     if (!isOpen) {
       setEnvironmentName('')
-      setColor(colorOptions[0].value as EnvironmentColor)
+      setColor(colorOptions[0]?.value as EnvironmentColor)
       setError(undefined)
     }
   }, [isOpen, colorOptions])

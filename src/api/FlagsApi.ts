@@ -184,25 +184,11 @@ async function addEnvironmentToFlags(environment: IEnvironment) {
 async function removeEnvironmentFromFlags(environmentId: string): Promise<void> {
   const flags = await getFlags()
 
-  console.log('Get flags')
-  console.log(flags)
-
   const flagsWithEnvironmentRemoved = flags.map((flag) => {
     const newEnvironments = flag.environments.filter((environment) => environment.id !== environmentId)
 
-    console.log('New envs for flag')
-    console.log(newEnvironments)
-
     return { ...flag, environments: newEnvironments }
   })
-
-  console.log('New flags with env removed')
-  console.log(flagsWithEnvironmentRemoved)
-
-  const newFlags = flagsWithEnvironmentRemoved.map((flag) => ({ id: flag.id, environments: flag.environments }))
-
-  console.log('New Flags')
-  console.log(newFlags)
 
   const flagsUpdatePromises = flagsWithEnvironmentRemoved.map((flag) =>
     updateFlag({ id: flag.id, environments: flag.environments })
