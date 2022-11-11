@@ -185,7 +185,7 @@ function EditEnvironmentModal({ environment, isOpen, onClose }: IProps) {
                 display="flex"
                 alignItems="center"
               >
-                <Box mr="4" shadow="md" borderRadius="md" w="6" h="6" background={colorOption.color} />
+                <Box mr="4" shadow="md" borderRadius="md" w="20" h="2" background={colorOption.color} />
 
                 <Text>{colorOption.label}</Text>
 

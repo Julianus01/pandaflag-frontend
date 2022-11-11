@@ -53,7 +53,7 @@ function EnvironmentRow({ environment, isFirst, isLast, moveUp, moveDown }: IPro
       </Td>
 
       <Td isNumeric>
-        <Box ml="auto" shadow="md" borderRadius="md" w="7" h="7" background={`${environment.color}.400`} />
+        <Box ml="auto" shadow="md" borderRadius="md" w="20" h="2" background={`${environment.color}.400`} />
       </Td>
 
       <Td>
