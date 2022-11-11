@@ -11,6 +11,10 @@ import { useEffect, useState } from 'react'
 import { IEnvironment } from 'api/EnvironmentsApi'
 import { Link } from 'react-router-dom'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
+import EnvironmentUtils from 'utils/EnvironmentsUtils'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
+import { IProject } from 'api/ProjectsApi'
 
 function isFlagEnabled(flag: IFlag, environmentName: string): boolean {
   const foundEnvironment = flag.environments.find((environment: IEnvironment) => environment.name === environmentName)
@@ -87,11 +91,17 @@ interface IProps {
 }
 
 function FlagRow({ flag }: IProps) {
+  const project = useSelector((state: IStoreState) => state.configuration.project) as IProject
   const history = useHistory()
 
   function onEdit() {
     history.push(RoutePage.flag(flag.name))
   }
+
+  const sortedFlagEnvironments = EnvironmentUtils.sortEnvironmentsWithOrderFromLS(
+    project.id,
+    flag.environments
+  ) as IEnvironment[]
 
   return (
     <Row>
@@ -99,7 +109,7 @@ function FlagRow({ flag }: IProps) {
         <FlagLink to={RoutePage.flag(flag.name)}>{flag.name}</FlagLink>
       </Td>
 
-      {flag.environments.map((flagEnvironment: IEnvironment) => (
+      {sortedFlagEnvironments.map((flagEnvironment: IEnvironment) => (
         <Td key={flagEnvironment.id}>
           <FlagSwitch flag={flag} environmentName={flagEnvironment.name} />
         </Td>

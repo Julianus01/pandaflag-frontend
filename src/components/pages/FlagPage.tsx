@@ -26,6 +26,10 @@ import styled from 'styled-components/macro'
 import _ from 'lodash/fp'
 import Section from 'components/styles/Section'
 import { IEnvironment } from 'api/EnvironmentsApi'
+import EnvironmentUtils from 'utils/EnvironmentsUtils'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
+import { IProject } from 'api/ProjectsApi'
 
 interface IParams {
   name: string
@@ -36,13 +40,21 @@ function FlagPage() {
   const params = useParams<IParams>()
   const history = useHistory()
   const queryClient = useQueryClient()
+  const project = useSelector((state: IStoreState) => state.configuration.project) as IProject
 
   const [flag, setFlag] = usePropState<IFlag | undefined>(undefined)
   const [isDirty, setIsDirty] = useState<boolean>(false)
 
+  console.log('Flag')
+  console.log(flag)
+
   const sortedFlagEnvironments = useMemo(() => {
-    return flag?.environments.sort((a, b) => b.name.localeCompare(a.name))
-  }, [flag])
+    if (!flag?.environments?.length) {
+      return []
+    }
+
+    return EnvironmentUtils.sortEnvironmentsWithOrderFromLS(project.id, flag.environments) as IEnvironment[]
+  }, [project.id, flag])
 
   const { data, isFetching } = useQuery(
     [ApiQueryId.getFlagByName, params.name],
