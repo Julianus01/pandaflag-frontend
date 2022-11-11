@@ -137,6 +137,7 @@ async function updateFlag({ id, ...updates }: IUpdateFlagRequestParams): Promise
   }
 
   let newUpdates = { ...updates }
+  // Map Environments for DB format
   if (newUpdates?.environments) {
     newUpdates = {
       ...newUpdates,
@@ -168,6 +169,47 @@ async function deleteProjectFlags(projectId: string): Promise<void> {
   return batch.commit()
 }
 
+async function addEnvironmentToFlags(environment: IEnvironment) {
+  const flags = await getFlags()
+  const flagsUpdatePromises = flags.map((flag) =>
+    updateFlag({
+      id: flag.id,
+      environments: [...flag.environments, { ...environment, enabled: false }],
+    })
+  )
+
+  await Promise.all(flagsUpdatePromises)
+}
+
+async function removeEnvironmentFromFlags(environmentId: string): Promise<void> {
+  const flags = await getFlags()
+
+  console.log('Get flags')
+  console.log(flags)
+
+  const flagsWithEnvironmentRemoved = flags.map((flag) => {
+    const newEnvironments = flag.environments.filter((environment) => environment.id !== environmentId)
+
+    console.log('New envs for flag')
+    console.log(newEnvironments)
+
+    return { ...flag, environments: newEnvironments }
+  })
+
+  console.log('New flags with env removed')
+  console.log(flagsWithEnvironmentRemoved)
+
+  const newFlags = flagsWithEnvironmentRemoved.map((flag) => ({ id: flag.id, environments: flag.environments }))
+
+  console.log('New Flags')
+  console.log(newFlags)
+
+  const flagsUpdatePromises = flagsWithEnvironmentRemoved.map((flag) =>
+    updateFlag({ id: flag.id, environments: flag.environments })
+  )
+  await Promise.all(flagsUpdatePromises)
+}
+
 const FlagsApi = {
   // Get
   getFlags,
@@ -183,6 +225,10 @@ const FlagsApi = {
   // Delete
   deleteFlag,
   deleteProjectFlags,
+
+  // Helpers
+  addEnvironmentToFlags,
+  removeEnvironmentFromFlags,
 }
 
 export default FlagsApi

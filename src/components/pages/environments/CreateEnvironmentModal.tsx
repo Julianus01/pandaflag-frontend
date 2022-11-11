@@ -74,6 +74,10 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
   const createEnvironmentMutation = useMutation(EnvironmentsApi.createEnvironment, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getEnvironments)
+      queryClient.invalidateQueries(ApiQueryId.getFlags)
+      queryClient.invalidateQueries(ApiQueryId.getFlag)
+      queryClient.invalidateQueries(ApiQueryId.getFlagByName)
+
       toast({
         title: `Created environment successfully 👍`,
         isClosable: true,
@@ -133,8 +137,6 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
 
     createEnvironmentMutation.mutate({ name, color })
   }
-
-  console.log(colorOptions)
 
   return (
     <Modal

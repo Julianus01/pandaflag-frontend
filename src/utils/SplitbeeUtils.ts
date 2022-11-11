@@ -14,6 +14,7 @@ export enum SplitbeeEvent {
 
   // Environments
   CreateEnvironment = 'Create Environment',
+  DeleteEnvironment = 'Delete Environment',
 
   // Try Api
   CopyTryApiCode = 'Copy Try Api code',

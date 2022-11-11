@@ -17,6 +17,9 @@ function EnvironmentsPage() {
 
   const isEnvironmentsQuotaReached = (environments?.length as number) >= Quota.environments
 
+  console.log('Environments')
+  console.log(environments)
+
   return (
     <BoxedPage>
       <Box display="flex">

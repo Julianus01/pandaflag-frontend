@@ -20,6 +20,8 @@ function EnvironmentTable({ environments }: IProps) {
           <Th textTransform="capitalize" isNumeric>
             Color
           </Th>
+
+          <Th />
         </Tr>
       </Thead>
 
