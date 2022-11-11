@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { ChangeEvent, useState, KeyboardEvent, useContext } from 'react'
 import _ from 'lodash/fp'
-import EnvironmentsApi, { EnvironmentColor, IEnvironment } from 'api/EnvironmentsApi'
+import EnvironmentsApi, { EnvironmentColor } from 'api/EnvironmentsApi'
 import EnvironmentsContext from 'context/EnvironmentsContext'
 import { FiCheck } from 'react-icons/fi'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
@@ -35,29 +35,11 @@ interface ColorOption {
   color: string
 }
 
-function getColorOptions(environments: IEnvironment[] | undefined): ColorOption[] {
-  if (!environments?.length) {
-    return []
-  }
-
-  const options = Object.keys(EnvironmentColor).map((color) => ({
-    value: color,
-    label: capitalizeFirstLetter(color),
-    color: `${color}.400`,
-  }))
-
-  const allColorsHaveBeenUsed = environments?.length >= Object.keys(EnvironmentColor).length
-  if (allColorsHaveBeenUsed) {
-    return options
-  }
-
-  const unusedOptions = options.filter((colorOption) => {
-    const alreadyInUse = Boolean(environments.find((environment) => environment.color === colorOption.value))
-    return !alreadyInUse
-  })
-
-  return unusedOptions
-}
+const ColorOptions: ColorOption[] = Object.keys(EnvironmentColor).map((color) => ({
+  value: color,
+  label: capitalizeFirstLetter(color),
+  color: `${color}.400`,
+}))
 
 interface IProps {
   isOpen: boolean
@@ -68,9 +50,8 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
   const queryClient = useQueryClient()
   const toast = useToast()
   const { data: environments } = useContext(EnvironmentsContext)
-  const colorOptions = getColorOptions(environments as IEnvironment[])
   const [environmentName, setEnvironmentName] = useState<string>('')
-  const [color, setColor] = useState<EnvironmentColor>(colorOptions[0]?.value as EnvironmentColor)
+  const [color, setColor] = useState<EnvironmentColor>(ColorOptions[0]?.value as EnvironmentColor)
   const [error, setError] = useState<string | undefined>(undefined)
 
   const itemHoverAndActiveBg = useColorModeValue('gray.100', 'whiteAlpha.100')
@@ -95,10 +76,10 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
   useUpdateEffect(() => {
     if (!isOpen) {
       setEnvironmentName('')
-      setColor(colorOptions[0]?.value as EnvironmentColor)
+      setColor(ColorOptions[0]?.value as EnvironmentColor)
       setError(undefined)
     }
-  }, [isOpen, colorOptions])
+  }, [isOpen])
 
   function onEnvironmentNameChange(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value
@@ -175,7 +156,7 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
           </FormControl>
 
           <Box display="grid" gridTemplateColumns="1fr" gridGap="1">
-            {colorOptions.map((colorOption) => (
+            {ColorOptions.map((colorOption) => (
               <Box
                 onClick={() => setColor(colorOption.value as EnvironmentColor)}
                 bg={colorOption.value === color ? itemHoverAndActiveBg : 'transparent'}
