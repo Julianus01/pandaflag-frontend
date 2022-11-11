@@ -11,6 +11,7 @@ import {
   writeBatch,
   deleteDoc,
   doc,
+  setDoc,
 } from 'firebase/firestore'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
@@ -114,8 +115,12 @@ async function createDefaultEnvironments(organizationId: string, projectId: stri
 }
 
 // Update
-async function updateEnvironment() {
-  return true
+export interface IUpdateEnvironmentRequestParams extends Partial<IEnvironment> {
+  id: string
+}
+
+async function updateEnvironment({ id, ...updates }: IUpdateEnvironmentRequestParams): Promise<void> {
+  return setDoc(doc(getFirestore(), FirestoreCollection.environments, id), updates, { merge: true })
 }
 
 // Delete Project Environments
