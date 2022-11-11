@@ -13,7 +13,7 @@ function EnvironmentTable({ environments }: IProps) {
     <Table variant="simple">
       <Thead>
         <Tr>
-          <Th textTransform="capitalize">
+          <Th width="100%" textTransform="capitalize">
             <Box>Name</Box>
           </Th>
 
