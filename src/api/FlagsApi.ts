@@ -137,6 +137,7 @@ async function updateFlag({ id, ...updates }: IUpdateFlagRequestParams): Promise
   }
 
   let newUpdates = { ...updates }
+  // Map Environments for DB format
   if (newUpdates?.environments) {
     newUpdates = {
       ...newUpdates,
@@ -168,6 +169,33 @@ async function deleteProjectFlags(projectId: string): Promise<void> {
   return batch.commit()
 }
 
+async function addEnvironmentToFlags(environment: IEnvironment) {
+  const flags = await getFlags()
+  const flagsUpdatePromises = flags.map((flag) =>
+    updateFlag({
+      id: flag.id,
+      environments: [...flag.environments, { ...environment, enabled: false }],
+    })
+  )
+
+  await Promise.all(flagsUpdatePromises)
+}
+
+async function removeEnvironmentFromFlags(environmentId: string): Promise<void> {
+  const flags = await getFlags()
+
+  const flagsWithEnvironmentRemoved = flags.map((flag) => {
+    const newEnvironments = flag.environments.filter((environment) => environment.id !== environmentId)
+
+    return { ...flag, environments: newEnvironments }
+  })
+
+  const flagsUpdatePromises = flagsWithEnvironmentRemoved.map((flag) =>
+    updateFlag({ id: flag.id, environments: flag.environments })
+  )
+  await Promise.all(flagsUpdatePromises)
+}
+
 const FlagsApi = {
   // Get
   getFlags,
@@ -183,6 +211,10 @@ const FlagsApi = {
   // Delete
   deleteFlag,
   deleteProjectFlags,
+
+  // Helpers
+  addEnvironmentToFlags,
+  removeEnvironmentFromFlags,
 }
 
 export default FlagsApi

@@ -10,10 +10,11 @@ import {
   FormErrorMessage,
   Input,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi from 'api/FlagsApi'
-import { ChangeEvent, useState, KeyboardEvent, useRef } from 'react'
+import { ChangeEvent, useState, KeyboardEvent, useRef, useEffect } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import _ from 'lodash/fp'
 import AutoTextArea from 'components/styles/AutoTextarea'
@@ -26,6 +27,7 @@ interface IProps {
 }
 
 function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: IProps) {
+  const toast = useToast()
   const inputRef = useRef()
   const queryClient = useQueryClient()
 
@@ -33,24 +35,28 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: IProps) {
   const [description, setDescription] = useState<string>('')
   const [error, setError] = useState<string | undefined>(undefined)
 
+  // Reset state on close
+  useEffect(() => {
+    if (!isOpen) {
+      setFlagName('')
+      setDescription('')
+      setError(undefined)
+    }
+  }, [isOpen])
+
   const createFlagMutation = useMutation(FlagsApi.createFlag, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getFlags)
+
+      toast({
+        title: `Created flag successfully 👍`,
+        isClosable: true,
+        variant: 'subtle',
+        status: 'success',
+      })
       onClose()
-      resetState()
     },
   })
-
-  function _onClose() {
-    onClose()
-    resetState()
-  }
-
-  function resetState() {
-    setFlagName('')
-    setDescription('')
-    setError(undefined)
-  }
 
   function formatNameSnakeCase() {
     setFlagName(_.snakeCase(flagName))
@@ -98,7 +104,7 @@ function CreateFlagDialog({ isOpen, onClose, doesFlagAlreadyExist }: IProps) {
     <AlertDialog
       motionPreset="slideInBottom"
       leastDestructiveRef={inputRef as any}
-      onClose={_onClose}
+      onClose={onClose}
       isOpen={isOpen}
       isCentered
       autoFocus={false}

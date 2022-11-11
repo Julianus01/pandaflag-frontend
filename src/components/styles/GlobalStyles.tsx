@@ -19,6 +19,7 @@ function GlobalStyles() {
           ::-webkit-scrollbar {
             background-color: transparent;
             width: 6px;
+            height: 4px;
           }
 
           ::-webkit-scrollbar-track {

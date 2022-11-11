@@ -9,6 +9,7 @@ import {
   FormControl,
   FormErrorMessage,
   Input,
+  useToast,
 } from '@chakra-ui/react'
 import { ApiQueryId } from 'api/ApiQueryId'
 import ProjectsApi, { IProject } from 'api/ProjectsApi'
@@ -27,6 +28,7 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   const inputRef = useRef()
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
+  const toast = useToast()
 
   const [projectName, setProjectName] = useState<string>('')
   const [error, setError] = useState<string | undefined>(undefined)
@@ -35,6 +37,13 @@ function CreateProjectDialog({ isOpen, onClose }: Props) {
   const createProjectMutation = useMutation(ProjectsApi.createProject, {
     onSuccess: (newProject: IProject) => {
       queryClient.invalidateQueries(ApiQueryId.getProjectsByOrganizationId)
+
+      toast({
+        title: `Created project successfully 👍`,
+        isClosable: true,
+        variant: 'subtle',
+        status: 'success',
+      })
       dispatch(configurationActions.setProject(newProject))
       setProjectName('')
       onClose()

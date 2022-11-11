@@ -12,6 +12,11 @@ export enum SplitbeeEvent {
   DeleteFlag = 'Delete Flag',
   ToggleFlagStatus = 'Toggle Flag Status',
 
+  // Environments
+  CreateEnvironment = 'Create Environment',
+  UpdateEnvironment = 'Update Environment',
+  DeleteEnvironment = 'Delete Environment',
+
   // Try Api
   CopyTryApiCode = 'Copy Try Api code',
   RunTryApi = 'Run Try Api',

@@ -1,4 +1,4 @@
-import { Heading, Alert, AlertIcon, Button, Icon, Box, Spinner } from '@chakra-ui/react'
+import { Heading, Alert, AlertIcon, Button, Icon, Box, Spinner, useDisclosure } from '@chakra-ui/react'
 import { IEnvironment } from 'api/EnvironmentsApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
@@ -8,8 +8,10 @@ import { FiHash } from 'react-icons/fi'
 import { PricingUtils } from 'utils/PricingUtils'
 import EnvironmentsTable from './environments/EnvironmentsTable'
 import SkeletonTable from 'components/styles/SkeletonTable'
+import CreateEnvironmentModal from './environments/CreateEnvironmentModal'
 
 function EnvironmentsPage() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const Quota = PricingUtils.getQuota()
   const { data: environments, isFetching, isLoading } = useContext(EnvironmentsContext)
 
@@ -23,7 +25,13 @@ function EnvironmentsPage() {
           {isFetching && <Spinner colorScheme="primary" ml={6} size="sm" />}
         </Heading>
 
-        <Button disabled leftIcon={<Icon as={FiHash} />} onClick={() => null} colorScheme="primary">
+        <Button
+          // TODO: Fix this with Quota
+          disabled={false}
+          onClick={onOpen}
+          leftIcon={<Icon as={FiHash} />}
+          colorScheme="primary"
+        >
           Add Environment
         </Button>
       </Box>
@@ -42,6 +50,8 @@ function EnvironmentsPage() {
           <EnvironmentsTable environments={environments as IEnvironment[]} />
         </TableContainer>
       )}
+
+      <CreateEnvironmentModal isOpen={isOpen} onClose={onClose} />
     </BoxedPage>
   )
 }

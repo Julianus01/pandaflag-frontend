@@ -118,7 +118,7 @@ function EditProjectDialog({ project, isOpen, onClose }: Props) {
       <AlertDialogOverlay />
 
       <AlertDialogContent>
-        <AlertDialogHeader>Edit project</AlertDialogHeader>
+        <AlertDialogHeader>Edit Project</AlertDialogHeader>
 
         <AlertDialogBody>
           <FormControl mb={4} isInvalid={Boolean(error)}>
