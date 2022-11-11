@@ -12,14 +12,27 @@ import {
 } from 'firebase/firestore'
 import store from 'redux/store'
 import { FirestoreCollection } from './FirestoreCollection'
+import { IOrganization } from './OrganizationsApi'
 import { IProject } from './ProjectsApi'
+
+export enum EnvironmentColor {
+  red = 'red',
+  orange = 'orange',
+  yellow = 'yellow',
+  green = 'green',
+  teal = 'teal',
+  blue = 'blue',
+  cyan = 'cyan',
+  purple = 'purple',
+  pink = 'pink',
+}
 
 export interface IEnvironment {
   id: string
   projectId: string
   organizationId: string
   name: string
-  color: string
+  color: EnvironmentColor
   enabled: boolean
   createdAt: Timestamp
 }
@@ -32,8 +45,8 @@ export interface IFlagEnvironment {
 }
 
 export const DefaultEnvironment = {
-  production: { name: 'production', color: 'orange' },
-  development: { name: 'development', color: 'blue' },
+  production: { name: 'production', color: EnvironmentColor.orange },
+  development: { name: 'development', color: EnvironmentColor.blue },
 }
 
 // Get
@@ -53,6 +66,29 @@ async function getEnvironments(): Promise<IDbEnvironment[]> {
 }
 
 // Create
+interface ICreateEnvironmentParams {
+  name: string
+  color: EnvironmentColor
+}
+
+async function createEnvironment(params: ICreateEnvironmentParams) {
+  const organization = store.getState().configuration.organization as IOrganization
+  const project = store.getState().configuration.project as IProject
+  const createdAt = Timestamp.now()
+
+  const newEnvironment = {
+    name: params.name,
+    color: params.color,
+    organizationId: organization.id,
+    projectId: project.id,
+    createdAt,
+  }
+
+  const newEnvironmentDoc = await addDoc(collection(getFirestore(), FirestoreCollection.environments), newEnvironment)
+
+  return { ...newEnvironment, id: newEnvironmentDoc.id }
+}
+
 async function createDefaultEnvironments(organizationId: string, projectId: string): Promise<void> {
   const createdAt = Timestamp.now()
 
@@ -71,6 +107,11 @@ async function createDefaultEnvironments(organizationId: string, projectId: stri
       createdAt,
     }),
   ])
+}
+
+// Update
+async function updateEnvironment() {
+  return true
 }
 
 // Delete Project Environments
@@ -92,7 +133,11 @@ const EnvironmentsApi = {
   getEnvironments,
 
   // Create
+  createEnvironment,
   createDefaultEnvironments,
+
+  // Update
+  updateEnvironment,
 
   //   Delete
   deleteProjectEnvironments,
