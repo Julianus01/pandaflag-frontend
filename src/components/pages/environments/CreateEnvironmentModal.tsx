@@ -15,7 +15,7 @@ import {
   Icon,
   useToast,
 } from '@chakra-ui/react'
-import { ChangeEvent, useState, KeyboardEvent, useContext, useEffect } from 'react'
+import { ChangeEvent, useState, KeyboardEvent, useContext } from 'react'
 import _ from 'lodash/fp'
 import EnvironmentsApi, { EnvironmentColor, IEnvironment } from 'api/EnvironmentsApi'
 import EnvironmentsContext from 'context/EnvironmentsContext'
@@ -23,6 +23,7 @@ import { FiCheck } from 'react-icons/fi'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 import { useMutation, useQueryClient } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
+import { useUpdateEffect } from 'react-use'
 
 function capitalizeFirstLetter(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1)
@@ -40,6 +41,11 @@ function getColorOptions(environments: IEnvironment[]): ColorOption[] {
     label: capitalizeFirstLetter(color),
     color: `${color}.400`,
   }))
+
+  const allColorsHaveBeenUsed = environments?.length >= Object.keys(EnvironmentColor).length
+  if (allColorsHaveBeenUsed) {
+    return options
+  }
 
   const unusedOptions = options.filter((colorOption) => {
     const alreadyInUse = Boolean(environments.find((environment) => environment.color === colorOption.value))
@@ -78,7 +84,7 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
     },
   })
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (!isOpen) {
       setEnvironmentName('')
       setColor(colorOptions[0].value as EnvironmentColor)
@@ -127,6 +133,8 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
 
     createEnvironmentMutation.mutate({ name, color })
   }
+
+  console.log(colorOptions)
 
   return (
     <Modal
