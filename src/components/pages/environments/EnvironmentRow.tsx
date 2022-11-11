@@ -1,19 +1,51 @@
 import { Box, Td, Tr, HStack, Tooltip, IconButton, Icon, useDisclosure } from '@chakra-ui/react'
 import { IEnvironment } from 'api/EnvironmentsApi'
-import { FiEdit2 } from 'react-icons/fi'
+import { FiArrowDown, FiArrowUp, FiEdit2 } from 'react-icons/fi'
 import styled from 'styled-components/macro'
 import EditEnvironmentModal from './EditEnvironmentDialog'
 import EnvironmentRemoveButton from './EnvironmentRemoveButton'
 
 interface IProps {
   environment: IEnvironment
+  isFirst: boolean
+  isLast: boolean
+  moveUp: () => void
+  moveDown: () => void
 }
 
-function EnvironmentRow({ environment }: IProps) {
+function EnvironmentRow({ environment, isFirst, isLast, moveUp, moveDown }: IProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <Row>
+      <Td>
+        <HStack spacing="2" display="flex" justifyContent="flex-end">
+          <Tooltip placement="top" label="Move Up">
+            <Box>
+              <IconButton
+                disabled={isFirst}
+                onClick={moveUp}
+                size="xs"
+                aria-label="move-up"
+                icon={<Icon as={FiArrowUp} />}
+              />
+            </Box>
+          </Tooltip>
+
+          <Tooltip placement="top" label="Move Down">
+            <Box>
+              <IconButton
+                disabled={isLast}
+                onClick={moveDown}
+                size="xs"
+                aria-label="move-down"
+                icon={<Icon as={FiArrowDown} />}
+              />
+            </Box>
+          </Tooltip>
+        </HStack>
+      </Td>
+
       <Td>
         <Box display="flex" alignItems="center">
           {environment.name}

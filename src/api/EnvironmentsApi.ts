@@ -14,6 +14,7 @@ import {
   setDoc,
 } from 'firebase/firestore'
 import store from 'redux/store'
+import EnvironmentUtils from 'utils/EnvironmentsUtils'
 import { FirestoreCollection } from './FirestoreCollection'
 import FlagsApi from './FlagsApi'
 import { IOrganization } from './OrganizationsApi'
@@ -33,6 +34,8 @@ export enum EnvironmentColor {
 
 export interface IEnvironment {
   id: string
+  // Order is only on UI, using it together with LS for orders
+  order?: number
   projectId: string
   organizationId: string
   name: string
@@ -66,7 +69,7 @@ async function getEnvironments(): Promise<IDbEnvironment[]> {
     return { ...data, id: doc.id }
   }) as IDbEnvironment[]
 
-  return environments.sort((a, b) => b.name.localeCompare(a.name))
+  return EnvironmentUtils.sortEnvironmentsWithOrderFromLS(project.id, environments)
 }
 
 // Create
