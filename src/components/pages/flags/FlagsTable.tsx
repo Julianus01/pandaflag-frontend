@@ -18,7 +18,7 @@ function FlagsTable({ flags }: IProps) {
     <Table size="md" variant="simple">
       <Thead>
         <Tr>
-          <Th width="100%" textTransform="capitalize">
+          <Th textTransform="capitalize">
             Name
           </Th>
 

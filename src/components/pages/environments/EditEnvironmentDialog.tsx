@@ -199,7 +199,7 @@ function EditEnvironmentModal({ environment, isOpen, onClose }: IProps) {
           <Button
             data-splitbee-event={SplitbeeEvent.UpdateEnvironment}
             onClick={updateEnvironment}
-            loadingText="Adding Environment"
+            loadingText="Updating"
             disabled={disabledEdit}
             colorScheme="primary"
             isLoading={updateEnvironmentMutation.isLoading}
