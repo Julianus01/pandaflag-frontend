@@ -18,9 +18,7 @@ function FlagsTable({ flags }: IProps) {
     <Table size="md" variant="simple">
       <Thead>
         <Tr>
-          <Th textTransform="capitalize">
-            Name
-          </Th>
+          <Th textTransform="capitalize">Name</Th>
 
           {environments?.map((environment: IDbEnvironment) => (
             <Th key={environment.id} isNumeric textTransform="lowercase">
