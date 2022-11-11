@@ -170,7 +170,7 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
             <FormErrorMessage>{error}</FormErrorMessage>
           </FormControl>
 
-          <Box>
+          <Box display="grid" gridTemplateColumns="1fr" gridGap="1">
             {colorOptions.map((colorOption) => (
               <Box
                 onClick={() => setColor(colorOption.value as EnvironmentColor)}
@@ -183,7 +183,7 @@ function CreateEnvironmentModal({ isOpen, onClose }: IProps) {
                 display="flex"
                 alignItems="center"
               >
-                <Box mr="4" shadow="md" borderRadius="md" w="7" h="7" background={colorOption.color} />
+                <Box mr="4" shadow="md" borderRadius="md" w="6" h="6" background={colorOption.color} />
 
                 <Text>{colorOption.label}</Text>
 
