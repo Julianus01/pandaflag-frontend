@@ -6,10 +6,10 @@ import RoutePage from 'components/routes/RoutePage'
 import SidebarProjectSelector from './SidebarProjectSelector'
 import SidebarFooter from './SidebarFooter'
 import SidebarProjectsCount from './SidebarProjectsCount'
-import PandaflagLogo from '../PandaflagLogo'
 import SidebarFlagsCount from './SidebarFlagsCount'
 import { useFlag } from 'pandaflag-react'
 import { FeatureFlag } from 'utils/CommonUtils'
+import PandaflagLogoSideText from '../PandaflagLogoSideText'
 
 const MENU_ITEMS: ISidebarMenuItem[] = [
   {
@@ -55,7 +55,7 @@ function Sidebar() {
 
   return (
     <Container>
-      <PandaflagLogo textAlign="left" mb={16} ml={4} />
+      <PandaflagLogoSideText textAlign="left" mb={16} mr="auto" ml="4" />
 
       <Box mb={2}>
         <SidebarProjectSelector />

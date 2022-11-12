@@ -1,25 +1,12 @@
-import { Heading, HeadingProps } from '@chakra-ui/react'
-import { NodeEnvironment } from 'utils/CommonUtils'
+import { Image, useColorModeValue } from '@chakra-ui/react'
+import { ImageProps } from '@chakra-ui/react'
+import logoLightSvg from 'assets/logo/logo.svg'
+import logoDarkSvg from 'assets/logo/logo-dark.svg'
 
-function getTitle() {
-  switch (process.env.REACT_APP_STAGE) {
-    case NodeEnvironment.production:
-      return 'pandaflag'
+function PandaflagLogo({ height = '30px', ...restProps }: ImageProps) {
+  const logoSvg = useColorModeValue(logoLightSvg, logoDarkSvg)
 
-    case NodeEnvironment.development:
-      return 'pandaflag DEV'
-
-    default:
-      return 'pandaflag ENV'
-  }
-}
-
-function PandaflagLogo(props: HeadingProps) {
-  return (
-    <Heading fontWeight="semibold" as="h4" size="md" {...props}>
-      {getTitle()}
-    </Heading>
-  )
+  return <Image height={height} src={logoSvg} alt="logo" {...restProps} />
 }
 
 export default PandaflagLogo
