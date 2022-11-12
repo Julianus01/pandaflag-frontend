@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 import { Heading, Text, Input, InputLeftElement, Icon, InputGroup, Button, Box } from '@chakra-ui/react'
 import { FiMail, FiKey, FiGlobe } from 'react-icons/fi'
 import ThemeButton from 'theme/ThemeButton'
-import PandaflagLogo from 'components/shared/PandaflagLogo'
+import PandaflagLogoSideText from 'components/shared/PandaflagLogoSideText'
 import { NavLink } from 'react-router-dom'
 import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import * as yup from 'yup'
@@ -87,7 +87,7 @@ function RegisterPage() {
     <Container>
       <Box display="flex" justifyContent="center">
         <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
-          <PandaflagLogo mx="auto" mt={6} />
+          <PandaflagLogoSideText mx="auto" mt={6} />
         </a>
       </Box>
 

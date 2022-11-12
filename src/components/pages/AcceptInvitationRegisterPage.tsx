@@ -23,7 +23,7 @@ import * as yup from 'yup'
 import AuthApi from 'api/AuthApi'
 import UsersApi, { IMemberRelation, MemberType } from 'api/UsersApi'
 import { UserCredential } from '@firebase/auth'
-import PandaflagLogo from 'components/shared/PandaflagLogo'
+import PandaflagLogoSideText from 'components/shared/PandaflagLogoSideText'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
@@ -178,7 +178,7 @@ function AcceptInvitationRegisterPage() {
       <Container>
         <Box display="flex" justifyContent="center">
           <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
-            <PandaflagLogo mx="auto" mt={6} />
+            <PandaflagLogoSideText mx="auto" mt={6} />
           </a>
         </Box>
 
@@ -203,7 +203,7 @@ function AcceptInvitationRegisterPage() {
     <Container>
       <Box display="flex" justifyContent="center">
         <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
-          <PandaflagLogo mx="auto" mt={6} />
+          <PandaflagLogoSideText mx="auto" mt={6} />
         </a>
       </Box>
 
@@ -215,7 +215,7 @@ function AcceptInvitationRegisterPage() {
 
           <Text color="gray.500" mb={4}>
             {organization?.name} invited you to join their organization as{' '}
-            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="primary">
+            <Tag size="md" borderRadius="md" variant="subtle" colorScheme="blue">
               <TagLabel textTransform="capitalize">{MemberType.member}</TagLabel>
             </Tag>
           </Text>

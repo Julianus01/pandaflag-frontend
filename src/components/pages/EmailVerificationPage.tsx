@@ -4,7 +4,7 @@ import { useState } from 'react'
 import AuthApi from 'api/AuthApi'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
-import PandaflagLogo from 'components/shared/PandaflagLogo'
+import PandaflagLogoSideText from 'components/shared/PandaflagLogoSideText'
 
 function EmailVerificationPage() {
   const toast = useToast()
@@ -37,7 +37,7 @@ function EmailVerificationPage() {
     <Container>
       <Box display="flex" justifyContent="center">
         <a href={process.env.REACT_APP_PANDAFLAG_APP_URL as string}>
-          <PandaflagLogo mx="auto" mt={6} />
+          <PandaflagLogoSideText mx="auto" mt={6} />
         </a>
       </Box>
 
