@@ -23,7 +23,7 @@ function getEnvironmentsOrderFromLS(projectId: string): EnvironmentOrder[] {
   return projectOrders
 }
 
-function saveEnvironmentsOrderToLs(projectId: string, environments: IEnvironment[]) {
+function saveEnvironmentsOrderToLs(projectId: string, environments: IEnvironment[] | IDbEnvironment[]) {
   const ordersString = localStorage.getItem(EnvironmentOrdersLsKey)
   const ordersLsJson = ordersString ? JSON.parse(ordersString) : {}
 
