@@ -26,6 +26,7 @@ function OrganizationPricingUpgradeSuccessAlert() {
         <Alert borderRadius="md" mb={4} status="success">
           <AlertIcon />
 
+          {/* TODO: Update this */}
           <Box>
             <AlertTitle>Success upgrade for {productId}</AlertTitle>
 

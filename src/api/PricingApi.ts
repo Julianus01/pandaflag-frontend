@@ -1,9 +1,11 @@
+import { IUser } from 'redux/ducks/authDuck'
 import store from 'redux/store'
 import { IOrganization } from './OrganizationsApi'
 
 const BaseUrl = process.env.REACT_APP_PANDAFLAG_API_URL_BASE as string
 
 async function createCheckoutSessionURL(productId: string): Promise<string> {
+  const user = store.getState().auth.user as IUser
   const organization = store.getState().configuration.organization as IOrganization
 
   const response = await fetch(`${BaseUrl}/stripe/create-checkout-session`, {
@@ -15,6 +17,7 @@ async function createCheckoutSessionURL(productId: string): Promise<string> {
       organizationId: organization.id,
       productId: productId,
       customerId: organization.customerId,
+      email: user.email,
     }),
   })
 
@@ -41,7 +44,7 @@ async function createPortalSessionURL(): Promise<string> {
 
 const PricingApi = {
   createCheckoutSessionURL,
-  createPortalSessionURL
+  createPortalSessionURL,
 }
 
 export default PricingApi
