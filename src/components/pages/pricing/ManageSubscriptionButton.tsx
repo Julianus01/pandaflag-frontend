@@ -14,7 +14,15 @@ function ManageSubscriptionButton() {
   }
 
   return (
-    <Button onClick={onManageSubscription} variant="outline" colorScheme="green" size="md" w="100%">
+    <Button
+      disabled={manageSubscriptionMutation.isLoading}
+      isLoading={manageSubscriptionMutation.isLoading}
+      onClick={onManageSubscription}
+      variant="outline"
+      colorScheme="green"
+      size="md"
+      w="100%"
+    >
       Manage subscription
     </Button>
   )

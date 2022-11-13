@@ -38,7 +38,7 @@ export const PricingPlans: IPricingPlans = {
   Starter: {
     name: PricingPlanName.Starter,
     // TODO: This should be handled in process env or something
-    productId: 'prod_MmYlRFZnuQZBmJ',
+    productId: 'prod_MnOMAAL0RlJ3kE',
     quota: {
       projects: 5,
       environments: 5,
