@@ -24,6 +24,7 @@ export interface IOrganization {
   name: string
   members: IMemberRelation[]
   createdAt: Timestamp
+  customerId?: string
 }
 
 // Get Organization

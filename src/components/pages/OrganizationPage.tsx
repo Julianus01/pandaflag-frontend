@@ -20,12 +20,12 @@ import { useMutation, useQueryClient } from 'react-query'
 import OrganizationsApi, { IOrganization } from 'api/OrganizationsApi'
 import { ApiQueryId } from 'api/ApiQueryId'
 import usePropState from 'hooks/common/usePropState'
-import OrganizationPricingPlan, { PricingPlan } from './organization/OrganizationPricingPlan'
-import styled from 'styled-components/macro'
+import OrganizationPricingPlan from './organization/OrganizationPricingPlan'
 import { useIsCurrentUserMemberType } from 'hooks/userHooks'
 import { MemberType } from 'api/UsersApi'
 import { FiLogOut } from 'react-icons/fi'
 import LeaveOrganizationDialog from './organization/LeaveOrganizationDialog'
+import { PricingPlans } from 'utils/PricingUtils'
 
 function OrganizationPage() {
   const queryClient = useQueryClient()
@@ -127,18 +127,12 @@ function OrganizationPage() {
         Pricing Plan
       </Heading>
 
-      <Box mb={10} display="grid" gridGap="6" gridTemplateColumns="1fr 1fr">
-        <Section px="12" py="10">
-          <OrganizationPricingPlan pricingPlan={PricingPlan.free} />
-        </Section>
-
-        <Section px="12" py="10" position="relative">
-          <Box filter="blur(4px)">
-            <OrganizationPricingPlan pricingPlan={PricingPlan.paid} />
-          </Box>
-
-          <ComingSoonContainer>Coming soon</ComingSoonContainer>
-        </Section>
+      <Box mb={10} display="grid" gridGap="6" gridTemplateColumns="1fr 1fr 1fr">
+        {Object.values(PricingPlans).map((pricingPlan) => (
+          <Section key={pricingPlan.name} px="12" py="10" position="relative">
+            <OrganizationPricingPlan pricingPlan={pricingPlan} />
+          </Section>
+        ))}
       </Box>
 
       <Heading mb={4} as="h5" size="sm">
@@ -161,15 +155,3 @@ function OrganizationPage() {
 }
 
 export default OrganizationPage
-
-const ComingSoonContainer = styled(Box)`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-`
