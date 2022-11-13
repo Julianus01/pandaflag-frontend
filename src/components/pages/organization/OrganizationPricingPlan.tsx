@@ -1,24 +1,13 @@
-import { Box, Heading, Text, Tag, TagLabel, Button } from '@chakra-ui/react'
-import PricingApi from 'api/PricingApi'
-import { useMutation } from 'react-query'
+import { Box, Heading, Text, Tag, TagLabel } from '@chakra-ui/react'
 import styled from 'styled-components/macro'
 import { IPricingPlan, PricingPlanName } from 'utils/PricingUtils'
+import PricingPlanButton from '../pricing/PricingPlanButton'
 
 interface IProps {
   pricingPlan: IPricingPlan
 }
 
 function OrganizationPricingPlan({ pricingPlan }: IProps) {
-  const upgradeMutation = useMutation(PricingApi.createCheckoutSessionURL)
-
-  function onUpgrade() {
-    upgradeMutation.mutate(pricingPlan.productId, {
-      onSuccess: (checkoutSessionUrl) => {
-        window.location.replace(checkoutSessionUrl)
-      },
-    })
-  }
-
   return (
     <Box>
       <Box filter={pricingPlan.name === PricingPlanName.ComingSoon ? 'blur(4px)' : 'none'}>
@@ -29,8 +18,7 @@ function OrganizationPricingPlan({ pricingPlan }: IProps) {
             </Heading>
 
             <Tag
-              // TODO: Update based on active pricing plan
-              // visibility={true}
+              visibility={pricingPlan.name === PricingPlanName.Free ? 'visible' : 'hidden'}
               size="sm"
               borderRadius="md"
               variant="subtle"
@@ -87,26 +75,7 @@ function OrganizationPricingPlan({ pricingPlan }: IProps) {
           </Text>
         </Box>
 
-        {/* TODO: Do based on active one */}
-        {false && (
-          <Button variant="outline" disabled colorScheme="green" size="md" w="100%">
-            Selected
-          </Button>
-        )}
-
-        {!false && (
-          // TODO: Handle disabled state based on pricing plan
-          <Button
-            disabled={upgradeMutation.isLoading}
-            isLoading={upgradeMutation.isLoading}
-            onClick={onUpgrade}
-            colorScheme="green"
-            size="md"
-            w="100%"
-          >
-            Upgrade
-          </Button>
-        )}
+        <PricingPlanButton pricingPlan={pricingPlan} />
       </Box>
 
       {pricingPlan.name === PricingPlanName.ComingSoon && <ComingSoonContainer>Coming Soon</ComingSoonContainer>}

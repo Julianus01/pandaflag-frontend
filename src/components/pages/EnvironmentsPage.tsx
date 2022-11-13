@@ -26,8 +26,7 @@ function EnvironmentsPage() {
         </Heading>
 
         <Button
-          // TODO: Fix this with Quota
-          disabled={false}
+          disabled={isEnvironmentsQuotaReached}
           onClick={onOpen}
           leftIcon={<Icon as={FiHash} />}
           colorScheme="primary"

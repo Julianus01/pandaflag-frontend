@@ -22,8 +22,26 @@ async function createCheckoutSessionURL(productId: string): Promise<string> {
   return json.url
 }
 
+async function createPortalSessionURL(): Promise<string> {
+  const organization = store.getState().configuration.organization as IOrganization
+
+  const response = await fetch(`${BaseUrl}/stripe/create-portal-session`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      customerId: organization.customerId,
+    }),
+  })
+
+  const json: { url: string } = await response.json()
+  return json.url
+}
+
 const PricingApi = {
   createCheckoutSessionURL,
+  createPortalSessionURL
 }
 
 export default PricingApi
