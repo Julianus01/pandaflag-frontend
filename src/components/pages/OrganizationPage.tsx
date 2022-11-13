@@ -26,6 +26,7 @@ import { MemberType } from 'api/UsersApi'
 import { FiLogOut } from 'react-icons/fi'
 import LeaveOrganizationDialog from './organization/LeaveOrganizationDialog'
 import { PricingPlans } from 'utils/PricingUtils'
+import OrganizationPricingUpgradeSuccessAlert from './organization/OrganizationPricingUpgradeSuccessAlert'
 
 function OrganizationPage() {
   const queryClient = useQueryClient()
@@ -126,6 +127,8 @@ function OrganizationPage() {
       <Heading mb={4} as="h5" size="sm">
         Pricing Plan
       </Heading>
+
+      <OrganizationPricingUpgradeSuccessAlert />
 
       <Box mb={10} display="grid" gridGap="6" gridTemplateColumns="1fr 1fr 1fr">
         {Object.values(PricingPlans).map((pricingPlan) => (

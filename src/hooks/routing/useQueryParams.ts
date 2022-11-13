@@ -9,6 +9,10 @@ export enum TryApiParam {
 export enum QueryParam {
   tryApi = 'tryApi',
   email = 'email',
+
+  // Organization page stripe
+  success = 'success',
+  productId = 'productId',
 }
 
 function useQueryParams() {
