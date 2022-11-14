@@ -40,6 +40,7 @@ function OrganizationPage() {
 
   const updateOrganizationMutation = useMutation(OrganizationsApi.updateOrganization)
 
+
   function onNameChange(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value
     if (value.length > 40) {

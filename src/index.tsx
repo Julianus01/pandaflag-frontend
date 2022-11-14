@@ -14,6 +14,7 @@ import { EnvironmentsContextProvider } from 'context/EnvironmentsContext'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import splitbee from '@splitbee/web'
 import { PandaflagProvider } from 'pandaflag-react'
+import { SubscriptionsContextProvider } from 'context/SubscriptionsContext'
 
 // For version checking
 console.log('v1.0.1')
@@ -41,16 +42,18 @@ function RootHTML() {
       <ReduxProvider store={store}>
         <QueryClientProvider client={queryClient}>
           <ChakraProvider theme={theme}>
-            <ProjectsContextProvider>
-              <EnvironmentsContextProvider>
-                <GlobalStyles />
-                <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+            <SubscriptionsContextProvider>
+              <ProjectsContextProvider>
+                <EnvironmentsContextProvider>
+                  <GlobalStyles />
+                  <ColorModeScript initialColorMode={theme.config.initialColorMode} />
 
-                <StyledThemeProvider>
-                  <App />
-                </StyledThemeProvider>
-              </EnvironmentsContextProvider>
-            </ProjectsContextProvider>
+                  <StyledThemeProvider>
+                    <App />
+                  </StyledThemeProvider>
+                </EnvironmentsContextProvider>
+              </ProjectsContextProvider>
+            </SubscriptionsContextProvider>
           </ChakraProvider>
         </QueryClientProvider>
       </ReduxProvider>
