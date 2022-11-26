@@ -19,6 +19,8 @@ import { FirestoreCollection } from './FirestoreCollection'
 import ProjectsApi from './ProjectsApi'
 import { IMemberRelation, MemberType } from './UsersApi'
 
+const BaseUrl = process.env.REACT_APP_PANDAFLAG_API_URL as string
+
 export interface IOrganization {
   id: string
   name: string
@@ -142,10 +144,26 @@ async function deleteOrganization(): Promise<void> {
   ])
 }
 
+interface ICanInviteMemberResponse {
+  canInvite: boolean
+}
+
+async function canInviteMember(orgId: string): Promise<ICanInviteMemberResponse> {
+  const response = await fetch(`${BaseUrl}/can-invite-member/${orgId}`, {
+    headers: {
+      'Content-type': 'application/json',
+    },
+  })
+
+  const json = await response.json()
+  return json as ICanInviteMemberResponse
+}
+
 const OrganizationsApi = {
   // Get
   getOrganization,
   getOrganizationById,
+  canInviteMember,
 
   // Create
   createOrganization,

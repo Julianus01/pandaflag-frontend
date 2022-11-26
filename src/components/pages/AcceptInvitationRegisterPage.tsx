@@ -27,10 +27,9 @@ import PandaflagLogoSideText from 'components/shared/PandaflagLogoSideText'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
-import { FreePricingPlanProduct } from 'utils/PricingUtils'
 import { FaGoogle } from 'react-icons/fa'
 import store from 'redux/store'
-import { useQueryClient } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 
 function addMemberToOrganization(organization: IOrganization, memberRelation: IMemberRelation): IOrganization {
@@ -86,8 +85,11 @@ function AcceptInvitationRegisterPage() {
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false)
   const { organization, isLoading } = useOrganizationById(params.orgId)
 
-  // TODO: Fix this
-  const Quota = FreePricingPlanProduct.metadata
+  const canInviteMemberQuery = useQuery(
+    ApiQueryId.canInviteMember,
+    () => OrganizationsApi.canInviteMember(params.orgId),
+    { enabled: !!params.orgId }
+  )
 
   // Log user out for this page
   useEffect(() => {
@@ -97,8 +99,6 @@ function AcceptInvitationRegisterPage() {
       AuthApi.logout()
     }
   }, [])
-
-  const isMembersQuotaReached = (organization?.members?.length as number) >= Quota.membersLimit
 
   function onInputChange(inputName: string) {
     return function (event: ChangeEvent<HTMLInputElement>) {
@@ -175,7 +175,7 @@ function AcceptInvitationRegisterPage() {
     await OrganizationsApi.updateOrganization(organizationWithNewMember)
   }
 
-  if (isLoading) {
+  if (canInviteMemberQuery.isLoading || isLoading) {
     return (
       <Container>
         <Box display="flex" justifyContent="center">
@@ -197,7 +197,7 @@ function AcceptInvitationRegisterPage() {
     )
   }
 
-  if (!organization || isMembersQuotaReached) {
+  if (!canInviteMemberQuery.data?.canInvite || !organization) {
     return <Redirect to={RoutePage.notFound()} />
   }
 

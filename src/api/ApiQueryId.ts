@@ -17,6 +17,7 @@ export enum ApiQueryId {
 
   // Members
   getMembers = 'getMembers',
+  canInviteMember = 'canInviteMember',
 
   // Pricing
   getSubscriptions = 'getSubscriptions',

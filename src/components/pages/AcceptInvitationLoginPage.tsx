@@ -26,10 +26,9 @@ import { UserCredential } from '@firebase/auth'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
-import { FreePricingPlanProduct } from 'utils/PricingUtils'
 import { FaGoogle } from 'react-icons/fa'
 import store from 'redux/store'
-import { useQueryClient } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { ApiQueryId } from 'api/ApiQueryId'
 import PandaflagLogoSideText from 'components/shared/PandaflagLogoSideText'
 
@@ -86,8 +85,11 @@ function AcceptInvitationLoginPage() {
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false)
   const { organization, isLoading } = useOrganizationById(params.orgId)
 
-  // TODO: Fix this
-  const Quota = FreePricingPlanProduct.metadata
+  const canInviteMemberQuery = useQuery(
+    ApiQueryId.canInviteMember,
+    () => OrganizationsApi.canInviteMember(params.orgId),
+    { enabled: !!params.orgId }
+  )
 
   // Log user out for this page
   useEffect(() => {
@@ -97,8 +99,6 @@ function AcceptInvitationLoginPage() {
       AuthApi.logout()
     }
   }, [])
-
-  const isMembersQuotaReached = (organization?.members?.length as number) >= Quota.membersLimit
 
   function onInputChange(inputName: string) {
     return function (event: ChangeEvent<HTMLInputElement>) {
@@ -180,7 +180,7 @@ function AcceptInvitationLoginPage() {
     await OrganizationsApi.updateOrganization(organizationWithNewMember)
   }
 
-  if (isLoading) {
+  if (canInviteMemberQuery.isLoading || isLoading) {
     return (
       <Container>
         <Box display="flex" justifyContent="center">
@@ -202,7 +202,7 @@ function AcceptInvitationLoginPage() {
     )
   }
 
-  if (!organization || isMembersQuotaReached) {
+  if (!canInviteMemberQuery.data?.canInvite || !organization) {
     return <Redirect to={RoutePage.notFound()} />
   }
 
