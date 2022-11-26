@@ -1,6 +1,8 @@
 import { Box, Heading, Text, Tag, TagLabel } from '@chakra-ui/react'
 import { IPrice } from 'api/PricingApi'
+import { MemberType } from 'api/UsersApi'
 import SubscriptionsContext from 'context/SubscriptionsContext'
+import { useIsCurrentUserMemberType } from 'hooks/userHooks'
 import { useContext } from 'react'
 import styled from 'styled-components/macro'
 import PricingPlanButton from '../pricing/PricingPlanButton'
@@ -10,6 +12,7 @@ interface IProps {
 }
 
 function OrganizationPricingPlan({ price }: IProps) {
+  const isAdmin = useIsCurrentUserMemberType(MemberType.admin)
   const { activeSubscription } = useContext(SubscriptionsContext)
 
   return (
@@ -80,7 +83,7 @@ function OrganizationPricingPlan({ price }: IProps) {
           </Text>
         </Box>
 
-        <PricingPlanButton product={price.product} />
+        {isAdmin && <PricingPlanButton product={price.product} />}
       </Box>
     </Box>
   )
