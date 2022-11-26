@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton, Box } from '@chakra-ui/react'
+import { Alert, AlertIcon, AlertTitle, CloseButton, Box } from '@chakra-ui/react'
 import RoutePage from 'components/routes/RoutePage'
 import useQueryParam from 'hooks/routing/useQueryParam'
 import { QueryParam } from 'hooks/routing/useQueryParams'
@@ -10,8 +10,7 @@ import { useState } from 'react'
 function OrganizationPricingUpgradeSuccessAlert() {
   const { width, height } = useWindowSize()
   const history = useHistory()
-  const upgradeSuccess = useQueryParam(QueryParam.success) === 'true'
-  const productId = useQueryParam(QueryParam.productId)
+  const upgradeSuccess = useQueryParam(QueryParam.success) === 'true' || true
   const [showConfetti] = useState<boolean>(upgradeSuccess)
 
   function onClose() {
@@ -26,16 +25,18 @@ function OrganizationPricingUpgradeSuccessAlert() {
         <Alert borderRadius="md" mb={4} status="success">
           <AlertIcon />
 
-          {/* TODO: Update this */}
           <Box>
-            <AlertTitle>Success upgrade for {productId}</AlertTitle>
-
-            <AlertDescription>
-              Your application has been received. We will review your application and respond within the next 48 hours.
-            </AlertDescription>
+            <AlertTitle>Successfully upgraded your plan 🚀</AlertTitle>
           </Box>
 
-          <CloseButton alignSelf="flex-start" position="relative" right={-1} top={-1} onClick={onClose} />
+          <CloseButton
+            alignSelf="flex-start"
+            marginLeft="auto"
+            position="relative"
+            right={-1}
+            top={-1}
+            onClick={onClose}
+          />
         </Alert>
       )}
     </>
