@@ -39,6 +39,8 @@ function MemberRemoveButton({ member }: IProps) {
         variant: 'subtle',
         status: 'success',
       })
+
+      queryClient.invalidateQueries(ApiQueryId.getOrganization)
     },
   })
 
