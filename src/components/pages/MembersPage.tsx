@@ -5,12 +5,12 @@ import RoutePage from 'components/routes/RoutePage'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import SkeletonTable from 'components/styles/SkeletonTable'
-import { useEffect } from 'react'
+import SubscriptionsContext from 'context/SubscriptionsContext'
+import { useContext, useEffect } from 'react'
 import { FiSend } from 'react-icons/fi'
 import { useQuery, useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
-import { PricingUtils } from 'utils/PricingUtils'
 import MembersTable from './members/MembersTable'
 
 function useInvitationLink() {
@@ -21,7 +21,7 @@ function useInvitationLink() {
 
 function MembersPage() {
   const queryClient = useQueryClient()
-  const Quota = PricingUtils.getQuota()
+  const { activeSubscription } = useContext(SubscriptionsContext)
   const organization = useSelector((state: IStoreState) => state.configuration.organization)
   const invitationLink = useInvitationLink()
   const { hasCopied, onCopy } = useClipboard(invitationLink)
@@ -37,7 +37,7 @@ function MembersPage() {
     firstMember.uid === user?.uid ? -1 : secondMember.uid === user?.uid ? 1 : 0
   )
 
-  const isMembersQuotaReached = (organization?.members?.length as number) >= Quota.members
+  const isMembersQuotaReached = (organization?.members?.length as number) >= activeSubscription.metadata.membersLimit
 
   return (
     <BoxedPage>

@@ -63,7 +63,7 @@ function FlagsPage() {
         </>
       )}
 
-      {!isLoading && !Boolean(flags?.length) && <Section>Go ahead and add your first feature 🚩</Section>}
+      {!isLoading && !Boolean(flags?.length) && <Section py="8" px="6">Go ahead and add your first feature 🚩</Section>}
 
       <CreateFlagDialog doesFlagAlreadyExist={doesFlagAlreadyExist} isOpen={isOpen} onClose={onClose} />
     </BoxedPage>

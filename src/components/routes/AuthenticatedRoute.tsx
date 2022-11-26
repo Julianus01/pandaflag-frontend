@@ -6,19 +6,23 @@ import { IStoreState } from 'redux/store'
 import { useContext } from 'react'
 import ProjectsContext from 'context/ProjectsContext'
 import LoadingPage from 'components/pages/LoadingPage'
+import SubscriptionsContext from 'context/SubscriptionsContext'
+import PricesContext from 'context/PricesContext'
 
 interface ProjectRouteProps extends RouteProps {
   organizationId: string
 }
 
 function ProjectRoute(props: ProjectRouteProps) {
-  const { data: projects, isLoading: projectsLoading } = useContext(ProjectsContext)
+  const projectsQuery = useContext(ProjectsContext)
+  const subscriptionsQuery = useContext(SubscriptionsContext)
+  const pricesQuery = useContext(PricesContext)
 
-  if (projectsLoading) {
+  if (projectsQuery.isLoading || subscriptionsQuery.isLoading || pricesQuery.isLoading) {
     return <LoadingPage />
   }
 
-  if (!projects?.length) {
+  if (!projectsQuery.data?.length) {
     return <Redirect to={RoutePage.createFirstProject()} />
   }
 

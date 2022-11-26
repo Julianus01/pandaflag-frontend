@@ -91,7 +91,7 @@ function ProfilePage() {
         </Box>
       </Box>
 
-      <Section mb={4}>
+      <Section py="8" px="6" mb={4}>
         <FormControl mb={6} id="email">
           <FormLabel mb={1} fontSize="sm" color="gray.500">
             Email
@@ -148,7 +148,7 @@ function ProfilePage() {
         </Box>
       </Section>
 
-      <Section mb={4}>
+      <Section py="8" px="6" mb={4}>
         <Heading as="h5" size="sm">
           Theme
         </Heading>

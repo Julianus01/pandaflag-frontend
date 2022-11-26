@@ -20,4 +20,6 @@ export enum ApiQueryId {
 
   // Pricing
   getSubscriptions = 'getSubscriptions',
+  getProducts = 'getProducts',
+  getPrices = 'getPrices'
 }

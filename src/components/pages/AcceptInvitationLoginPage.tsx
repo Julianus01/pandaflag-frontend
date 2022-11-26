@@ -26,7 +26,7 @@ import { UserCredential } from '@firebase/auth'
 import ThemeButton from 'theme/ThemeButton'
 import Section from 'components/styles/Section'
 import RoutePage from 'components/routes/RoutePage'
-import { PricingUtils } from 'utils/PricingUtils'
+import { FreePricingPlanProduct } from 'utils/PricingUtils'
 import { FaGoogle } from 'react-icons/fa'
 import store from 'redux/store'
 import { useQueryClient } from 'react-query'
@@ -85,7 +85,9 @@ function AcceptInvitationLoginPage() {
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false)
   const { organization, isLoading } = useOrganizationById(params.orgId)
-  const Quota = PricingUtils.getQuota(organization?.id)
+
+  // TODO: Fix this
+  const Quota = FreePricingPlanProduct.metadata
 
   // Log user out for this page
   useEffect(() => {
@@ -96,7 +98,7 @@ function AcceptInvitationLoginPage() {
     }
   }, [])
 
-  const isMembersQuotaReached = (organization?.members?.length as number) >= Quota.members
+  const isMembersQuotaReached = (organization?.members?.length as number) >= Quota.membersLimit
 
   function onInputChange(inputName: string) {
     return function (event: ChangeEvent<HTMLInputElement>) {

@@ -1,79 +1,64 @@
-import store from 'redux/store'
+import { IPrice, IProduct, IProductDb, ISubscription, SubscriptionStatus } from 'api/PricingApi'
 
-const PandaflagDevelopmentOrgId = 'ZIxcs0zFIsDxQIe0Usy7'
-const PandaflagProductionOrgId = 'DUEJ18weCR85tfLuNIat'
+const FreePricingPlanID = 'free-plan'
 
-export enum PricingPlanName {
-  Free = 'Free',
-  Starter = 'Starter',
-  ComingSoon = 'Coming Soon',
-}
-
-export interface IPricingPlans {
-  [name: string]: IPricingPlan
-}
-
-export interface IPricingPlan {
-  name: PricingPlanName
-  productId: string
-  quota: IQuota
-}
-
-export interface IQuota {
-  projects: number
-  members: number
-  environments: number
-}
-
-export const PricingPlans: IPricingPlans = {
-  Free: {
-    name: PricingPlanName.Free,
-    productId: '',
-    quota: {
-      projects: 1,
-      environments: 2,
-      members: 2,
-    },
+export const FreePricingPlanProduct: IProduct = {
+  id: FreePricingPlanID,
+  object: 'product',
+  active: true,
+  created: 1668374351,
+  default_price: '',
+  metadata: {
+    environmentsLimit: 2,
+    membersLimit: 2,
+    projectsLimit: 1,
   },
-  Starter: {
-    name: PricingPlanName.Starter,
-    // TODO: This should be handled in process env or something
-    productId: 'prod_MnOMAAL0RlJ3kE',
-    quota: {
-      projects: 5,
-      environments: 5,
-      members: 20,
-    },
-  },
-  ComingSoon: {
-    name: PricingPlanName.ComingSoon,
-    productId: '',
-    quota: {
-      projects: 0,
-      environments: 0,
-      members: 0,
-    },
-  },
+  name: 'Free',
+  updated: 1669472686,
 }
 
-function getQuota(orgId?: string): IQuota {
-  const organizationId = orgId || store.getState().configuration.organization?.id
+export const FreePrice: IPrice = {
+  id: 'free-price',
+  object: 'price',
+  active: true,
+  billing_scheme: 'per_unit',
+  created: -8640000000000000,
+  currency: 'eur',
+  unit_amount: 0,
+  unit_amount_decimal: '0',
+  product: FreePricingPlanProduct,
+}
 
-  if (organizationId && [PandaflagDevelopmentOrgId, PandaflagProductionOrgId].includes(organizationId)) {
-    return {
-      projects: 999,
-      members: 999,
-      environments: 999,
-    }
-  }
+export const FreeSubscription: ISubscription = {
+  id: 'free-subscription',
+  customer: '',
+  current_period_start: -8640000000000000,
+  current_period_end: 8640000000000000,
+  plan: {
+    id: 'price-free',
+    active: true,
+    product: FreePricingPlanID,
+    currency: 'eur',
+    amount: 0,
+    amount_decimal: '0',
+    created: -8640000000000000,
+    interval: 'month',
+  },
+  metadata: FreePricingPlanProduct.metadata,
+  status: 'active' as SubscriptionStatus,
+}
 
+function mapProductMetadata(product: IProductDb): IProduct {
   return {
-    projects: 1,
-    members: 2,
-    environments: 2,
+    ...product,
+    metadata: {
+      projectsLimit: Number(product.metadata.projectsLimit),
+      environmentsLimit: Number(product.metadata.environmentsLimit),
+      membersLimit: Number(product.metadata.membersLimit),
+    },
   }
 }
 
 export const PricingUtils = {
-  getQuota,
+  mapProductMetadata,
 }

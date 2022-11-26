@@ -11,6 +11,7 @@ import { IStoreState } from 'redux/store'
 import UsersApi from 'api/UsersApi'
 import ErrorBoundary from 'components/shared/ErrorBoundary'
 import { useFlags } from 'pandaflag-react'
+import LoadingPage from 'components/pages/LoadingPage'
 
 function useInitUserAndOrganization(): boolean {
   const dispatch = useDispatch()
@@ -57,7 +58,7 @@ function App() {
   const initialized = useInitUserAndOrganization()
 
   if (!initialized || flagsData.isLoading) {
-    return null
+    return <LoadingPage />
   }
 
   return (

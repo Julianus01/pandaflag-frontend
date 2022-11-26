@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import BoxedPage from 'components/styles/BoxedPage'
 import Section from 'components/styles/Section'
-import { ChangeEvent, useState, KeyboardEvent } from 'react'
+import { ChangeEvent, useState, KeyboardEvent, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import { IStoreState } from 'redux/store'
 import _ from 'lodash/fp'
@@ -25,8 +25,8 @@ import { useIsCurrentUserMemberType } from 'hooks/userHooks'
 import { MemberType } from 'api/UsersApi'
 import { FiLogOut } from 'react-icons/fi'
 import LeaveOrganizationDialog from './organization/LeaveOrganizationDialog'
-import { PricingPlans } from 'utils/PricingUtils'
 import OrganizationPricingUpgradeSuccessAlert from './organization/OrganizationPricingUpgradeSuccessAlert'
+import PricesContext from 'context/PricesContext'
 
 function OrganizationPage() {
   const queryClient = useQueryClient()
@@ -37,9 +37,9 @@ function OrganizationPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [name, setName] = usePropState<string>(organization?.name as string)
   const [isDirty, setIsDirty] = useState<boolean>(false)
+  const pricesQuery = useContext(PricesContext)
 
   const updateOrganizationMutation = useMutation(OrganizationsApi.updateOrganization)
-
 
   function onNameChange(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value
@@ -104,7 +104,7 @@ function OrganizationPage() {
         )}
       </Box>
 
-      <Section mb={10}>
+      <Section py="8" px="6" mb={10}>
         <Heading mb={2} as="h5" size="sm">
           Information
         </Heading>
@@ -131,10 +131,10 @@ function OrganizationPage() {
 
       <OrganizationPricingUpgradeSuccessAlert />
 
-      <Box mb={10} display="grid" gridGap="6" gridTemplateColumns="1fr 1fr 1fr">
-        {Object.values(PricingPlans).map((pricingPlan) => (
-          <Section key={pricingPlan.name} px="12" py="10" position="relative">
-            <OrganizationPricingPlan pricingPlan={pricingPlan} />
+      <Box mb={10} display="grid" gridGap="6" gridTemplateColumns="1fr 1fr">
+        {pricesQuery?.data?.map((price) => (
+          <Section key={price.product.name} px="12" py="10" position="relative">
+            <OrganizationPricingPlan price={price} />
           </Section>
         ))}
       </Box>
@@ -143,7 +143,7 @@ function OrganizationPage() {
         Advanced
       </Heading>
 
-      <Section>
+      <Section py="8" px="6">
         <Box display="flex" alignItems="center">
           <Text>Leave organization</Text>
 

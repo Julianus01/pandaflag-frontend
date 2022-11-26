@@ -5,17 +5,17 @@ import BoxedPage from 'components/styles/BoxedPage'
 import EnvironmentsContext from 'context/EnvironmentsContext'
 import { useContext } from 'react'
 import { FiHash } from 'react-icons/fi'
-import { PricingUtils } from 'utils/PricingUtils'
 import EnvironmentsTable from './environments/EnvironmentsTable'
 import SkeletonTable from 'components/styles/SkeletonTable'
 import CreateEnvironmentModal from './environments/CreateEnvironmentModal'
+import SubscriptionsContext from 'context/SubscriptionsContext'
 
 function EnvironmentsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const Quota = PricingUtils.getQuota()
+  const { activeSubscription } = useContext(SubscriptionsContext)
   const { data: environments, isFetching, isLoading } = useContext(EnvironmentsContext)
 
-  const isEnvironmentsQuotaReached = (environments?.length as number) >= Quota.environments
+  const isEnvironmentsQuotaReached = (environments?.length as number) >= activeSubscription.metadata.environmentsLimit
 
   return (
     <BoxedPage>

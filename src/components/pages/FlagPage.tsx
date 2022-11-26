@@ -45,9 +45,6 @@ function FlagPage() {
   const [flag, setFlag] = usePropState<IFlag | undefined>(undefined)
   const [isDirty, setIsDirty] = useState<boolean>(false)
 
-  console.log('Flag')
-  console.log(flag)
-
   const sortedFlagEnvironments = useMemo(() => {
     if (!flag?.environments?.length) {
       return []
@@ -204,7 +201,7 @@ function FlagPage() {
         </Button>
       </Box>
 
-      <Section mb={4}>
+      <Section py="8" px="6" mb={4}>
         <Heading mb={4} as="h5" size="sm">
           Status
         </Heading>
@@ -239,7 +236,7 @@ function FlagPage() {
         ))}
       </Section>
 
-      <Section>
+      <Section py="8" px="6">
         <Heading mb={2} as="h5" size="sm">
           Information
         </Heading>

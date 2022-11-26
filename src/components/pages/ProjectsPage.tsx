@@ -3,18 +3,18 @@ import { IProject } from 'api/ProjectsApi'
 import TableContainer from 'components/shared/TableContainer'
 import BoxedPage from 'components/styles/BoxedPage'
 import ProjectsContext from 'context/ProjectsContext'
+import SubscriptionsContext from 'context/SubscriptionsContext'
 import { useContext } from 'react'
 import { FiLayers } from 'react-icons/fi'
-import { PricingUtils } from 'utils/PricingUtils'
 import CreateProjectDialog from './projects/CreateProjectDialog'
 import ProjectsTable from './projects/ProjectsTable'
 
 function ProjectsPage() {
-  const Quota = PricingUtils.getQuota()
+  const { activeSubscription } = useContext(SubscriptionsContext)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { data: projects } = useContext(ProjectsContext)
 
-  const isProjectsQuotaReached = (projects?.length as number) >= Quota.projects
+  const isProjectsQuotaReached = (projects?.length as number) >= activeSubscription.metadata.projectsLimit
 
   return (
     <BoxedPage>

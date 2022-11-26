@@ -48,7 +48,7 @@ function FeedbackPage() {
         order for us to have a better overview of what your needs are
       </Text>
 
-      <Section mb={4}>
+      <Section py="8" px="6" mb={4}>
         <FormControl id="Title">
           <FormLabel fontSize="sm" color="gray.500">
             Title

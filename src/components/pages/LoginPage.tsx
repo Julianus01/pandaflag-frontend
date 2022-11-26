@@ -94,7 +94,7 @@ function LoginPage() {
       </Box>
 
       <Content>
-        <Section py="12" px="16">
+        <ContentBox py="12" px="16">
           <LoginContainer>
             <Heading mb={2} as="h3" size="lg">
               Log in
@@ -163,7 +163,7 @@ function LoginPage() {
               continue with Google
             </Button>
           </LoginContainer>
-        </Section>
+        </ContentBox>
 
         <Text mt={10} mx="auto" color="gray.500">
           Don't have an account? <RegisterLink to={RoutePage.register}>Create Account</RegisterLink>
@@ -213,3 +213,5 @@ const ForgotPasswordLink = styled(NavLink)`
     text-decoration: underline;
   }
 `
+
+const ContentBox = styled(Section).attrs({ py: 12, px: 16 })``
