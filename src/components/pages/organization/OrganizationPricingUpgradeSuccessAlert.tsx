@@ -10,7 +10,7 @@ import { useState } from 'react'
 function OrganizationPricingUpgradeSuccessAlert() {
   const { width, height } = useWindowSize()
   const history = useHistory()
-  const upgradeSuccess = useQueryParam(QueryParam.success) === 'true' || true
+  const upgradeSuccess = useQueryParam(QueryParam.success) === 'true'
   const [showConfetti] = useState<boolean>(upgradeSuccess)
 
   function onClose() {
