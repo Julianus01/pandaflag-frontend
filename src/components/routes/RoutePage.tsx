@@ -54,10 +54,6 @@ function profile() {
   return `/profile`
 }
 
-function feedback() {
-  return `/feedback`
-}
-
 function acceptInvitationRegister(orgId: string) {
   return `/accept-invitation-register/${orgId}`
 }
@@ -90,7 +86,6 @@ const RoutePage = {
   createOrganization,
   createFirstProject,
   profile,
-  feedback,
   members,
 }
 

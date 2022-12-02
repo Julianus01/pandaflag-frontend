@@ -1,7 +1,7 @@
 import { KeyboardEvent, MouseEvent } from 'react'
 
 export enum FeatureFlag {
-  feedbackPage = 'feedback_page',
+  feedbackAndBugsLink = 'feedback_and_bugs_github_link',
   tryApi = 'try_api',
 }
 

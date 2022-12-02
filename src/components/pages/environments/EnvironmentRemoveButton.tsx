@@ -30,6 +30,7 @@ function EnvironmentRemoveButton({ environment }: IProps) {
   const deleteMutation = useMutation(EnvironmentsApi.deleteEnvironment, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getEnvironments)
+      queryClient.invalidateQueries(ApiQueryId.getFlags)
 
       toast({
         title: `Removed environment '${environment.name}'`,

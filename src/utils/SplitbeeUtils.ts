@@ -4,9 +4,6 @@ export enum SplitbeeEvent {
   LoginWithGoogle = 'Login with Google',
   Register = 'Register',
 
-  // Feedback
-  SendFeedback = 'Send Feedback',
-
   // Flags
   CreateFlag = 'Create Flag',
   DeleteFlag = 'Delete Flag',

@@ -44,14 +44,18 @@ const CONFIGURATION_MENU_ITEMS: ISidebarMenuItem[] = [
   },
 ]
 
-const FEEDBACK_MENU_ITEM = {
-  name: 'Feedback',
-  href: RoutePage.feedback(),
+const FEEDBACK_AND_BUGS_MENU_ITEM = {
+  name: 'Feedback & Bugs',
+  href: 'https://github.com/Julianus01/pandaflag-feedback-and-bugs/issues/new',
+  pathname: 'https://github.com/Julianus01/pandaflag-feedback-and-bugs/issues/new',
   icon: <Icon strokeWidth={2.4} w={4} h={4} as={FiMessageSquare} />,
+  linkProps: {
+    target: '_blank',
+  },
 }
 
 function Sidebar() {
-  const feedbackFlagData = useFlag(FeatureFlag.feedbackPage)
+  const feedbackAndBugsFlagData = useFlag(FeatureFlag.feedbackAndBugsLink)
 
   return (
     <Container>
@@ -87,13 +91,13 @@ function Sidebar() {
         ))}
       </Content>
 
-      {feedbackFlagData.flag?.enabled && (
+      {feedbackAndBugsFlagData.flag?.enabled && (
         <Box marginTop="auto">
           <SidebarMenuItem
-            menuItem={FEEDBACK_MENU_ITEM}
-            active={window.location.pathname.includes(FEEDBACK_MENU_ITEM.href)}
+            menuItem={FEEDBACK_AND_BUGS_MENU_ITEM}
+            active={window.location.pathname.includes(FEEDBACK_AND_BUGS_MENU_ITEM.href)}
           >
-            {FEEDBACK_MENU_ITEM.name}
+            {FEEDBACK_AND_BUGS_MENU_ITEM.name}
           </SidebarMenuItem>
         </Box>
       )}
@@ -114,7 +118,7 @@ const Container = styled.div`
 const Content = styled.div`
   flex: 1;
 
-  div:not(:last-child) {
+  a:not(:last-child) {
     margin-bottom: ${({ theme }) => theme.space[2]};
   }
 `
