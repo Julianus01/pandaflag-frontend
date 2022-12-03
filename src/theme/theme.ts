@@ -8,9 +8,6 @@ const config: ThemeConfig = {
 const fonts = {
   heading: 'Inter, sans-serif',
   body: 'Inter, sans-serif',
-
-  // heading: 'Poppins, sans-serif',
-  // body: 'Poppins, sans-serif',
 }
 
 const components = {
