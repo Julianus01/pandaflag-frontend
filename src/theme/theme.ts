@@ -16,6 +16,16 @@ const components = {
       size: 'sm',
     },
   },
+  Input: {
+    defaultProps: {
+      focusBorderColor: 'primary.500',
+    },
+  },
+  Textarea: {
+    defaultProps: {
+      focusBorderColor: 'primary.500',
+    },
+  },
 }
 
 const colors = {
