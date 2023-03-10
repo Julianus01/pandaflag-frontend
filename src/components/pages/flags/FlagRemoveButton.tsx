@@ -15,6 +15,8 @@ import { ApiQueryId } from 'api/ApiQueryId'
 import FlagsApi, { IFlag } from 'api/FlagsApi'
 import { FiMinus } from 'react-icons/fi'
 import { useQueryClient, useMutation, useQuery } from 'react-query'
+import { useSelector } from 'react-redux'
+import { IStoreState } from 'redux/store'
 import { SplitbeeEvent } from 'utils/SplitbeeUtils'
 
 interface IProps {
@@ -24,9 +26,11 @@ interface IProps {
 function FlagRemoveButton({ flag }: IProps) {
   const queryClient = useQueryClient()
   const toast = useToast()
+  const project = useSelector((state: IStoreState) => state.configuration.project)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { isFetching: flagsFetching } = useQuery(ApiQueryId.getFlags, FlagsApi.getFlags)
+  const { isFetching: flagsFetching } = useQuery([ApiQueryId.getFlags, project?.id], FlagsApi.getFlags)
+
   const deleteMutation = useMutation(FlagsApi.deleteFlag, {
     onSuccess: () => {
       queryClient.invalidateQueries(ApiQueryId.getFlags)

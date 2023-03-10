@@ -16,6 +16,7 @@ import splitbee from '@splitbee/web'
 import { PandaflagProvider } from 'pandaflag-react'
 import { SubscriptionsContextProvider } from 'context/SubscriptionsContext'
 import { PricesContextProvider } from 'context/PricesContext'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 // For version checking
 console.log('v1.0.1')
@@ -58,6 +59,8 @@ function RootHTML() {
               </SubscriptionsContextProvider>
             </PricesContextProvider>
           </ChakraProvider>
+
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </ReduxProvider>
     </PandaflagProvider>
