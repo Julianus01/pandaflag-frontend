@@ -21,7 +21,7 @@
     "firebase": "^9.1.1",
     "framer-motion": "^4.1.17",
     "lodash": "^4.17.21",
-    "pandaflag-react": "^1.0.1",
+    "pandaflag-react": "^1.0.2",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-confetti": "^6.1.0",
